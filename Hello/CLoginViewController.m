@@ -10,6 +10,7 @@
 #import "CViewController.h"
 #import "JNSPairViewController.h"
 #import "JNSPairWaitingViewController.h"
+#import "JNSPairConfirmViewController.h"
 
 @interface CLoginViewController ()
 @property (weak, nonatomic) IBOutlet UITextField *userField;
@@ -30,7 +31,9 @@ JNSUser* user;
             [self presentViewController:main animated:true completion:nil];
         } else if (user.request) {
             if (user.incoming) {
-                
+                JNSPairConfirmViewController* view = [self.storyboard instantiateViewControllerWithIdentifier:@"pair_confirm_view"];
+                view.user = user;
+                [self presentViewController:view animated:true completion:nil];
             } else {
                 JNSPairWaitingViewController* view = [self.storyboard instantiateViewControllerWithIdentifier:@"pair_waiting_view"];
                 

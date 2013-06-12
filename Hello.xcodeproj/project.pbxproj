@@ -21,6 +21,8 @@
 		06A521CF174A6B660077C0C8 /* MainStoryboard_iPhone.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 06A521CD174A6B660077C0C8 /* MainStoryboard_iPhone.storyboard */; };
 		06A521D2174A6B660077C0C8 /* MainStoryboard_iPad.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 06A521D0174A6B660077C0C8 /* MainStoryboard_iPad.storyboard */; };
 		06A521D5174A6B660077C0C8 /* CViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 06A521D4174A6B660077C0C8 /* CViewController.m */; };
+		06DAA6231768BEC7005C334A /* JNSPairConfirmViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 06DAA6221768BEC7005C334A /* JNSPairConfirmViewController.m */; };
+		06DAA6261768CF3E005C334A /* JNSBaseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 06DAA6251768CF3E005C334A /* JNSBaseViewController.m */; };
 		06ECF5BF17671E780028F7D6 /* CLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 06ECF5BE17671E780028F7D6 /* CLoginViewController.m */; };
 		06ECF5C2176838560028F7D6 /* JNSUser.m in Sources */ = {isa = PBXBuildFile; fileRef = 06ECF5C1176838550028F7D6 /* JNSUser.m */; };
 		06ECF5C5176845FC0028F7D6 /* JNSPairViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 06ECF5C4176845FC0028F7D6 /* JNSPairViewController.m */; };
@@ -47,6 +49,10 @@
 		06A521D1174A6B660077C0C8 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = en; path = en.lproj/MainStoryboard_iPad.storyboard; sourceTree = "<group>"; };
 		06A521D3174A6B660077C0C8 /* CViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CViewController.h; sourceTree = "<group>"; };
 		06A521D4174A6B660077C0C8 /* CViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CViewController.m; sourceTree = "<group>"; };
+		06DAA6211768BEC7005C334A /* JNSPairConfirmViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JNSPairConfirmViewController.h; sourceTree = "<group>"; };
+		06DAA6221768BEC7005C334A /* JNSPairConfirmViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JNSPairConfirmViewController.m; sourceTree = "<group>"; };
+		06DAA6241768CF3E005C334A /* JNSBaseViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JNSBaseViewController.h; sourceTree = "<group>"; };
+		06DAA6251768CF3E005C334A /* JNSBaseViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JNSBaseViewController.m; sourceTree = "<group>"; };
 		06ECF5BD17671E780028F7D6 /* CLoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CLoginViewController.h; sourceTree = "<group>"; };
 		06ECF5BE17671E780028F7D6 /* CLoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CLoginViewController.m; sourceTree = "<group>"; };
 		06ECF5C0176838550028F7D6 /* JNSUser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JNSUser.h; sourceTree = "<group>"; };
@@ -117,7 +123,11 @@
 				06ECF5C717684A190028F7D6 /* JNSPairWaitingViewController.m */,
 				06ECF5C0176838550028F7D6 /* JNSUser.h */,
 				06ECF5C1176838550028F7D6 /* JNSUser.m */,
+				06DAA6211768BEC7005C334A /* JNSPairConfirmViewController.h */,
+				06DAA6221768BEC7005C334A /* JNSPairConfirmViewController.m */,
 				06A521BC174A6B660077C0C8 /* Supporting Files */,
+				06DAA6241768CF3E005C334A /* JNSBaseViewController.h */,
+				06DAA6251768CF3E005C334A /* JNSBaseViewController.m */,
 			);
 			path = Hello;
 			sourceTree = "<group>";
@@ -213,6 +223,8 @@
 				06ECF5C2176838560028F7D6 /* JNSUser.m in Sources */,
 				06ECF5C5176845FC0028F7D6 /* JNSPairViewController.m in Sources */,
 				06ECF5C817684A190028F7D6 /* JNSPairWaitingViewController.m in Sources */,
+				06DAA6231768BEC7005C334A /* JNSPairConfirmViewController.m in Sources */,
+				06DAA6261768CF3E005C334A /* JNSBaseViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

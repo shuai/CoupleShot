@@ -31,5 +31,6 @@
 
 -(void)initWithID:(NSString*)user_id Password:(NSString*)password Delegate:(id)delegate;
 -(void)pairWithUser: (NSString*) user Completion:(void (^)(NSString*))completion;
+-(void)confirmRequest:(bool)confirm Completion:(void (^)(NSString*))completion;
 
 @end
