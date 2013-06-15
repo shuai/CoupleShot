@@ -27,6 +27,9 @@
 		06ECF5C2176838560028F7D6 /* JNSUser.m in Sources */ = {isa = PBXBuildFile; fileRef = 06ECF5C1176838550028F7D6 /* JNSUser.m */; };
 		06ECF5C5176845FC0028F7D6 /* JNSPairViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 06ECF5C4176845FC0028F7D6 /* JNSPairViewController.m */; };
 		06ECF5C817684A190028F7D6 /* JNSPairWaitingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 06ECF5C717684A190028F7D6 /* JNSPairWaitingViewController.m */; };
+		06F97E47176C6E3000F58AC9 /* JNSTimeline.m in Sources */ = {isa = PBXBuildFile; fileRef = 06F97E42176C660500F58AC9 /* JNSTimeline.m */; };
+		06F97E48176C6E3B00F58AC9 /* JNSConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = 06F97E46176C681300F58AC9 /* JNSConnection.m */; };
+		06F97E4B176C8BC700F58AC9 /* JNSWizardViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 06F97E4A176C8BC700F58AC9 /* JNSWizardViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -61,6 +64,14 @@
 		06ECF5C4176845FC0028F7D6 /* JNSPairViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JNSPairViewController.m; sourceTree = "<group>"; };
 		06ECF5C617684A190028F7D6 /* JNSPairWaitingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JNSPairWaitingViewController.h; sourceTree = "<group>"; };
 		06ECF5C717684A190028F7D6 /* JNSPairWaitingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JNSPairWaitingViewController.m; sourceTree = "<group>"; };
+		06F97E41176C660500F58AC9 /* JNSTimeline.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = JNSTimeline.h; sourceTree = "<group>"; };
+		06F97E42176C660500F58AC9 /* JNSTimeline.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = JNSTimeline.m; sourceTree = "<group>"; };
+		06F97E43176C661E00F58AC9 /* JNSTimelineEntry.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = JNSTimelineEntry.h; sourceTree = "<group>"; };
+		06F97E44176C661E00F58AC9 /* JNSTimelineEntry.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = JNSTimelineEntry.m; sourceTree = "<group>"; };
+		06F97E45176C681300F58AC9 /* JNSConnection.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = JNSConnection.h; sourceTree = "<group>"; };
+		06F97E46176C681300F58AC9 /* JNSConnection.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = JNSConnection.m; sourceTree = "<group>"; };
+		06F97E49176C8BC700F58AC9 /* JNSWizardViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JNSWizardViewController.h; sourceTree = "<group>"; };
+		06F97E4A176C8BC700F58AC9 /* JNSWizardViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JNSWizardViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -115,6 +126,8 @@
 				06A521D0174A6B660077C0C8 /* MainStoryboard_iPad.storyboard */,
 				06A521D3174A6B660077C0C8 /* CViewController.h */,
 				06A521D4174A6B660077C0C8 /* CViewController.m */,
+				06F97E49176C8BC700F58AC9 /* JNSWizardViewController.h */,
+				06F97E4A176C8BC700F58AC9 /* JNSWizardViewController.m */,
 				06ECF5BD17671E780028F7D6 /* CLoginViewController.h */,
 				06ECF5BE17671E780028F7D6 /* CLoginViewController.m */,
 				06ECF5C3176845FC0028F7D6 /* JNSPairViewController.h */,
@@ -125,9 +138,15 @@
 				06ECF5C1176838550028F7D6 /* JNSUser.m */,
 				06DAA6211768BEC7005C334A /* JNSPairConfirmViewController.h */,
 				06DAA6221768BEC7005C334A /* JNSPairConfirmViewController.m */,
-				06A521BC174A6B660077C0C8 /* Supporting Files */,
 				06DAA6241768CF3E005C334A /* JNSBaseViewController.h */,
 				06DAA6251768CF3E005C334A /* JNSBaseViewController.m */,
+				06F97E41176C660500F58AC9 /* JNSTimeline.h */,
+				06F97E42176C660500F58AC9 /* JNSTimeline.m */,
+				06F97E43176C661E00F58AC9 /* JNSTimelineEntry.h */,
+				06F97E44176C661E00F58AC9 /* JNSTimelineEntry.m */,
+				06F97E45176C681300F58AC9 /* JNSConnection.h */,
+				06F97E46176C681300F58AC9 /* JNSConnection.m */,
+				06A521BC174A6B660077C0C8 /* Supporting Files */,
 			);
 			path = Hello;
 			sourceTree = "<group>";
@@ -216,15 +235,18 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				06F97E47176C6E3000F58AC9 /* JNSTimeline.m in Sources */,
 				06A521C2174A6B660077C0C8 /* main.m in Sources */,
 				06A521C6174A6B660077C0C8 /* CAppDelegate.m in Sources */,
 				06A521D5174A6B660077C0C8 /* CViewController.m in Sources */,
 				06ECF5BF17671E780028F7D6 /* CLoginViewController.m in Sources */,
+				06F97E48176C6E3B00F58AC9 /* JNSConnection.m in Sources */,
 				06ECF5C2176838560028F7D6 /* JNSUser.m in Sources */,
 				06ECF5C5176845FC0028F7D6 /* JNSPairViewController.m in Sources */,
 				06ECF5C817684A190028F7D6 /* JNSPairWaitingViewController.m in Sources */,
 				06DAA6231768BEC7005C334A /* JNSPairConfirmViewController.m in Sources */,
 				06DAA6261768CF3E005C334A /* JNSBaseViewController.m in Sources */,
+				06F97E4B176C8BC700F58AC9 /* JNSWizardViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -323,8 +345,7 @@
 		06A521D9174A6B660077C0C8 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "iPhone Developer: shuai shao (N493JD3M93)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: shuai shao (N493JD3M93)";
+				CODE_SIGN_IDENTITY = "";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Hello/Hello-Prefix.pch";
 				INFOPLIST_FILE = "Hello/Hello-Info.plist";

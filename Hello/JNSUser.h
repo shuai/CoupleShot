@@ -7,7 +7,8 @@
 //
 
 #import <Foundation/Foundation.h>
-
+#import "JNSTimeline.h"
+#import "JNSConnection.h"
 
 @protocol JNSUserDelegate
 
@@ -15,9 +16,10 @@
 
 @end
 
+@class JNSUser;
+extern JNSUser* current_user;
 
-
-@interface JNSUser : NSObject<NSURLConnectionDataDelegate>
+@interface JNSUser : NSObject<JNSConnectionDelegate>
 
 @property (weak) id<JNSUserDelegate> delegate;
 @property (readonly) bool valid;
@@ -25,9 +27,12 @@
 @property (readonly) NSString* user_id;
 @property (readonly) NSString* request;
 @property (readonly) bool incoming;
+@property JNSTimeline* timeline;
 
+// load from network
 +(JNSUser*)userWithID:(NSString*)user_id Password:(NSString*)password Delegate:(id)delegate;
-
+// load from cache
++(JNSUser*)loadUser;
 
 -(void)initWithID:(NSString*)user_id Password:(NSString*)password Delegate:(id)delegate;
 -(void)pairWithUser: (NSString*) user Completion:(void (^)(NSString*))completion;

@@ -11,5 +11,4 @@
 
 @interface JNSPairViewController : UIViewController
 
-@property JNSUser* user;
 @end

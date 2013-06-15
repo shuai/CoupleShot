@@ -23,12 +23,23 @@
 
 JNSUser* user;
 
+-(void)viewDidLoad {
+    self.navigationItem.hidesBackButton = true;
+}
+
+-(void)viewWillAppear:(BOOL)animated {
+    UINavigationController* container = (UINavigationController*)self.parentViewController;
+    container.navigationBarHidden = true;
+}
+
 -(void)validationComplete {
 
     if (user.valid) {
+        NSAssert(!current_user, @"");
+        current_user = user;
+
         if (user.partner_id) {
-            CViewController* main = [self.storyboard instantiateViewControllerWithIdentifier:@"main_view"];
-            [self presentViewController:main animated:true completion:nil];
+            [self dismissViewControllerAnimated:true completion:nil];
         } else if (user.request) {
             if (user.incoming) {
                 JNSPairConfirmViewController* view = [self.storyboard instantiateViewControllerWithIdentifier:@"pair_confirm_view"];
@@ -42,8 +53,10 @@ JNSUser* user;
             }
         } else {
             JNSPairViewController* view = [self.storyboard instantiateViewControllerWithIdentifier:@"pair_view"];
-            view.user = user;
-            [self presentViewController:view animated:true completion:nil];
+
+            [self.navigationController pushViewController:view animated:true];
+            
+            //[self presentViewController:view animated:true completion:nil];
         }
         // TODO how to delete current one?
     } else {

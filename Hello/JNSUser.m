@@ -10,43 +10,39 @@
 
 @implementation JNSUser
 
-NSString* kHost = @"http://localhost";
-NSString* kSignInURL = @"/signin";
-NSString* kPairURL = @"/api/pair";
-NSString* kPairConfirmURL = @"/api/pair/confirm";
+JNSUser* current_user;
 
 void (^pairCompletion)(NSString*);
 
-NSURLConnection* _connection;
-NSHTTPURLResponse* _response;
-NSMutableData* _data;
+JNSConnection* _connection;
 
-- (void)connectionDidFinishLoading:(NSURLConnection *)connection {
+-(void)requestComplete:(JNSConnection*)connection WithJSON:(NSDictionary *)json {
     NSAssert(connection == _connection, @"");
-
-    NSError* error;
-    NSDictionary* json = [NSJSONSerialization JSONObjectWithData:_data options:kNilOptions error:&error];
     NSString* msg = [json objectForKey:@"msg"];
+    if (!msg) {
+        msg = @"Connection problem";
+    }
 
-    NSLog(@"connectionDidFinishLoading:\n %@", [json description]);
-
-    if ([_response.URL.relativePath compare:kSignInURL] == NSOrderedSame) {
-        if (200 == [_response statusCode]) {
+    bool ok = connection.response && connection.response.statusCode == 200;
+        
+    if ([connection.path compare:kSignInURL] == NSOrderedSame) {
+        if (ok) {
             _valid = true;
             [self updateJSON:json];
+            _timeline = [JNSTimeline new];
         } else {
             _valid = false;
         }
         [self.delegate validationComplete];
-    } else if ([_response.URL.relativePath compare:kPairURL] == NSOrderedSame) {
-        if (200 == [_response statusCode]) {
+    } else if ([connection.path compare:kPairURL] == NSOrderedSame) {
+        if (ok) {
             [self updateJSON:json];
         }
         
         pairCompletion(msg);
         pairCompletion = nil;
-    } else if ([_response.URL.relativePath compare:kPairConfirmURL] == NSOrderedSame) {
-        if (200 == [_response statusCode]) {
+    } else if ([connection.path compare:kPairConfirmURL] == NSOrderedSame) {
+        if (ok) {
             [self updateJSON:json];
         }
         pairCompletion(msg);
@@ -54,25 +50,6 @@ NSMutableData* _data;
     }
     
     _connection = nil;
-    _response = nil;
-    _data = nil;
-}
-
-- (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data {
-    NSAssert(connection == _connection, @"");
-    [_data appendData:data];
-    NSLog(@"didReceiveData, length:%d", data.length);
-}
-
-- (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response {
-    NSAssert(connection == _connection, @"");
-    NSAssert(!_response, @"");
-    NSAssert(!_data, @"");
-    
-    _response = (NSHTTPURLResponse*)response;
-    _data = [NSMutableData new];
-
-    NSLog(@"didReceiveResponse, relativePath:%@, status:%d", _response.URL.relativePath, [_response statusCode]);
 }
 
 +(JNSUser*)userWithID:(NSString*)user_id Password:(NSString*)password Delegate:(id)delegate {
@@ -81,35 +58,25 @@ NSMutableData* _data;
     return user;
 }
 
++(JNSUser*)loadUser {
+    return nil;
+}
+
 -(void)initWithID:(NSString*)user_id Password:(NSString*)password Delegate:(id)delegate {
     _delegate = delegate;
     _user_id = user_id;
-    
-    NSURL* url = [NSURL URLWithString:kSignInURL relativeToURL: [NSURL URLWithString:kHost]];
-    NSMutableURLRequest* request = [NSMutableURLRequest requestWithURL:url];
-    [request setHTTPMethod:@"POST"];
-    
+
     NSString* body = [NSString stringWithFormat:@"user=%@&pwd=%@", user_id, password];
-    NSData* data = [body dataUsingEncoding:(NSUTF8StringEncoding)];
-    [request setHTTPBody:data];
-    
-    _connection = [NSURLConnection connectionWithRequest:request delegate:self];
+    _connection = [JNSConnection connectionWithMethod:false URL:kSignInURL Params:body Delegate:self];
 }
 
 -(void)pairWithUser: (NSString*) user Completion:(void (^)(NSString*))completion {
     NSAssert(!_connection, @"");
     NSAssert(!pairCompletion, @"Pending pair request");
     pairCompletion = completion;
-
-    NSURL* url = [NSURL URLWithString:kPairURL relativeToURL: [NSURL URLWithString:kHost]];
-    NSMutableURLRequest* request = [NSMutableURLRequest requestWithURL:url];
-    [request setHTTPMethod:@"POST"];
     
     NSString* body = [NSString stringWithFormat:@"user=%@", user];
-    NSData* data = [body dataUsingEncoding:(NSUTF8StringEncoding)];
-    [request setHTTPBody:data];
-
-    _connection = [NSURLConnection connectionWithRequest:request delegate:self];
+    _connection = [JNSConnection connectionWithMethod:false URL:kPairURL Params:body Delegate:self];
 }
 
 
@@ -125,18 +92,10 @@ NSMutableData* _data;
     NSAssert(!_connection, @"");
     NSAssert(_request && _request.length, @"");
     NSAssert(!pairCompletion, @"Pending pair request");
-
     pairCompletion = completion;
-
-    NSURL* url = [NSURL URLWithString:kPairURL relativeToURL: [NSURL URLWithString:kHost]];
-    NSMutableURLRequest* request = [NSMutableURLRequest requestWithURL:url];
-    [request setHTTPMethod:@"POST"];
     
     NSString* body = [NSString stringWithFormat:@"user=%@&confirm=%@", _request, confirm?@"1":@"0"];
-    NSData* data = [body dataUsingEncoding:(NSUTF8StringEncoding)];
-    [request setHTTPBody:data];
-    
-    _connection = [NSURLConnection connectionWithRequest:request delegate:self];
+    _connection = [JNSConnection connectionWithMethod:false URL:kPairURL Params:body Delegate:self];
 }
 
 @end

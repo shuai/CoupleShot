@@ -7,12 +7,16 @@
 //
 
 #import "CAppDelegate.h"
+#import "JNSWizardViewController.h"
+#import "CViewController.h"
 
 @implementation CAppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     // Override point for customization after application launch.
+    current_user = [JNSUser loadUser];
+
     return YES;
 }
 							

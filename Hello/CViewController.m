@@ -8,6 +8,8 @@
 
 #import "CViewController.h"
 #import <MobileCoreServices/MobileCoreServices.h>
+#import "JNSWizardViewController.h"
+#import "JNSUser.h"
 
 @interface CViewController ()
 @property (weak, nonatomic) IBOutlet UIButton *addButton;
@@ -19,7 +21,6 @@
 @implementation CViewController
 NSMutableArray* dataArray;
 
-
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -29,6 +30,13 @@ NSMutableArray* dataArray;
     self.tableView.dataSource = self;
     
     dataArray = [NSMutableArray new];
+}
+
+- (void)viewDidAppear:(BOOL)animated {
+    if (!current_user || !current_user.partner_id) {
+        JNSWizardViewController* wizard = [[self storyboard] instantiateViewControllerWithIdentifier:@"wizard_view"];
+        [self presentViewController:wizard animated:false completion:nil];
+    }
 }
 
 - (void)didReceiveMemoryWarning
