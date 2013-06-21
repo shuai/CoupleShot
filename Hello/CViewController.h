@@ -7,7 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "JNSUser.h"
 
-@interface CViewController : UIViewController <UITableViewDelegate, UITableViewDataSource, UINavigationControllerDelegate, UIImagePickerControllerDelegate>
+@interface CViewController : UIViewController <UITableViewDelegate, UITableViewDataSource,  UINavigationControllerDelegate, UIImagePickerControllerDelegate,
+    JNSUserDelegate, JNSTimelineDelegate>
 
 @end

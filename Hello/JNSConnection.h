@@ -13,6 +13,7 @@ extern NSString* kSignInURL;
 extern NSString* kPairURL;
 extern NSString* kPairConfirmURL;
 extern NSString* kTimelineURL;
+extern NSString* kPostURL;
 
 @class JNSConnection;
 
@@ -30,14 +31,14 @@ extern NSString* kTimelineURL;
 @property NSHTTPURLResponse* response;
 @property (readonly) NSString* path;
 
--(void)initWithMethod:(BOOL)get
-                  URL:(NSString*)url_str
-                 Params:(NSString*)params
-             Delegate:(id<JNSConnectionDelegate>)delegate;
+-(id) initWithMethod:(BOOL)get
+                 URL:(NSString*)url_str
+              Params:(NSString*)params
+            Delegate:(id<JNSConnectionDelegate>)delegate;
 
 +(JNSConnection*) connectionWithMethod:(BOOL)get
-                                     URL:(NSString*)url
-                                    Params:(NSString*)params
-                                Delegate:(id<JNSConnectionDelegate>)delegate;
+                                   URL:(NSString*)url
+                                Params:(NSString*)params
+                              Delegate:(id<JNSConnectionDelegate>)delegate;
 
 @end

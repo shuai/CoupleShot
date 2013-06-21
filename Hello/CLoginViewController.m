@@ -34,6 +34,8 @@ JNSUser* user;
 
 -(void)validationComplete {
 
+    [UIApplication sharedApplication].networkActivityIndicatorVisible = false;
+    
     if (user.valid) {
         NSAssert(!current_user, @"");
         current_user = user;
@@ -58,12 +60,8 @@ JNSUser* user;
             
             //[self presentViewController:view animated:true completion:nil];
         }
-        // TODO how to delete current one?
     } else {
-        [self.userField setEnabled:true];
-        [self.pwdField setEnabled:true];
-        [self.signinButton setEnabled:true];
-        [self.signinButton setTitle:@"登录" forState:UIControlStateNormal];
+        self.view.userInteractionEnabled = true;
     }
 }
 
@@ -74,10 +72,9 @@ JNSUser* user;
         return;
     }
     
-    [self.userField setEnabled:false];
-    [self.pwdField setEnabled:false];
-    [self.signinButton setEnabled:false];
-
+    self.view.userInteractionEnabled = false;
+    [UIApplication sharedApplication].networkActivityIndicatorVisible = true;
+    
     user = [JNSUser userWithID:self.userField.text Password:self.pwdField.text Delegate:self];
 }
 

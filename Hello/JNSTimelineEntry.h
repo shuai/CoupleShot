@@ -8,6 +8,29 @@
 
 #import <Foundation/Foundation.h>
 
-@interface JNSTimelineEntry : NSObject
+@class JNSTimelineEntry;
+
+@protocol JNSTimelineEntryDelegate <NSObject>
+
+@required
+-(void)downloadComplete:(JNSTimelineEntry*)entry;
+-(void)uploadEntry:(JNSTimelineEntry*)entry Progress:(int)progress;
+@end
+
+@interface JNSTimelineEntry : NSObject<NSURLConnectionDataDelegate>
+
+//@property NSString* image_file;
+@property long timestamp;
+//@property int height;
+//@property int width;
+@property UIImage* image;
+@property id<JNSTimelineEntryDelegate> delegate;
+
+// For uploading soon
+-(JNSTimelineEntry*) initWithImage:(UIImage*)image;
+-(JNSTimelineEntry*) initWithURL:(NSString*) url Delegate:(id<JNSTimelineEntryDelegate>)delegate;
+
+-(void) downloadContent;
+-(void) upload;
 
 @end

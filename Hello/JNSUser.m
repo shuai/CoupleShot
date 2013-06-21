@@ -30,6 +30,7 @@ JNSConnection* _connection;
             _valid = true;
             [self updateJSON:json];
             _timeline = [JNSTimeline new];
+            // TODO load from cache
         } else {
             _valid = false;
         }

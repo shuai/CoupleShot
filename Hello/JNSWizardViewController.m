@@ -10,4 +10,8 @@
 
 @implementation JNSWizardViewController
 
+-(void)viewWillDisappear:(BOOL)animated {
+    
+}
+
 @end

@@ -15,10 +15,16 @@ NSString* kSignInURL = @"/signin";
 NSString* kPairURL = @"/api/pair";
 NSString* kPairConfirmURL = @"/api/pair/confirm";
 NSString* kTimelineURL = @"/api/timeline";
+NSString* kPostURL = @"/api/image";
 
 id<JNSConnectionDelegate> _delegate;
 
--(void)initWithMethod:(BOOL)get URL:(NSString*)url_str Params:(NSString*)params Delegate:(id<JNSConnectionDelegate>)delegate {
+-(id)initWithMethod:(BOOL)get URL:(NSString*)url_str Params:(NSString*)params Delegate:(id<JNSConnectionDelegate>)delegate {
+    self = [super init];
+    if (!self) {
+        return nil;
+    }
+    
     _delegate = delegate;
     _path = url_str;
     
@@ -31,6 +37,7 @@ id<JNSConnectionDelegate> _delegate;
     [request setHTTPMethod:get?@"GET":@"POST"];
 
     [NSURLConnection connectionWithRequest:request delegate:self];
+    return self;
 }
 
 - (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data {
@@ -50,10 +57,13 @@ id<JNSConnectionDelegate> _delegate;
 
 - (void)connectionDidFinishLoading:(NSURLConnection *)connection {
     NSDictionary* json = nil;
+    
+    NSLog(@"requestComplete:\n %@\n", [_response description]);
+    
     if ([[_response MIMEType] rangeOfString:@"json"].location != NSNotFound) {
         NSError* error;
         json = [NSJSONSerialization JSONObjectWithData:_data options:kNilOptions error:&error];
-        NSLog(@"requestComplete:\n %@", [json description]);        
+        NSLog(@"JSON:\n %@", [json description]);
     }
     [_delegate requestComplete:self WithJSON:json];
 }
@@ -63,8 +73,7 @@ id<JNSConnectionDelegate> _delegate;
 }
 
 +(JNSConnection*) connectionWithMethod:(BOOL)get URL:(NSString*)url_str Params:(NSString*)params Delegate:(id<JNSConnectionDelegate>)delegate {
-    JNSConnection* connection = [JNSConnection alloc];
-    [connection initWithMethod:get URL:url_str Params:params Delegate:delegate];
+    JNSConnection* connection = [[JNSConnection alloc] initWithMethod:get URL:url_str Params:params Delegate:delegate];
     return connection;
 }
 

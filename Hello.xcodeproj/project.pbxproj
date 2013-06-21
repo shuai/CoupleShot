@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		06522D2F176DAF8400D097E4 /* JNSTimelineEntry.m in Sources */ = {isa = PBXBuildFile; fileRef = 06F97E44176C661E00F58AC9 /* JNSTimelineEntry.m */; };
 		0688531A1753A3AE009A0C46 /* cell.png in Resources */ = {isa = PBXBuildFile; fileRef = 068853191753A3AE009A0C46 /* cell.png */; };
 		0688531C175748D4009A0C46 /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0688531B175748D4009A0C46 /* MobileCoreServices.framework */; };
 		06A521B6174A6B660077C0C8 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 06A521B5174A6B660077C0C8 /* UIKit.framework */; };
@@ -239,6 +240,7 @@
 				06A521C2174A6B660077C0C8 /* main.m in Sources */,
 				06A521C6174A6B660077C0C8 /* CAppDelegate.m in Sources */,
 				06A521D5174A6B660077C0C8 /* CViewController.m in Sources */,
+				06522D2F176DAF8400D097E4 /* JNSTimelineEntry.m in Sources */,
 				06ECF5BF17671E780028F7D6 /* CLoginViewController.m in Sources */,
 				06F97E48176C6E3B00F58AC9 /* JNSConnection.m in Sources */,
 				06ECF5C2176838560028F7D6 /* JNSUser.m in Sources */,
@@ -345,7 +347,8 @@
 		06A521D9174A6B660077C0C8 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "";
+				CODE_SIGN_IDENTITY = "iPhone Developer: shuai shao (N493JD3M93)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Hello/Hello-Prefix.pch";
 				INFOPLIST_FILE = "Hello/Hello-Info.plist";

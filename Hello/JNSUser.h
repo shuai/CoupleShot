@@ -12,6 +12,7 @@
 
 @protocol JNSUserDelegate
 
+@optional
 -(void)validationComplete;
 
 @end
@@ -33,6 +34,7 @@ extern JNSUser* current_user;
 +(JNSUser*)userWithID:(NSString*)user_id Password:(NSString*)password Delegate:(id)delegate;
 // load from cache
 +(JNSUser*)loadUser;
+
 
 -(void)initWithID:(NSString*)user_id Password:(NSString*)password Delegate:(id)delegate;
 -(void)pairWithUser: (NSString*) user Completion:(void (^)(NSString*))completion;
