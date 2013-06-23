@@ -8,8 +8,6 @@
 
 #import "JNSConnection.h"
 
-@implementation JNSConnection
-
 NSString* kHost = @"http://localhost";
 NSString* kSignInURL = @"/signin";
 NSString* kPairURL = @"/api/pair";
@@ -17,16 +15,20 @@ NSString* kPairConfirmURL = @"/api/pair/confirm";
 NSString* kTimelineURL = @"/api/timeline";
 NSString* kPostURL = @"/api/image";
 
-id<JNSConnectionDelegate> _delegate;
+@interface JNSConnection() {
+    NSHTTPURLResponse* _response;
+    NSMutableData* _data;
+    void (^_completion)(JNSConnection*, NSHTTPURLResponse*, NSDictionary* json, NSError*);
+}
 
--(id)initWithMethod:(BOOL)get URL:(NSString*)url_str Params:(NSString*)params Delegate:(id<JNSConnectionDelegate>)delegate {
-    self = [super init];
-    if (!self) {
-        return nil;
-    }
-    
-    _delegate = delegate;
-    _path = url_str;
+@end
+
+@implementation JNSConnection
+
+-(id) initWithMethod:(BOOL)get
+                 URL:(NSString*)url_str
+              Params:(NSString*)params
+          Completion:(void (^)(JNSConnection*, NSHTTPURLResponse*, NSDictionary*, NSError*))completion {
     
     url_str = [NSString stringWithFormat:@"%@?%@", url_str, params];
 
@@ -36,6 +38,17 @@ id<JNSConnectionDelegate> _delegate;
     NSMutableURLRequest* request = [NSMutableURLRequest requestWithURL:url];
     [request setHTTPMethod:get?@"GET":@"POST"];
 
+    return [self initWithRequest:request Completion:completion];
+}
+
+-(id) initWithRequest:(NSURLRequest*)request
+           Completion:(void (^)(JNSConnection*, NSHTTPURLResponse*, NSDictionary*, NSError*))completion {
+    self = [super init];
+    if (!self) {
+        return nil;
+    }
+
+    _completion = completion;    
     [NSURLConnection connectionWithRequest:request delegate:self];
     return self;
 }
@@ -57,24 +70,45 @@ id<JNSConnectionDelegate> _delegate;
 
 - (void)connectionDidFinishLoading:(NSURLConnection *)connection {
     NSDictionary* json = nil;
+    NSError* error;
     
     NSLog(@"requestComplete:\n %@\n", [_response description]);
-    
+
     if ([[_response MIMEType] rangeOfString:@"json"].location != NSNotFound) {
-        NSError* error;
-        json = [NSJSONSerialization JSONObjectWithData:_data options:kNilOptions error:&error];
-        NSLog(@"JSON:\n %@", [json description]);
+        if (_response.statusCode == 200) {
+            json = [NSJSONSerialization JSONObjectWithData:_data options:kNilOptions error:&error];
+            NSLog(@"JSON:\n %@", [json description]);            
+        } else {
+            NSDictionary* obj = [NSJSONSerialization JSONObjectWithData:_data options:kNilOptions error:&error];
+            error = [NSError errorWithDomain:[obj objectForKey:@"msg"]
+                                        code:_response.statusCode
+                                    userInfo:nil];
+        }
     }
-    [_delegate requestComplete:self WithJSON:json];
+    _completion(self, _response, json, error);
 }
 
 - (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error {
-    [_delegate requestComplete:self WithJSON:nil];
+    _completion(self, nil, nil, error);
 }
 
-+(JNSConnection*) connectionWithMethod:(BOOL)get URL:(NSString*)url_str Params:(NSString*)params Delegate:(id<JNSConnectionDelegate>)delegate {
-    JNSConnection* connection = [[JNSConnection alloc] initWithMethod:get URL:url_str Params:params Delegate:delegate];
++(JNSConnection*) connectionWithRequest:(NSURLRequest*)request
+                             Completion:(void (^)(JNSConnection*, NSHTTPURLResponse*, NSDictionary*, NSError*))completion {
+    return [[JNSConnection alloc] initWithRequest:request
+                                       Completion:completion];
+}
+
++(JNSConnection*) connectionWithMethod:(BOOL)get
+                                   URL:(NSString*)url
+                                Params:(NSString*)params
+                            Completion:(void (^)(JNSConnection*, NSHTTPURLResponse*, NSDictionary*, NSError*))completion {
+    JNSConnection* connection = [[JNSConnection alloc] initWithMethod:get
+                                                                  URL:url
+                                                               Params:params
+                                                           Completion:completion];
     return connection;
 }
+
+
 
 @end

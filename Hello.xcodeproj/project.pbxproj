@@ -7,8 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		062CB43F17761AF100182960 /* JNSTimeline.m in Sources */ = {isa = PBXBuildFile; fileRef = 062CB43E17761AF100182960 /* JNSTimeline.m */; };
 		06522D2F176DAF8400D097E4 /* JNSTimelineEntry.m in Sources */ = {isa = PBXBuildFile; fileRef = 06F97E44176C661E00F58AC9 /* JNSTimelineEntry.m */; };
-		0688531A1753A3AE009A0C46 /* cell.png in Resources */ = {isa = PBXBuildFile; fileRef = 068853191753A3AE009A0C46 /* cell.png */; };
+		0665C4851775CD4F00411CBF /* JNSConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = 0665C4841775CD4F00411CBF /* JNSConfig.m */; };
+		067BD3DF17759D1900AECB59 /* Model.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 067BD3DD17759D1900AECB59 /* Model.xcdatamodeld */; };
+		067BD3E11775A4ED00AECB59 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 067BD3E01775A4ED00AECB59 /* CoreData.framework */; };
 		0688531C175748D4009A0C46 /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0688531B175748D4009A0C46 /* MobileCoreServices.framework */; };
 		06A521B6174A6B660077C0C8 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 06A521B5174A6B660077C0C8 /* UIKit.framework */; };
 		06A521B8174A6B660077C0C8 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 06A521B7174A6B660077C0C8 /* Foundation.framework */; };
@@ -28,13 +31,18 @@
 		06ECF5C2176838560028F7D6 /* JNSUser.m in Sources */ = {isa = PBXBuildFile; fileRef = 06ECF5C1176838550028F7D6 /* JNSUser.m */; };
 		06ECF5C5176845FC0028F7D6 /* JNSPairViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 06ECF5C4176845FC0028F7D6 /* JNSPairViewController.m */; };
 		06ECF5C817684A190028F7D6 /* JNSPairWaitingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 06ECF5C717684A190028F7D6 /* JNSPairWaitingViewController.m */; };
-		06F97E47176C6E3000F58AC9 /* JNSTimeline.m in Sources */ = {isa = PBXBuildFile; fileRef = 06F97E42176C660500F58AC9 /* JNSTimeline.m */; };
 		06F97E48176C6E3B00F58AC9 /* JNSConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = 06F97E46176C681300F58AC9 /* JNSConnection.m */; };
 		06F97E4B176C8BC700F58AC9 /* JNSWizardViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 06F97E4A176C8BC700F58AC9 /* JNSWizardViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		068853191753A3AE009A0C46 /* cell.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = cell.png; sourceTree = "<group>"; };
+		062CB43D17761AF100182960 /* JNSTimeline.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JNSTimeline.h; sourceTree = "<group>"; };
+		062CB43E17761AF100182960 /* JNSTimeline.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JNSTimeline.m; sourceTree = "<group>"; };
+		062CB440177621B100182960 /* JNSTimelineEntry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JNSTimelineEntry.h; sourceTree = "<group>"; };
+		0665C4831775CD4F00411CBF /* JNSConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JNSConfig.h; path = ../JNSConfig.h; sourceTree = "<group>"; };
+		0665C4841775CD4F00411CBF /* JNSConfig.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = JNSConfig.m; path = ../JNSConfig.m; sourceTree = "<group>"; };
+		067BD3DE17759D1900AECB59 /* Model.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Model.xcdatamodel; sourceTree = "<group>"; };
+		067BD3E01775A4ED00AECB59 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		0688531B175748D4009A0C46 /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
 		06A521B2174A6B660077C0C8 /* Hello.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Hello.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		06A521B5174A6B660077C0C8 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
@@ -65,9 +73,6 @@
 		06ECF5C4176845FC0028F7D6 /* JNSPairViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JNSPairViewController.m; sourceTree = "<group>"; };
 		06ECF5C617684A190028F7D6 /* JNSPairWaitingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JNSPairWaitingViewController.h; sourceTree = "<group>"; };
 		06ECF5C717684A190028F7D6 /* JNSPairWaitingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JNSPairWaitingViewController.m; sourceTree = "<group>"; };
-		06F97E41176C660500F58AC9 /* JNSTimeline.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = JNSTimeline.h; sourceTree = "<group>"; };
-		06F97E42176C660500F58AC9 /* JNSTimeline.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = JNSTimeline.m; sourceTree = "<group>"; };
-		06F97E43176C661E00F58AC9 /* JNSTimelineEntry.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = JNSTimelineEntry.h; sourceTree = "<group>"; };
 		06F97E44176C661E00F58AC9 /* JNSTimelineEntry.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = JNSTimelineEntry.m; sourceTree = "<group>"; };
 		06F97E45176C681300F58AC9 /* JNSConnection.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = JNSConnection.h; sourceTree = "<group>"; };
 		06F97E46176C681300F58AC9 /* JNSConnection.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = JNSConnection.m; sourceTree = "<group>"; };
@@ -80,6 +85,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				067BD3E11775A4ED00AECB59 /* CoreData.framework in Frameworks */,
 				0688531C175748D4009A0C46 /* MobileCoreServices.framework in Frameworks */,
 				06A521B6174A6B660077C0C8 /* UIKit.framework in Frameworks */,
 				06A521B8174A6B660077C0C8 /* Foundation.framework in Frameworks */,
@@ -93,7 +99,6 @@
 		06A521A9174A6B660077C0C8 = {
 			isa = PBXGroup;
 			children = (
-				0688531B175748D4009A0C46 /* MobileCoreServices.framework */,
 				06A521BB174A6B660077C0C8 /* Hello */,
 				06A521B4174A6B660077C0C8 /* Frameworks */,
 				06A521B3174A6B660077C0C8 /* Products */,
@@ -111,6 +116,8 @@
 		06A521B4174A6B660077C0C8 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				067BD3E01775A4ED00AECB59 /* CoreData.framework */,
+				0688531B175748D4009A0C46 /* MobileCoreServices.framework */,
 				06A521B5174A6B660077C0C8 /* UIKit.framework */,
 				06A521B7174A6B660077C0C8 /* Foundation.framework */,
 				06A521B9174A6B660077C0C8 /* CoreGraphics.framework */,
@@ -141,13 +148,16 @@
 				06DAA6221768BEC7005C334A /* JNSPairConfirmViewController.m */,
 				06DAA6241768CF3E005C334A /* JNSBaseViewController.h */,
 				06DAA6251768CF3E005C334A /* JNSBaseViewController.m */,
-				06F97E41176C660500F58AC9 /* JNSTimeline.h */,
-				06F97E42176C660500F58AC9 /* JNSTimeline.m */,
-				06F97E43176C661E00F58AC9 /* JNSTimelineEntry.h */,
+				062CB43D17761AF100182960 /* JNSTimeline.h */,
+				062CB43E17761AF100182960 /* JNSTimeline.m */,
+				062CB440177621B100182960 /* JNSTimelineEntry.h */,
 				06F97E44176C661E00F58AC9 /* JNSTimelineEntry.m */,
 				06F97E45176C681300F58AC9 /* JNSConnection.h */,
 				06F97E46176C681300F58AC9 /* JNSConnection.m */,
+				0665C4831775CD4F00411CBF /* JNSConfig.h */,
+				0665C4841775CD4F00411CBF /* JNSConfig.m */,
 				06A521BC174A6B660077C0C8 /* Supporting Files */,
+				067BD3DD17759D1900AECB59 /* Model.xcdatamodeld */,
 			);
 			path = Hello;
 			sourceTree = "<group>";
@@ -155,7 +165,6 @@
 		06A521BC174A6B660077C0C8 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				068853191753A3AE009A0C46 /* cell.png */,
 				06A521BD174A6B660077C0C8 /* Hello-Info.plist */,
 				06A521BE174A6B660077C0C8 /* InfoPlist.strings */,
 				06A521C1174A6B660077C0C8 /* main.m */,
@@ -225,7 +234,6 @@
 				06A521CC174A6B660077C0C8 /* Default-568h@2x.png in Resources */,
 				06A521CF174A6B660077C0C8 /* MainStoryboard_iPhone.storyboard in Resources */,
 				06A521D2174A6B660077C0C8 /* MainStoryboard_iPad.storyboard in Resources */,
-				0688531A1753A3AE009A0C46 /* cell.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -236,9 +244,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				06F97E47176C6E3000F58AC9 /* JNSTimeline.m in Sources */,
 				06A521C2174A6B660077C0C8 /* main.m in Sources */,
 				06A521C6174A6B660077C0C8 /* CAppDelegate.m in Sources */,
+				067BD3DF17759D1900AECB59 /* Model.xcdatamodeld in Sources */,
 				06A521D5174A6B660077C0C8 /* CViewController.m in Sources */,
 				06522D2F176DAF8400D097E4 /* JNSTimelineEntry.m in Sources */,
 				06ECF5BF17671E780028F7D6 /* CLoginViewController.m in Sources */,
@@ -246,9 +254,11 @@
 				06ECF5C2176838560028F7D6 /* JNSUser.m in Sources */,
 				06ECF5C5176845FC0028F7D6 /* JNSPairViewController.m in Sources */,
 				06ECF5C817684A190028F7D6 /* JNSPairWaitingViewController.m in Sources */,
+				062CB43F17761AF100182960 /* JNSTimeline.m in Sources */,
 				06DAA6231768BEC7005C334A /* JNSPairConfirmViewController.m in Sources */,
 				06DAA6261768CF3E005C334A /* JNSBaseViewController.m in Sources */,
 				06F97E4B176C8BC700F58AC9 /* JNSWizardViewController.m in Sources */,
+				0665C4851775CD4F00411CBF /* JNSConfig.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -394,6 +404,19 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		067BD3DD17759D1900AECB59 /* Model.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				067BD3DE17759D1900AECB59 /* Model.xcdatamodel */,
+			);
+			currentVersion = 067BD3DE17759D1900AECB59 /* Model.xcdatamodel */;
+			path = Model.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
 	};
 	rootObject = 06A521AA174A6B660077C0C8 /* Project object */;
 }

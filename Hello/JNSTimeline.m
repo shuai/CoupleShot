@@ -2,90 +2,82 @@
 //  JNSTimeline.m
 //  Hello
 //
-//  Created by Shuai on 6/15/13.
+//  Created by Shuai on 6/23/13.
 //  Copyright (c) 2013 joy. All rights reserved.
 //
 
 #import "JNSTimeline.h"
+#import "JNSTimelineEntry.h"
 #import "JNSConnection.h"
+
+@interface JNSTimeline() {
+    JNSConnection* _connection;
+}
+@end
+
 
 @implementation JNSTimeline
 
-- (id)init {
-    self = [super init];
-    if (self) {
-        _array = [NSMutableArray new];
-    }
-    return self;
+@dynamic entries;
+
++(id)timelineWithContext:(NSManagedObjectContext*)context {
+    NSEntityDescription *entity = [NSEntityDescription entityForName:@"JNSTimeline"
+                                              inManagedObjectContext:context];
+    
+    JNSTimeline* timeline = [[JNSTimeline alloc] initWithEntity:entity
+                                 insertIntoManagedObjectContext:context];
+    return timeline;
 }
 
--(void) loadLatest {
+-(void) addEntryWithImage:(UIImage*)image {
+    JNSTimelineEntry* entry = [JNSTimelineEntry entryWithImage:image
+                                                       Context:[self managedObjectContext]];
+    [self addEntriesObject:entry];
+    // TODO completion
+}
+
+-(void)loadLatestCompletion:(void(^)(unsigned add, NSError* error))completion {
     if (_connection) {
         NSLog(@"[JNSTimeline loadLatest] already loading");
         return;
     }
-    
+
+    // TODO read the latest timestamp    
     long timestamp = 0;
-    if ([_array count]) {
-        timestamp = ((JNSTimelineEntry*)[_array lastObject]).timestamp;
+    if ([self.entries count]) {
+        timestamp = [((JNSTimelineEntry*)[self.entries lastObject]).timestamp timeIntervalSince1970];
     }
     
-    // TODO read the latest timestamp
     NSString* params = [NSString stringWithFormat:@"timestamp=%ld", timestamp];
-    _connection = [JNSConnection connectionWithMethod:true URL:kTimelineURL Params:params Delegate:self];
+    _connection = [JNSConnection connectionWithMethod:true
+                                                  URL:kTimelineURL
+                                               Params:params
+                                           Completion:^(JNSConnection* connection, NSHTTPURLResponse *response, NSDictionary *json, NSError *error)
+   {
+       if (response.statusCode == 200 && json && error == nil) {
+           NSArray* data = [json objectForKey:@"data"];
+           for (NSString* str in data) {
+               NSError* error;
+               NSDictionary* obj = [NSJSONSerialization JSONObjectWithData:
+                                    [str dataUsingEncoding:NSUTF8StringEncoding]
+                                                                   options:kNilOptions
+                                                                     error:&error];
+               JNSTimelineEntry* entry = [JNSTimelineEntry entryWithJSON:obj
+                                                                 Context:self.managedObjectContext];
+               [self addEntriesObject:entry];
+           }
+           completion([data count], nil);
+       } else {
+           if (!error) {
+               if (json) {
+                   error = [NSError errorWithDomain:[json objectForKey:@"msg"] code:0 userInfo:nil];
+               } else {
+                   // TODO
+               }
+           }
+           completion(0, error);
+       }
+   }];
 }
-
--(int)count {
-    return [self.array count];
-}
-
--(void)addEntry:(JNSTimelineEntry*)entry {
-    [self.array addObject:entry];
-    entry.delegate = self;
-    [entry upload];
-}
-
-
-// delegates
-
--(void)requestComplete:(JNSConnection*)connection WithJSON:(NSDictionary*)json {
-    // assume appending
-    if (connection.response.statusCode == 200) {
-        NSArray* data = [json objectForKey:@"data"];
-        for (NSString* str in data) {
-            NSError* error;
-            NSDictionary* obj = [NSJSONSerialization JSONObjectWithData:[str dataUsingEncoding:NSUTF8StringEncoding]
-                                                                options:kNilOptions
-                                                                  error:&error];
-            JNSTimelineEntry* entry = [[JNSTimelineEntry alloc] initWithURL:[obj objectForKey:@"url"]
-                                                                   Delegate:self];
-            
-//            entry.width = [[obj objectForKey:@"width"] intValue];
-//            entry.height = [[obj objectForKey:@"height"] intValue];
-            entry.timestamp = [[obj objectForKey:@"time"] intValue];
-            
-            [entry downloadContent];
-            [_array addObject:entry];
-        }
-        [_delegate pullComplte:[data count] WithError:nil];
-    } else {
-        NSString* err = [json objectForKey:@"msg"];
-        [_delegate pullComplte:0 WithError:err];
-    }
-}
-
-// JNSTimelineEntryDelegate
-
--(void)downloadComplete:(JNSTimelineEntry*)entry {
-    int index = [_array indexOfObject:entry];
-    NSAssert(index != NSNotFound, @"");
-    // TODO error msg?
-    [_delegate entryWithIndex:index LoadedWithError:nil];
-}
-
--(void)uploadEntry:(JNSTimelineEntry*)entry Progress:(int)progress {
-    
-}
-
 
 @end

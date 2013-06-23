@@ -2,35 +2,30 @@
 //  JNSTimelineEntry.h
 //  Hello
 //
-//  Created by Shuai on 6/15/13.
+//  Created by Shuai on 6/23/13.
 //  Copyright (c) 2013 joy. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
+#import <CoreData/CoreData.h>
 
-@class JNSTimelineEntry;
 
-@protocol JNSTimelineEntryDelegate <NSObject>
+@interface JNSTimelineEntry : NSManagedObject<NSURLConnectionDataDelegate>
 
-@required
--(void)downloadComplete:(JNSTimelineEntry*)entry;
--(void)uploadEntry:(JNSTimelineEntry*)entry Progress:(int)progress;
-@end
-
-@interface JNSTimelineEntry : NSObject<NSURLConnectionDataDelegate>
-
-//@property NSString* image_file;
-@property long timestamp;
-//@property int height;
-//@property int width;
 @property UIImage* image;
-@property id<JNSTimelineEntryDelegate> delegate;
+@property (readonly) bool downloading;
 
-// For uploading soon
--(JNSTimelineEntry*) initWithImage:(UIImage*)image;
--(JNSTimelineEntry*) initWithURL:(NSString*) url Delegate:(id<JNSTimelineEntryDelegate>)delegate;
+// Core Data
+@property (nonatomic, retain) NSDate * timestamp;
+@property (nonatomic, retain) NSNumber * width;
+@property (nonatomic, retain) NSNumber * height;
+@property (nonatomic, retain) NSString * image_url;
 
--(void) downloadContent;
+
++(JNSTimelineEntry*)entryWithImage:(UIImage*)image Context:(NSManagedObjectContext*)context;
++(JNSTimelineEntry*)entryWithJSON:(NSDictionary*)json Context:(NSManagedObjectContext*)context;
+
+-(void) downloadContentCompletion:(void(^)(JNSTimelineEntry*, NSString* error))completion;
 -(void) upload;
 
 @end

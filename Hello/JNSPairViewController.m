@@ -34,9 +34,10 @@
         [self.button setHidden:true];
         [self.indicator setHidden:false];
         [self.indicator startAnimating];
-        
+
+        JNSUser* current_user = [JNSUser activeUser];
         [current_user pairWithUser:self.userField.text Completion:^(NSString* msg){
-            if (current_user.partner_id) {
+            if (current_user.partner) {
                 CViewController* main = [self.storyboard instantiateViewControllerWithIdentifier:@"main_view"];
                 [self presentViewController:main animated:true completion:nil];
             } else if (current_user.request) {

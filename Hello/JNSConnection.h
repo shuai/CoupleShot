@@ -15,30 +15,19 @@ extern NSString* kPairConfirmURL;
 extern NSString* kTimelineURL;
 extern NSString* kPostURL;
 
-@class JNSConnection;
-
-@protocol JNSConnectionDelegate
-
-@optional
--(void)requestComplete:(JNSConnection*)connection WithJSON:(NSDictionary*)json;
-
-@end
-
 
 @interface JNSConnection : NSObject<NSURLConnectionDataDelegate>
-
-@property NSMutableData* data;
-@property NSHTTPURLResponse* response;
-@property (readonly) NSString* path;
 
 -(id) initWithMethod:(BOOL)get
                  URL:(NSString*)url_str
               Params:(NSString*)params
-            Delegate:(id<JNSConnectionDelegate>)delegate;
+          Completion:(void (^)(JNSConnection*, NSHTTPURLResponse*, NSDictionary*, NSError*))completion;
 
++(JNSConnection*) connectionWithRequest:(NSURLRequest*)request
+                             Completion:(void (^)(JNSConnection*, NSHTTPURLResponse*, NSDictionary*, NSError*))completion;
 +(JNSConnection*) connectionWithMethod:(BOOL)get
                                    URL:(NSString*)url
                                 Params:(NSString*)params
-                              Delegate:(id<JNSConnectionDelegate>)delegate;
+                            Completion:(void (^)(JNSConnection*, NSHTTPURLResponse*, NSDictionary*, NSError*))completion;
 
 @end

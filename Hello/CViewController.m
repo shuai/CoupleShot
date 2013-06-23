@@ -13,9 +13,7 @@
 
 const int kContentMargin = 5;
 
-
-@interface CViewController () {
-}
+@interface CViewController ()
 @property (weak, nonatomic) IBOutlet UIButton *addButton;
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 
@@ -25,26 +23,6 @@ const int kContentMargin = 5;
 @implementation CViewController
 
 JNSUser* _user;
-
-// JNSTimelineDelegate
--(void) loadFromCacheComplte {
-    
-}
-
--(void) pullComplte:(int)count WithError:(NSString *)error {
-    if (error) {
-        UIAlertView* view = [[UIAlertView alloc] initWithTitle:@"加载错误" message:error delegate:nil cancelButtonTitle:@"确定" otherButtonTitles:nil];
-        [view show];
-    } else {
-        NSMutableArray* array = [NSMutableArray new];
-        for (int i=0; i<count; i++) {
-            [array addObject:[NSIndexPath indexPathForRow: [current_user.timeline count]-i-1 inSection:0]];
-        }
-        
-        [self.tableView insertRowsAtIndexPaths:array
-                              withRowAnimation:UITableViewRowAnimationFade];
-    }
-}
 
 -(void) entryWithIndex:(int)index LoadedWithError:(NSString*)err {
     NSLog(@"reloadRowsAtIndexPaths %d", index);
@@ -56,7 +34,6 @@ JNSUser* _user;
 
 // user
 
-
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -67,14 +44,38 @@ JNSUser* _user;
 }
 
 - (void)viewDidAppear:(BOOL)animated {
-    if (!current_user || !current_user.partner_id) {
+    JNSUser* current_user = [JNSUser activeUser];
+    if (!current_user || !current_user.partner) {
         JNSWizardViewController* wizard = [[self storyboard] instantiateViewControllerWithIdentifier:@"wizard_view"];
         [self presentViewController:wizard animated:false completion:nil];
     } else if (!_user) {
         _user = current_user;
         _user.delegate = self;
-        _user.timeline.delegate = self;
-        [_user.timeline loadLatest];
+        
+        [_user.timeline loadLatestCompletion:^(unsigned int count, NSError *error) {
+            if (error) {
+                UIAlertView* view = [[UIAlertView alloc] initWithTitle:@"加载错误"
+                                                               message:[error description]
+                                                              delegate:nil
+                                                     cancelButtonTitle:@"确定"
+                                                     otherButtonTitles:nil];
+                [view show];
+            } else {
+                NSMutableArray* array = [NSMutableArray new];
+                for (int i=0; i<count; i++) {
+                    [array addObject:
+                     [NSIndexPath indexPathForRow: i
+                                        inSection:0]];
+                }
+                
+                [self.tableView insertRowsAtIndexPaths:array
+                                      withRowAnimation:UITableViewRowAnimationFade];
+                [_tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:[array count]-1 inSection:0]
+                                  atScrollPosition:UITableViewScrollPositionNone
+                                          animated:true];
+                
+            }
+        }];
     }
 }
 
@@ -101,53 +102,73 @@ JNSUser* _user;
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     NSAssert(section == 0, @"");
     //NSLog(@"Number of rows in section %d: %d", section, [current_user.timeline count]);
-    return [current_user.timeline count];
+    return [[JNSUser activeUser].timeline.entries count];
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    JNSTimelineEntry* entry = _user.timeline.array[indexPath.row];
-    int height = 0;
-    
-    if (entry.image) {
-        int width = 320-kContentMargin*2;
-        height = entry.image.size.height*width/entry.image.size.width + kContentMargin - 2; // border
-    }
-    //NSLog(@"heightForRowAtIndexPath %d: %d", indexPath.row, height);
-    
-    return height;
+    JNSTimelineEntry* entry = _user.timeline.entries[indexPath.row];
+    return [self heightForEntry:entry];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    JNSTimelineEntry* entry = _user.timeline.array[indexPath.row];
+    JNSTimelineEntry* entry = _user.timeline.entries[indexPath.row];
     
     UITableViewCell *cell = [UITableViewCell new];
+    cell.frame = CGRectMake(0, 0, 320, [self heightForEntry:entry]);
     
     if (entry.image) {
-        UIImageView* image_view = [[UIImageView alloc] initWithImage:entry.image];
-        
-        int width = 320-kContentMargin*2;
-        int height = entry.image.size.height*width/entry.image.size.width;
-        
-        image_view.frame = CGRectMake(kContentMargin, kContentMargin, width, height);
-        [[cell contentView] addSubview:image_view];
-        
-        // slow
-        CALayer* layer = image_view.layer;
-        layer.cornerRadius = 5;
-        layer.borderColor = [[UIColor whiteColor] CGColor];
-        layer.borderWidth = 1;
-        layer.masksToBounds = true;
-        
-        //        layer.shadowColor = [UIColor blackColor].CGColor;
-        //        layer.shadowOpacity = 0.5;
-        //        layer.shadowRadius = 10;
-        //        layer.shadowOffset = CGSizeMake(3, 3);
-    } else {
-        // TODO
+        [[cell contentView] addSubview:[self createViewForEntry:entry]];
+    } else if (!entry.downloading) {
+        UIProgressView* progress = [[UIProgressView alloc] initWithProgressViewStyle:UIProgressViewStyleDefault];
+        int y = (cell.frame.size.height - progress.intrinsicContentSize.height)/2;
+        progress.frame = CGRectMake(10, y, 300, progress.intrinsicContentSize.height);
+        progress.progress = 0.3;
+
+        UIView* content = [cell contentView];
+        [content addSubview:progress];
+        [entry downloadContentCompletion:^(JNSTimelineEntry *entry, NSString *error) {
+            [progress removeFromSuperview];
+            [content addSubview:[self createViewForEntry:entry]];
+        }];
     }
     
-    
     return cell;
+}
+
+-(UIView*) createViewForEntry:(JNSTimelineEntry*)entry {
+    UIImageView* image_view = [[UIImageView alloc] initWithImage:entry.image];
+    
+    int width = 320-kContentMargin*2;
+    int height = entry.image.size.height*width/entry.image.size.width;
+    
+    image_view.frame = CGRectMake(kContentMargin, kContentMargin, width, height);
+    
+    // slow
+    CALayer* layer = image_view.layer;
+    layer.cornerRadius = 5;
+    layer.borderColor = [[UIColor colorWithWhite:0.5 alpha:0.2] CGColor];
+    layer.borderWidth = 1;
+    layer.masksToBounds = true;
+    
+    //        layer.shadowColor = [UIColor blackColor].CGColor;
+    //        layer.shadowOpacity = 0.5;
+    //        layer.shadowRadius = 10;
+    //        layer.shadowOffset = CGSizeMake(3, 3);
+    return image_view;
+}
+
+-(int) heightForEntry:(JNSTimelineEntry*)entry {
+    int height = 0;
+    
+    if ([entry.width intValue] != 0) {
+        int width = 320-kContentMargin*2;
+        height = [entry.height intValue]*width/[entry.width intValue] + kContentMargin - 2; // border
+    } else {
+        // TODO arbitraty default height
+        height = 240;
+    }
+    
+    return height;
 }
 
 
@@ -167,26 +188,23 @@ JNSUser* _user;
         if (image == nil)
             image = [info objectForKey: UIImagePickerControllerOriginalImage];
         
-        JNSTimelineEntry* entry = [[JNSTimelineEntry alloc] initWithImage:image];
-        [current_user.timeline addEntry:entry];
+        [[JNSUser activeUser].timeline addEntryWithImage:image];
         
         [self.tableView insertRowsAtIndexPaths:
          [NSArray arrayWithObject:
-          [NSIndexPath indexPathForRow: [current_user.timeline count]-1
+          [NSIndexPath indexPathForRow: [[JNSUser activeUser].timeline.entries count]-1
                              inSection:0]]
                               withRowAnimation:UITableViewRowAnimationFade];
         
     }
     
     [self dismissViewControllerAnimated:YES completion:nil];
-    [_tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:[current_user.timeline count]-1 inSection:0]
+    
+    // scroll to bottom
+    [_tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:[[JNSUser activeUser].timeline.entries count]-1
+                                                          inSection:0]
                       atScrollPosition:UITableViewScrollPositionNone
                               animated:true];
-    
-//    [_tableView scrollToRowAtIndexPath:
-//        [NSIndexPath indexPathForRow:[current_user.timeline count]-1 inSection:0]]
-//                    atScrollPosition:
-//            animated:true];
 }
 
 @end

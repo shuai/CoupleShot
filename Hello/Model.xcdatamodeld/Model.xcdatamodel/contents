@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="3381.3" systemVersion="12E55" minimumToolsVersion="Xcode 4.3" macOSVersion="Automatic" iOSVersion="Automatic">
+    <entity name="JNSConfig" representedClassName="JNSConfig" syncable="YES">
+        <relationship name="cachedUser" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="JNSUser" syncable="YES"/>
+    </entity>
+    <entity name="JNSTimeline" representedClassName="JNSTimeline" syncable="YES">
+        <relationship name="entries" optional="YES" toMany="YES" deletionRule="Nullify" ordered="YES" destinationEntity="JNSTimelineEntry" syncable="YES"/>
+    </entity>
+    <entity name="JNSTimelineEntry" representedClassName="JNSTimelineEntry" syncable="YES">
+        <attribute name="height" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
+        <attribute name="image_url" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="timestamp" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="width" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
+    </entity>
+    <entity name="JNSUser" representedClassName="JNSUser" syncable="YES">
+        <attribute name="email" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="incoming" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="partner" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="request" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="timeline" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="JNSTimeline" syncable="YES"/>
+    </entity>
+    <fetchRequest name="Users" entity="JNSUser"/>
+    <elements>
+        <element name="JNSConfig" positionX="0" positionY="0" width="0" height="0"/>
+        <element name="JNSTimeline" positionX="0" positionY="0" width="0" height="0"/>
+        <element name="JNSTimelineEntry" positionX="0" positionY="0" width="0" height="0"/>
+        <element name="JNSUser" positionX="0" positionY="0" width="0" height="0"/>
+    </elements>
+</model>

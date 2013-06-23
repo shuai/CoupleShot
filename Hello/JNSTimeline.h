@@ -2,30 +2,36 @@
 //  JNSTimeline.h
 //  Hello
 //
-//  Created by Shuai on 6/15/13.
+//  Created by Shuai on 6/23/13.
 //  Copyright (c) 2013 joy. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
-#import "JNSConnection.h"
+#import <CoreData/CoreData.h>
 #import "JNSTimelineEntry.h"
 
-@protocol JNSTimelineDelegate <NSObject>
+@interface JNSTimeline : NSManagedObject
 
--(void) loadFromCacheComplte;
--(void) pullComplte:(int)count WithError:(NSString*)error;
--(void) entryWithIndex:(int)index LoadedWithError:(NSString*)err;
--(void) entryWithIndex:(int)index UploadProgress:(int)progress WithError:(NSString*)err;
+// TODO sort by timestamp
+@property (nonatomic, retain) NSOrderedSet *entries;
+
++(id)timelineWithContext:(NSManagedObjectContext*)context;
+
+-(void) addEntryWithImage:(UIImage*)image;
+-(void)loadLatestCompletion:(void(^)(unsigned add, NSError* error))completion;
+
 @end
 
-@interface JNSTimeline : NSObject<JNSConnectionDelegate, JNSTimelineEntryDelegate>
+@interface JNSTimeline (CoreDataGeneratedAccessors)
 
-@property NSMutableArray* array;
-@property JNSConnection* connection;
-@property id<JNSTimelineDelegate> delegate;
-
--(int)count;
--(void)loadLatest;
--(void)addEntry:(JNSTimelineEntry*)entry;
-
+- (void)insertObject:(JNSTimelineEntry *)value inEntriesAtIndex:(NSUInteger)idx;
+- (void)removeObjectFromEntriesAtIndex:(NSUInteger)idx;
+- (void)insertEntries:(NSArray *)value atIndexes:(NSIndexSet *)indexes;
+- (void)removeEntriesAtIndexes:(NSIndexSet *)indexes;
+- (void)replaceObjectInEntriesAtIndex:(NSUInteger)idx withObject:(JNSTimelineEntry *)value;
+- (void)replaceEntriesAtIndexes:(NSIndexSet *)indexes withEntries:(NSArray *)values;
+- (void)addEntriesObject:(JNSTimelineEntry *)value;
+- (void)removeEntriesObject:(JNSTimelineEntry *)value;
+- (void)addEntries:(NSOrderedSet *)values;
+- (void)removeEntries:(NSOrderedSet *)values;
 @end

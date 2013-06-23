@@ -7,36 +7,32 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <CoreData/CoreData.h>
 #import "JNSTimeline.h"
 #import "JNSConnection.h"
 
 @protocol JNSUserDelegate
-
 @optional
 -(void)validationComplete;
-
 @end
 
-@class JNSUser;
-extern JNSUser* current_user;
 
-@interface JNSUser : NSObject<JNSConnectionDelegate>
+@interface JNSUser : NSManagedObject
 
 @property (weak) id<JNSUserDelegate> delegate;
 @property (readonly) bool valid;
-@property (readonly) NSString* partner_id;
-@property (readonly) NSString* user_id;
-@property (readonly) NSString* request;
-@property (readonly) bool incoming;
+
+// Core Data
+@property NSString* partner;
+@property NSString* email;
+@property NSString* request;
+@property bool incoming;
 @property JNSTimeline* timeline;
 
-// load from network
-+(JNSUser*)userWithID:(NSString*)user_id Password:(NSString*)password Delegate:(id)delegate;
-// load from cache
-+(JNSUser*)loadUser;
+// to load from network
++(JNSUser*)userWithID:(NSString*)email JSON:(NSDictionary*)json Context:(NSManagedObjectContext*)context;
++(JNSUser*)activeUser;
 
-
--(void)initWithID:(NSString*)user_id Password:(NSString*)password Delegate:(id)delegate;
 -(void)pairWithUser: (NSString*) user Completion:(void (^)(NSString*))completion;
 -(void)confirmRequest:(bool)confirm Completion:(void (^)(NSString*))completion;
 

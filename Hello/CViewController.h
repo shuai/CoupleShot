@@ -10,6 +10,6 @@
 #import "JNSUser.h"
 
 @interface CViewController : UIViewController <UITableViewDelegate, UITableViewDataSource,  UINavigationControllerDelegate, UIImagePickerControllerDelegate,
-    JNSUserDelegate, JNSTimelineDelegate>
+    JNSUserDelegate>
 
 @end

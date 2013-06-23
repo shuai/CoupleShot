@@ -11,8 +11,12 @@
 #import "JNSPairViewController.h"
 #import "JNSPairWaitingViewController.h"
 #import "JNSPairConfirmViewController.h"
+#import "JNSConfig.h"
+#import "JNSConnection.h"
 
-@interface CLoginViewController ()
+@interface CLoginViewController () {
+    JNSConnection* _connection;
+}
 @property (weak, nonatomic) IBOutlet UITextField *userField;
 @property (weak, nonatomic) IBOutlet UITextField *pwdField;
 @property (weak, nonatomic) IBOutlet UIButton *signinButton;
@@ -21,26 +25,30 @@
 
 @implementation CLoginViewController
 
-JNSUser* user;
-
 -(void)viewDidLoad {
+    [super viewDidLoad];
     self.navigationItem.hidesBackButton = true;
 }
 
 -(void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
     UINavigationController* container = (UINavigationController*)self.parentViewController;
     container.navigationBarHidden = true;
 }
 
--(void)validationComplete {
-
+-(void)validationCompleteWithConnection:(JNSConnection*)connection
+                               Response:(NSHTTPURLResponse*)response
+                                   JSON:(NSDictionary*)json
+                                  Error:(NSError*)error {
     [UIApplication sharedApplication].networkActivityIndicatorVisible = false;
     
-    if (user.valid) {
-        NSAssert(!current_user, @"");
-        current_user = user;
+    if (json) {
+        JNSUser* user = [JNSUser userWithID:self.userField.text
+                                       JSON:json
+                                     Context:[JNSConfig config].managedObjectContext];
+        [[JNSConfig config] setCachedUser:user];
 
-        if (user.partner_id) {
+        if (user.partner) {
             [self dismissViewControllerAnimated:true completion:nil];
         } else if (user.request) {
             if (user.incoming) {
@@ -61,6 +69,12 @@ JNSUser* user;
             //[self presentViewController:view animated:true completion:nil];
         }
     } else {
+        UIAlertView* view = [[UIAlertView alloc] initWithTitle:@"登录失败"
+                                                       message:[error localizedDescription]
+                                                      delegate:nil
+                                             cancelButtonTitle:@"取消"
+                                             otherButtonTitles:nil];
+        [view show];
         self.view.userInteractionEnabled = true;
     }
 }
@@ -75,7 +89,17 @@ JNSUser* user;
     self.view.userInteractionEnabled = false;
     [UIApplication sharedApplication].networkActivityIndicatorVisible = true;
     
-    user = [JNSUser userWithID:self.userField.text Password:self.pwdField.text Delegate:self];
+    NSString* body = [NSString stringWithFormat:@"user=%@&pwd=%@", self.userField.text, self.pwdField.text];
+    _connection = [JNSConnection connectionWithMethod:false
+                                                  URL:kSignInURL
+                                               Params:body
+                                           Completion:^(JNSConnection* connection, NSHTTPURLResponse *response, NSDictionary *json, NSError *error)
+   {
+       [self validationCompleteWithConnection:connection
+                                     Response:response
+                                         JSON:json
+                                        Error:error];
+   }];
 }
 
 
