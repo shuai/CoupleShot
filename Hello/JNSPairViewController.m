@@ -23,6 +23,8 @@
 - (void)viewDidLoad {
     [self.indicator setHidden:true];
     self.navigationItem.title = @"找到Ta";
+
+    [self alertRequest];    
 }
 
 -(void)viewWillAppear:(BOOL)animated {
@@ -36,17 +38,17 @@
         [self.indicator startAnimating];
 
         JNSUser* current_user = [JNSUser activeUser];
+        
         [current_user pairWithUser:self.userField.text Completion:^(NSString* msg){
             if (current_user.partner) {
-                CViewController* main = [self.storyboard instantiateViewControllerWithIdentifier:@"main_view"];
-                [self presentViewController:main animated:true completion:nil];
+                [self.parentViewController dismissViewControllerAnimated:YES completion:nil];
             } else if (current_user.request) {
                 if (current_user.incoming) {
-                    
+                    [self alertRequest];
                 } else {
                     JNSPairWaitingViewController* view = [self.storyboard instantiateViewControllerWithIdentifier:@"pair_waiting_view"];
                     
-                    [self presentViewController:view animated:true completion:nil];
+                    [self.navigationController pushViewController:view animated:YES];
                 }
             } else {
                 [self.errorLabel setText:msg];
@@ -55,6 +57,30 @@
             }
         }];
     }
+}
+
+- (void)alertRequest {
+    JNSUser* current_user = [JNSUser activeUser];
+
+    if (current_user.request && current_user.incoming) {
+        UIAlertView* view = [[UIAlertView alloc] initWithTitle:@"通知"
+                                                       message:[NSString stringWithFormat:@"%@ 请求和您分享", current_user.request]
+                                                      delegate:self
+                                             cancelButtonTitle:@"取消"
+                                             otherButtonTitles:@"接受请求", nil];
+        [view show];
+    }
+}
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
+    bool accept = buttonIndex == 1;
+    [[JNSUser activeUser] confirmRequest:accept Completion:^(NSString* msg) {
+        if (msg) {
+            //
+        } else {
+            [self.navigationController dismissViewControllerAnimated:YES completion:nil];
+        }
+    }];
 }
 
 @end

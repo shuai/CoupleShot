@@ -9,11 +9,11 @@
 #import <Foundation/Foundation.h>
 #import <CoreData/CoreData.h>
 
-
 @interface JNSTimelineEntry : NSManagedObject<NSURLConnectionDataDelegate>
 
 @property UIImage* image;
 @property (readonly) bool downloading;
+@property (readonly) bool uploading;
 
 // Core Data
 @property (nonatomic, retain) NSDate * timestamp;
@@ -25,7 +25,12 @@
 +(JNSTimelineEntry*)entryWithImage:(UIImage*)image Context:(NSManagedObjectContext*)context;
 +(JNSTimelineEntry*)entryWithJSON:(NSDictionary*)json Context:(NSManagedObjectContext*)context;
 
+
+// overrides
+- (void)awakeFromFetch;
+
 -(void) downloadContentCompletion:(void(^)(JNSTimelineEntry*, NSString* error))completion;
 -(void) upload;
+- (void)trackUploadProgress:(void(^)(unsigned, NSString* error))block;
 
 @end

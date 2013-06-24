@@ -49,28 +49,19 @@
         [[JNSConfig config] setCachedUser:user];
 
         if (user.partner) {
-            [self dismissViewControllerAnimated:true completion:nil];
-        } else if (user.request) {
-            if (user.incoming) {
-                JNSPairConfirmViewController* view = [self.storyboard instantiateViewControllerWithIdentifier:@"pair_confirm_view"];
-                view.user = user;
-                [self presentViewController:view animated:true completion:nil];
-            } else {
-                JNSPairWaitingViewController* view = [self.storyboard instantiateViewControllerWithIdentifier:@"pair_waiting_view"];
-                
-                view.user = user;
-                [self presentViewController:view animated:true completion:nil];
-            }
+            [self.parentViewController dismissViewControllerAnimated:YES completion:nil];
+        } else if (user.request && !user.incoming) {
+            JNSPairWaitingViewController* view = [self.storyboard instantiateViewControllerWithIdentifier:@"pair_waiting_view"];
+            [self.navigationController pushViewController:view animated:true];
         } else {
-            JNSPairViewController* view = [self.storyboard instantiateViewControllerWithIdentifier:@"pair_view"];
+            JNSPairViewController* view =
+                [self.storyboard instantiateViewControllerWithIdentifier:@"pair_view"];
 
             [self.navigationController pushViewController:view animated:true];
-            
-            //[self presentViewController:view animated:true completion:nil];
         }
     } else {
         UIAlertView* view = [[UIAlertView alloc] initWithTitle:@"登录失败"
-                                                       message:[error localizedDescription]
+                                                       message:[error localizedFailureReason]
                                                       delegate:nil
                                              cancelButtonTitle:@"取消"
                                              otherButtonTitles:nil];

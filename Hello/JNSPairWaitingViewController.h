@@ -11,5 +11,4 @@
 
 @interface JNSPairWaitingViewController : UIViewController
 
-@property JNSUser* user;
 @end

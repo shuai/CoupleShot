@@ -9,6 +9,6 @@
 #import <UIKit/UIKit.h>
 #import "JNSUser.h"
 
-@interface JNSPairViewController : UIViewController
+@interface JNSPairViewController : UIViewController<UIAlertViewDelegate>
 
 @end

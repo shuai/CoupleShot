@@ -8,10 +8,10 @@
 
 #import "JNSConnection.h"
 
-NSString* kHost = @"http://localhost";
+NSString* kHost = @"http://192.168.1.100";
 NSString* kSignInURL = @"/signin";
 NSString* kPairURL = @"/api/pair";
-NSString* kPairConfirmURL = @"/api/pair/confirm";
+NSString* kPairConfirmURL = @"/api/pair";
 NSString* kTimelineURL = @"/api/timeline";
 NSString* kPostURL = @"/api/image";
 

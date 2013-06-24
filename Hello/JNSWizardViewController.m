@@ -11,7 +11,8 @@
 @implementation JNSWizardViewController
 
 -(void)viewWillDisappear:(BOOL)animated {
-    
+    [super viewWillDisappear:animated];
+    [self.delegate wizardViewWillDisappear];
 }
 
 @end

@@ -44,7 +44,6 @@
             } else {
                 JNSPairWaitingViewController* view =
                     [self.storyboard instantiateViewControllerWithIdentifier:@"pair_waiting_view"];
-                view.user = self.user;
                 [self presentViewController:view animated:true completion:nil];
             }
         } else {

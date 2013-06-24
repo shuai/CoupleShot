@@ -9,6 +9,14 @@
 #import <UIKit/UIKit.h>
 #import "JNSUser.h"
 
+@protocol JNSWizardViewDelegate <UINavigationControllerDelegate>
+
+- (void)wizardViewWillDisappear;
+
+@end
+
 @interface JNSWizardViewController : UINavigationController
+
+@property (nonatomic, weak) id<JNSWizardViewDelegate> delegate;
 
 @end

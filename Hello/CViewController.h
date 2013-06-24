@@ -8,8 +8,9 @@
 
 #import <UIKit/UIKit.h>
 #import "JNSUser.h"
+#import "JNSWizardViewController.h"
 
 @interface CViewController : UIViewController <UITableViewDelegate, UITableViewDataSource,  UINavigationControllerDelegate, UIImagePickerControllerDelegate,
-    JNSUserDelegate>
+    JNSUserDelegate, JNSWizardViewDelegate>
 
 @end

@@ -33,7 +33,7 @@
     JNSTimelineEntry* entry = [JNSTimelineEntry entryWithImage:image
                                                        Context:[self managedObjectContext]];
     [self addEntriesObject:entry];
-    // TODO completion
+    [entry upload];
 }
 
 -(void)loadLatestCompletion:(void(^)(unsigned add, NSError* error))completion {

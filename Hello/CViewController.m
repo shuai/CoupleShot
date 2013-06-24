@@ -22,15 +22,12 @@ const int kContentMargin = 5;
 
 @implementation CViewController
 
-JNSUser* _user;
-
 -(void) entryWithIndex:(int)index LoadedWithError:(NSString*)err {
     NSLog(@"reloadRowsAtIndexPaths %d", index);
     
     [_tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:index inSection:0]]
                       withRowAnimation:UITableViewRowAnimationFade];
 }
-
 
 // user
 
@@ -41,18 +38,17 @@ JNSUser* _user;
     [self.view bringSubviewToFront:(self.addButton)];
     self.tableView.delegate = self;
     self.tableView.dataSource = self;
+    
+    [self loadTimeline];
 }
 
-- (void)viewDidAppear:(BOOL)animated {
-    JNSUser* current_user = [JNSUser activeUser];
-    if (!current_user || !current_user.partner) {
-        JNSWizardViewController* wizard = [[self storyboard] instantiateViewControllerWithIdentifier:@"wizard_view"];
-        [self presentViewController:wizard animated:false completion:nil];
-    } else if (!_user) {
-        _user = current_user;
-        _user.delegate = self;
+- (void)loadTimeline {
+    // Load timeline
+    JNSUser* user = [JNSUser activeUser];
+    if (user) {
+        user.delegate = self;
         
-        [_user.timeline loadLatestCompletion:^(unsigned int count, NSError *error) {
+        [user.timeline loadLatestCompletion:^(unsigned int count, NSError *error) {
             if (error) {
                 UIAlertView* view = [[UIAlertView alloc] initWithTitle:@"加载错误"
                                                                message:[error description]
@@ -68,15 +64,29 @@ JNSUser* _user;
                                         inSection:0]];
                 }
                 
-                [self.tableView insertRowsAtIndexPaths:array
-                                      withRowAnimation:UITableViewRowAnimationFade];
-                [_tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:[array count]-1 inSection:0]
-                                  atScrollPosition:UITableViewScrollPositionNone
-                                          animated:true];
-                
+                if ([array count] != 0) {
+                    [self.tableView insertRowsAtIndexPaths:array
+                                          withRowAnimation:UITableViewRowAnimationFade];
+                    [_tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:[array count]-1 inSection:0]
+                                      atScrollPosition:UITableViewScrollPositionNone
+                                              animated:true];
+                }
             }
         }];
-    }
+    }    
+}
+
+- (void)wizardViewWillDisappear {
+    [self loadTimeline];
+}
+
+- (void)viewDidAppear:(BOOL)animated {
+    JNSUser* user = [JNSUser activeUser];
+    if (!user || !user.partner) {
+        JNSWizardViewController* wizard = [[self storyboard] instantiateViewControllerWithIdentifier:@"wizard_view"];
+        wizard.delegate = self;
+        [self presentViewController:wizard animated:false completion:nil];
+    } 
 }
 
 - (void)didReceiveMemoryWarning
@@ -89,7 +99,7 @@ JNSUser* _user;
     
     UIImagePickerController* picker = [[UIImagePickerController alloc] init];
     picker.delegate = self;
-    picker.allowsEditing = false;
+    picker.allowsEditing = true;
     if ([UIImagePickerController isSourceTypeAvailable: UIImagePickerControllerSourceTypeCamera]) {
         picker.sourceType = UIImagePickerControllerSourceTypeCamera;
     }
@@ -101,48 +111,75 @@ JNSUser* _user;
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     NSAssert(section == 0, @"");
-    //NSLog(@"Number of rows in section %d: %d", section, [current_user.timeline count]);
+    NSLog(@"Number of rows in section %d: %d", section, [[JNSUser activeUser].timeline.entries count]);
     return [[JNSUser activeUser].timeline.entries count];
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    JNSTimelineEntry* entry = _user.timeline.entries[indexPath.row];
+    JNSTimelineEntry* entry = [JNSUser activeUser].timeline.entries[indexPath.row];
     return [self heightForEntry:entry];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    JNSTimelineEntry* entry = _user.timeline.entries[indexPath.row];
+    JNSTimelineEntry* entry = [JNSUser activeUser].timeline.entries[indexPath.row];
     
     UITableViewCell *cell = [UITableViewCell new];
     cell.frame = CGRectMake(0, 0, 320, [self heightForEntry:entry]);
+
+    UIImageView* image_view = [self createViewForEntry:entry];
+    [[cell contentView] addSubview:image_view];
     
     if (entry.image) {
-        [[cell contentView] addSubview:[self createViewForEntry:entry]];
+        image_view.image = entry.image;
+        
+        if (entry.uploading) {
+            UIProgressView* progress = [self createProgressViewInCell:cell];
+            [entry trackUploadProgress:^(unsigned int p, NSString *error) {
+                progress.progress = p;
+                if (p == 100) {
+                    [progress removeFromSuperview];
+                }
+            }];
+        }
     } else if (!entry.downloading) {
-        UIProgressView* progress = [[UIProgressView alloc] initWithProgressViewStyle:UIProgressViewStyleDefault];
-        int y = (cell.frame.size.height - progress.intrinsicContentSize.height)/2;
-        progress.frame = CGRectMake(10, y, 300, progress.intrinsicContentSize.height);
-        progress.progress = 0.3;
-
-        UIView* content = [cell contentView];
-        [content addSubview:progress];
+        UIProgressView* progress = [self createProgressViewInCell:cell];
+        
         [entry downloadContentCompletion:^(JNSTimelineEntry *entry, NSString *error) {
-            [progress removeFromSuperview];
-            [content addSubview:[self createViewForEntry:entry]];
+            
+            //[UIView animateWithDuration:0.5 animations:^{
+                progress.alpha = 0;
+                image_view.image = entry.image;
+            //}];
         }];
     }
+    
     
     return cell;
 }
 
--(UIView*) createViewForEntry:(JNSTimelineEntry*)entry {
-    UIImageView* image_view = [[UIImageView alloc] initWithImage:entry.image];
+- (UIProgressView*) createProgressViewInCell:(UITableViewCell*)cell {
+    UIProgressView* progress = [[UIProgressView alloc] initWithProgressViewStyle:UIProgressViewStyleDefault];
+    int y = (cell.frame.size.height - progress.intrinsicContentSize.height)/2;
+    int width = 150;
+    progress.frame = CGRectMake((self.view.window.frame.size.width - width)/2, y,
+                                150, progress.intrinsicContentSize.height);
+    progress.progress = 0;
+    [[cell contentView] addSubview:progress];
+    return progress;
+}
+
+-(UIImageView*) createViewForEntry:(JNSTimelineEntry*)entry {
     
     int width = 320-kContentMargin*2;
-    int height = entry.image.size.height*width/entry.image.size.width;
+    int height = 240;
     
-    image_view.frame = CGRectMake(kContentMargin, kContentMargin, width, height);
-    
+    if (entry.height) {
+        height = [entry.height intValue] * width / [entry.width intValue];
+    }
+
+    UIImageView* image_view = [[UIImageView alloc] initWithFrame:
+                               CGRectMake(kContentMargin, kContentMargin, width, height)];
+        
     // slow
     CALayer* layer = image_view.layer;
     layer.cornerRadius = 5;

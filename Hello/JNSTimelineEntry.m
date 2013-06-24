@@ -14,6 +14,7 @@
     NSURLConnection* _upload_connection;
     NSURLConnection* _download_connection;
     void(^_download_completion)(JNSTimelineEntry*, NSString* error);
+    void(^_upload_progress)(unsigned, NSString* error);
     NSData* _download_cache;
 }
 @end
@@ -31,12 +32,13 @@
     entry.image = image;
     entry.width = [NSNumber numberWithFloat: image.size.width];
     entry.height = [NSNumber numberWithFloat: image.size.height];
+    // TODO timestamp?
     return entry;
 }
 
 +(JNSTimelineEntry*)entryWithJSON:(NSDictionary*)json Context:(NSManagedObjectContext*)context {
     JNSTimelineEntry* entry = [JNSTimelineEntry entryWithContext:context];
-    entry.timestamp = [NSDate dateWithTimeIntervalSince1970:[[json objectForKey:@"time"] doubleValue]];
+    entry.timestamp = [NSDate dateWithTimeIntervalSince1970:[[json objectForKey:@"time"] doubleValue]/1000];
     entry.width = [NSNumber numberWithInt:[[json objectForKey:@"width"] intValue]];
     entry.height = [NSNumber numberWithInt:[[json objectForKey:@"height"] intValue]];
     entry.image_url = [json objectForKey:@"url"];
@@ -52,10 +54,41 @@
     return entry;
 }
 
-// Downloading
+// overrides
+-(void) awakeFromFetch {
+    // TODO load image from disk cache
+    NSURL* url = [self constructFileURL];
+    NSFileManager* manager = [NSFileManager defaultManager];
+    if ([manager fileExistsAtPath:[url path]]) {
+        _image = [UIImage imageWithContentsOfFile:[url path]];
+    }
+}
+
+-(NSURL*) constructFileURL {
+    NSFileManager* manager = [NSFileManager defaultManager];
+    NSURL* directory = [[manager URLsForDirectory:NSCachesDirectory
+                                                               inDomains:NSUserDomainMask] lastObject];
+    NSURL* image_dir = [directory URLByAppendingPathComponent:@"images" isDirectory:YES];
+    if (![manager fileExistsAtPath:[image_dir path]]) {
+        [manager createDirectoryAtURL:image_dir
+          withIntermediateDirectories:NO
+                           attributes:nil
+                                error:nil];
+    }
+    
+    return [image_dir URLByAppendingPathComponent:
+            [NSString stringWithFormat:@"%ld", (long)[self.timestamp timeIntervalSince1970]]];
+}
+
 -(bool) downloading {
     return _download_connection != nil;
 }
+
+-(bool) uploading {
+    return _upload_connection != nil;
+}
+
+// Downloading
 
 -(void) downloadContentCompletion:(void(^)(JNSTimelineEntry*, NSString* error))completion {
     NSAssert(!_download_connection, @"");
@@ -93,6 +126,9 @@
     _upload_connection = [NSURLConnection connectionWithRequest:request delegate:self];
 }
 
+- (void)trackUploadProgress:(void(^)(unsigned, NSString* error))block {
+    _upload_progress = block;
+}
 
 // NSURLConnectionDataDelegate
 
@@ -112,34 +148,49 @@
 
 - (void)connectionDidFinishLoading:(NSURLConnection *)connection {
     NSLog(@"requestComplete:\n %d\n", _response.statusCode);
-    
+
+    // TODO better error handling
     if (_download_connection == connection) {
-        NSAssert(!_image, @"");
-        _image = [UIImage imageWithData:_download_cache];
-        NSLog(@"Image downloaded. Width:%f Height%f",_image.size.width, _image.size.height);
-        _download_completion(self, nil);
-    } else {
-        //[_delegate uploadEntry:self Progress:100];
+        if (_response.statusCode == 200) {
+            NSAssert(!_image, @"");
+            _image = [UIImage imageWithData:_download_cache];
+            NSLog(@"Image downloaded. Width:%f Height%f",_image.size.width, _image.size.height);
+            _download_completion(self, nil);
+            
+            // save file to cache folder TODO asynchronus? Maybe no need to convert to png
+            NSURL* url = [self constructFileURL];
+            NSFileManager* manager = [NSFileManager defaultManager];
+            //NSAssert([manager fileExistsAtPath:[url path]] == false, @"");
+            NSData* data = [NSData dataWithData:UIImagePNGRepresentation(_image)];
+            if (![manager createFileAtPath:[url path] contents:data attributes:nil]) {
+                NSLog(@"Failed to save image");
+            }
+        } else {
+            _download_completion(self, @"下载失败");
+        }
+    } else if (_upload_connection == connection) {
+        _upload_progress(100, nil);
     }
-    _download_connection = nil;
-    _upload_connection = nil;
-    _response = nil;
-    _download_cache = nil;
-    _download_completion = nil;
+    [self clear];
 }
 
 - (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error {
     if (_download_connection == connection) {
         NSAssert(!_image, @"");
         _download_completion(self, [error localizedFailureReason]);
-    } else {
-        //[_delegate uploadEntry:self Progress:100];
+    } else if (_upload_connection == connection) {
+        _upload_progress(0, [error localizedFailureReason]);
     }
+    [self clear];
+}
+
+- (void)clear {
     _download_connection = nil;
     _upload_connection = nil;
     _response = nil;
     _download_cache = nil;
     _download_completion = nil;
+    _upload_progress = nil;
 }
 
 @end

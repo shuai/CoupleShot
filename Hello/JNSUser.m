@@ -66,7 +66,7 @@ JNSUser* activeUser;
     NSAssert(!_connection, @"");
     NSAssert(self.request && self.request.length, @"");
 
-    NSString* body = [NSString stringWithFormat:@"user=%@&confirm=%@", self.request, confirm?@"1":@"0"];
+    NSString* body = [NSString stringWithFormat:@"user=%@", self.request];
     _connection = [JNSConnection connectionWithMethod:false
                                                   URL:kPairConfirmURL
                                                Params:body
