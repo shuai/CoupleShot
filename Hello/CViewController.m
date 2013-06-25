@@ -51,7 +51,7 @@ const int kContentMargin = 5;
         [user.timeline loadLatestCompletion:^(unsigned int count, NSError *error) {
             if (error) {
                 UIAlertView* view = [[UIAlertView alloc] initWithTitle:@"加载错误"
-                                                               message:[error description]
+                                                               message:[error localizedFailureReason]
                                                               delegate:nil
                                                      cancelButtonTitle:@"确定"
                                                      otherButtonTitles:nil];
@@ -135,21 +135,36 @@ const int kContentMargin = 5;
         if (entry.uploading) {
             UIProgressView* progress = [self createProgressViewInCell:cell];
             [entry trackUploadProgress:^(unsigned int p, NSString *error) {
-                progress.progress = p;
+                NSLog(@"Uploading progress:%d", p);
                 if (p == 100) {
-                    [progress removeFromSuperview];
+                    [UIView animateWithDuration:0.3 animations:^{
+                        progress.alpha = 0;
+                    } completion:^(BOOL finished) {
+                        [progress removeFromSuperview];
+                    }];
+                } else {
+                    progress.progress = p;
                 }
             }];
         }
     } else if (!entry.downloading) {
         UIProgressView* progress = [self createProgressViewInCell:cell];
         
-        [entry downloadContentCompletion:^(JNSTimelineEntry *entry, NSString *error) {
-            
-            //[UIView animateWithDuration:0.5 animations:^{
-                progress.alpha = 0;
+        [entry downloadContentProgress:^(unsigned p, NSString *error) {
+            NSLog(@"Downloading progress:%d", p);
+            if (p == 100) {
                 image_view.image = entry.image;
-            //}];
+                image_view.alpha = 0;
+
+                [UIView animateWithDuration:0.3 animations:^{
+                    progress.alpha = 0;
+                    image_view.alpha = 1;
+                } completion:^(BOOL finished) {
+                    [progress removeFromSuperview];
+                }];
+            } else {
+                progress.progress = p;
+            }
         }];
     }
     
@@ -191,6 +206,38 @@ const int kContentMargin = 5;
     //        layer.shadowOpacity = 0.5;
     //        layer.shadowRadius = 10;
     //        layer.shadowOffset = CGSizeMake(3, 3);
+    
+    // Add time label
+    UILabel* label = [[UILabel alloc] init];
+    NSDate* date = [NSDate dateWithTimeIntervalSince1970: [entry.timestamp doubleValue]/1000];
+    NSTimeInterval interval = -[date timeIntervalSinceNow];
+
+    NSString* text;
+    if (interval < 5*60) {
+        text = @"刚刚";
+    } else if (interval < 60*60) {
+        text = [NSString stringWithFormat:@"%d分钟前", (int)interval/60];
+    } else if (interval < 24*60*60) {
+        text = [NSString stringWithFormat:@"%d小时前", (int)interval/3600];
+    } else {
+        text = [NSString stringWithFormat:@"%d天前", (int)interval/(24*3600)];
+    }
+    
+    [label setText:text];
+    label.font = [UIFont systemFontOfSize:12];
+    CGRect rect = CGRectMake(300 - [label intrinsicContentSize].width - 10,
+                             10,
+                             [label intrinsicContentSize].width+10,
+                             [label intrinsicContentSize].height+10);
+    label.frame = rect;
+    label.textAlignment = NSTextAlignmentCenter;
+    label.textColor = [UIColor colorWithWhite:0.8 alpha:1];
+    label.backgroundColor = [UIColor colorWithWhite:0.3 alpha:0.8];
+    label.layer.cornerRadius = 5;
+    label.layer.masksToBounds = YES;
+    
+    [image_view addSubview:label];
+    
     return image_view;
 }
 

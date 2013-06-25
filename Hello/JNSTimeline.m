@@ -43,12 +43,12 @@
     }
 
     // TODO read the latest timestamp    
-    long timestamp = 0;
+    UInt64 timestamp = 0;
     if ([self.entries count]) {
-        timestamp = [((JNSTimelineEntry*)[self.entries lastObject]).timestamp timeIntervalSince1970];
+        timestamp = [((JNSTimelineEntry*)[self.entries lastObject]).timestamp longLongValue] + 1;
     }
     
-    NSString* params = [NSString stringWithFormat:@"timestamp=%ld", timestamp];
+    NSString* params = [NSString stringWithFormat:@"timestamp=%llu", timestamp];
     _connection = [JNSConnection connectionWithMethod:true
                                                   URL:kTimelineURL
                                                Params:params

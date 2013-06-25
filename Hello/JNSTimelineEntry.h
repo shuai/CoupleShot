@@ -16,7 +16,7 @@
 @property (readonly) bool uploading;
 
 // Core Data
-@property (nonatomic, retain) NSDate * timestamp;
+@property (nonatomic, retain) NSNumber * timestamp;
 @property (nonatomic, retain) NSNumber * width;
 @property (nonatomic, retain) NSNumber * height;
 @property (nonatomic, retain) NSString * image_url;
@@ -29,8 +29,8 @@
 // overrides
 - (void)awakeFromFetch;
 
--(void) downloadContentCompletion:(void(^)(JNSTimelineEntry*, NSString* error))completion;
+-(void) downloadContentProgress:(void(^)(unsigned progress, NSString* error))block;
 -(void) upload;
-- (void)trackUploadProgress:(void(^)(unsigned, NSString* error))block;
+- (void)trackUploadProgress:(void(^)(unsigned progress, NSString* error))block;
 
 @end

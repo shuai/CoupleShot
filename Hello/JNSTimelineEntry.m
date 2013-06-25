@@ -11,11 +11,12 @@
 
 @interface JNSTimelineEntry(){
     NSHTTPURLResponse* _response;
+    NSInteger _content_length;
     NSURLConnection* _upload_connection;
     NSURLConnection* _download_connection;
-    void(^_download_completion)(JNSTimelineEntry*, NSString* error);
+    NSData* _download_cache;    
+    void(^_download_progress)(unsigned progress, NSString* error);
     void(^_upload_progress)(unsigned, NSString* error);
-    NSData* _download_cache;
 }
 @end
 
@@ -38,10 +39,8 @@
 
 +(JNSTimelineEntry*)entryWithJSON:(NSDictionary*)json Context:(NSManagedObjectContext*)context {
     JNSTimelineEntry* entry = [JNSTimelineEntry entryWithContext:context];
-    entry.timestamp = [NSDate dateWithTimeIntervalSince1970:[[json objectForKey:@"time"] doubleValue]/1000];
-    entry.width = [NSNumber numberWithInt:[[json objectForKey:@"width"] intValue]];
-    entry.height = [NSNumber numberWithInt:[[json objectForKey:@"height"] intValue]];
-    entry.image_url = [json objectForKey:@"url"];
+    
+    [entry updateMeta:json];
     return entry;
 }
 
@@ -77,7 +76,7 @@
     }
     
     return [image_dir URLByAppendingPathComponent:
-            [NSString stringWithFormat:@"%ld", (long)[self.timestamp timeIntervalSince1970]]];
+            [NSString stringWithFormat:@"%@", self.timestamp]];
 }
 
 -(bool) downloading {
@@ -90,11 +89,11 @@
 
 // Downloading
 
--(void) downloadContentCompletion:(void(^)(JNSTimelineEntry*, NSString* error))completion {
+-(void) downloadContentProgress:(void(^)(unsigned progress, NSString* error))block {
     NSAssert(!_download_connection, @"");
-    NSAssert(!_download_completion, @"");
+    NSAssert(!_download_progress, @"");
     
-    _download_completion = completion;
+    _download_progress = block;
     
     NSURL* url = [NSURL URLWithString:self.image_url relativeToURL: [NSURL URLWithString:kHost]];
     NSURLRequest* request = [NSURLRequest requestWithURL:url];
@@ -119,7 +118,9 @@
     [postbody appendData:[[NSString stringWithFormat:@"\r\n--%@\r\n",boundary] dataUsingEncoding:NSUTF8StringEncoding]];
     [postbody appendData:[@"Content-Disposition: form-data; name=\"image\"; filename=\"1.png\"\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
     [postbody appendData:[@"Content-Type: application/octet-stream\r\n\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
-    [postbody appendData:[NSData dataWithData:UIImagePNGRepresentation(_image)]];
+    
+    NSData* data = [NSData dataWithData:UIImagePNGRepresentation(_image)];
+    [postbody appendData:data];
     [postbody appendData:[[NSString stringWithFormat:@"\r\n--%@--\r\n",boundary] dataUsingEncoding:NSUTF8StringEncoding]];
     [request setHTTPBody:postbody];
     
@@ -141,9 +142,25 @@
     NSAssert(!_download_cache, @"");
 
     _response = (NSHTTPURLResponse*)response;
+    _content_length = [[_response.allHeaderFields valueForKey:@"Content-Length"] integerValue];
     _download_cache = [NSMutableData new];
     
     //NSLog(@"didReceiveResponse, relativePath:%@, status:%d", _response.URL.relativePath, [_response statusCode]);
+}
+
+- (void)connection:(NSURLConnection *)connection
+   didSendBodyData:(NSInteger)bytesWritten
+ totalBytesWritten:(NSInteger)totalBytesWritten
+totalBytesExpectedToWrite:(NSInteger)totalBytesExpectedToWrite {
+    // Remember this function is called for every connection
+    
+    if (_upload_progress) {
+        unsigned ratio = totalBytesWritten*100/totalBytesExpectedToWrite;
+        if (ratio > 99) {
+            ratio = 99;
+        }
+        _upload_progress(ratio, nil);
+    }
 }
 
 - (void)connectionDidFinishLoading:(NSURLConnection *)connection {
@@ -155,7 +172,7 @@
             NSAssert(!_image, @"");
             _image = [UIImage imageWithData:_download_cache];
             NSLog(@"Image downloaded. Width:%f Height%f",_image.size.width, _image.size.height);
-            _download_completion(self, nil);
+            [self updateProgress];
             
             // save file to cache folder TODO asynchronus? Maybe no need to convert to png
             NSURL* url = [self constructFileURL];
@@ -166,10 +183,21 @@
                 NSLog(@"Failed to save image");
             }
         } else {
-            _download_completion(self, @"下载失败");
+            _download_progress(0, @"下载失败");
         }
     } else if (_upload_connection == connection) {
-        _upload_progress(100, nil);
+        // Update meta info
+        NSError* error;
+        NSDictionary* obj = [NSJSONSerialization JSONObjectWithData:_download_cache
+                                                            options:kNilOptions
+                                                              error:&error];
+        if (error) {
+            _upload_progress(0, [error localizedFailureReason]);
+        } else {
+            NSDictionary* json = [obj objectForKey:@"content"];
+            [self updateMeta:json];
+            _upload_progress(100, nil);
+        }
     }
     [self clear];
 }
@@ -177,7 +205,7 @@
 - (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error {
     if (_download_connection == connection) {
         NSAssert(!_image, @"");
-        _download_completion(self, [error localizedFailureReason]);
+        _download_progress(0, [error localizedFailureReason]);
     } else if (_upload_connection == connection) {
         _upload_progress(0, [error localizedFailureReason]);
     }
@@ -189,8 +217,25 @@
     _upload_connection = nil;
     _response = nil;
     _download_cache = nil;
-    _download_completion = nil;
+    _download_progress = nil;
     _upload_progress = nil;
+    _content_length = 0;
+}
+
+- (void)updateProgress {
+    if (_content_length != 0) {
+        if (_download_progress) {
+            unsigned ratio = [_download_cache length]*100/_content_length;
+            _download_progress(ratio, nil);
+        }
+    }
+}
+
+- (void)updateMeta:(NSDictionary*)json {
+    self.timestamp = [NSNumber numberWithLongLong:[[json objectForKey:@"time"] longLongValue]];
+    self.width = [NSNumber numberWithInt:[[json objectForKey:@"width"] intValue]];
+    self.height = [NSNumber numberWithInt:[[json objectForKey:@"height"] intValue]];
+    self.image_url = [json objectForKey:@"url"];    
 }
 
 @end
