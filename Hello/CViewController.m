@@ -210,8 +210,11 @@ const int kContentMargin = 5;
     // Add time label
     UILabel* label = [[UILabel alloc] init];
     NSDate* date = [NSDate dateWithTimeIntervalSince1970: [entry.timestamp doubleValue]/1000];
-    NSTimeInterval interval = -[date timeIntervalSinceNow];
-
+    int interval = -[date timeIntervalSinceNow];
+    if (interval < 0) {
+        interval = 0;
+    }
+    
     NSString* text;
     if (interval < 5*60) {
         text = @"刚刚";
@@ -224,7 +227,7 @@ const int kContentMargin = 5;
     }
     
     [label setText:text];
-    label.font = [UIFont systemFontOfSize:12];
+    label.font = [UIFont systemFontOfSize:9];
     CGRect rect = CGRectMake(300 - [label intrinsicContentSize].width - 10,
                              10,
                              [label intrinsicContentSize].width+10,
@@ -232,7 +235,7 @@ const int kContentMargin = 5;
     label.frame = rect;
     label.textAlignment = NSTextAlignmentCenter;
     label.textColor = [UIColor colorWithWhite:0.8 alpha:1];
-    label.backgroundColor = [UIColor colorWithWhite:0.3 alpha:0.8];
+    label.backgroundColor = [UIColor colorWithWhite:0.3 alpha:0.5];
     label.layer.cornerRadius = 5;
     label.layer.masksToBounds = YES;
     

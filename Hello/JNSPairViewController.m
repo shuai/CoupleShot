@@ -13,8 +13,6 @@
 @interface JNSPairViewController ()
 @property (weak, nonatomic) IBOutlet UITextField *userField;
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView *indicator;
-@property (weak, nonatomic) IBOutlet UIButton *button;
-@property (weak, nonatomic) IBOutlet UILabel *errorLabel;
 
 @end
 
@@ -22,18 +20,20 @@
 
 - (void)viewDidLoad {
     [self.indicator setHidden:true];
-    self.navigationItem.title = @"找到Ta";
-
-    [self alertRequest];    
+    [self alertRequest];
+    UIBarButtonItem* right = [[UIBarButtonItem alloc] initWithTitle:@"发送请求"
+                                                              style:UIBarButtonItemStyleDone
+                                                             target:self
+                                                             action:@selector(sendButtonTouched:)];
+    self.navigationItem.rightBarButtonItem = right;
 }
 
 -(void)viewWillAppear:(BOOL)animated {
-    self.navigationController.navigationBarHidden = false;
+    [self.navigationController setNavigationBarHidden:false animated:animated];
 }
 
-- (IBAction)buttonTouched:(id)sender {
+- (void)sendButtonTouched:(id)sender {
     if (self.userField.hasText) {
-        [self.button setHidden:true];
         [self.indicator setHidden:false];
         [self.indicator startAnimating];
 
@@ -51,8 +51,12 @@
                     [self.navigationController pushViewController:view animated:YES];
                 }
             } else {
-                [self.errorLabel setText:msg];
-                [self.button setHidden:false];
+                UIAlertView* view = [[UIAlertView alloc] initWithTitle:@"请求失败"
+                                                               message:msg
+                                                              delegate:nil
+                                                     cancelButtonTitle:@"确定"
+                                                     otherButtonTitles:nil];
+                [view show];
                 [self.indicator setHidden:true];
             }
         }];

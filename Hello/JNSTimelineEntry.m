@@ -8,6 +8,7 @@
 
 #import "JNSTimelineEntry.h"
 #import "JNSConnection.h"
+#import "JNSConfig.h"
 
 @interface JNSTimelineEntry(){
     NSHTTPURLResponse* _response;
@@ -26,6 +27,8 @@
 @dynamic width;
 @dynamic height;
 @dynamic image_url;
+@dynamic imageCacheURL;
+
 @synthesize image = _image;
 
 +(JNSTimelineEntry*)entryWithImage:(UIImage*)image Context:(NSManagedObjectContext*)context {
@@ -33,6 +36,8 @@
     entry.image = image;
     entry.width = [NSNumber numberWithFloat: image.size.width];
     entry.height = [NSNumber numberWithFloat: image.size.height];
+    [entry cacheImage];
+    
     // TODO timestamp?
     return entry;
 }
@@ -56,18 +61,17 @@
 // overrides
 -(void) awakeFromFetch {
     // TODO load image from disk cache
-    NSURL* url = [self constructFileURL];
-    NSFileManager* manager = [NSFileManager defaultManager];
-    if ([manager fileExistsAtPath:[url path]]) {
-        _image = [UIImage imageWithContentsOfFile:[url path]];
+    if (self.imageCacheURL) {
+        _image = [UIImage imageWithContentsOfFile:self.imageCacheURL];
     }
 }
 
 -(NSURL*) constructFileURL {
     NSFileManager* manager = [NSFileManager defaultManager];
     NSURL* directory = [[manager URLsForDirectory:NSCachesDirectory
-                                                               inDomains:NSUserDomainMask] lastObject];
-    NSURL* image_dir = [directory URLByAppendingPathComponent:@"images" isDirectory:YES];
+                                        inDomains:NSUserDomainMask] lastObject];
+    NSURL* image_dir = [directory URLByAppendingPathComponent:@"images"
+                                                  isDirectory:YES];
     if (![manager fileExistsAtPath:[image_dir path]]) {
         [manager createDirectoryAtURL:image_dir
           withIntermediateDirectories:NO
@@ -76,7 +80,7 @@
     }
     
     return [image_dir URLByAppendingPathComponent:
-            [NSString stringWithFormat:@"%@", self.timestamp]];
+            [NSString stringWithFormat:@"%@", [JNSConfig uniqueImageID]]];
 }
 
 -(bool) downloading {
@@ -131,6 +135,22 @@
     _upload_progress = block;
 }
 
+- (void)cacheImage {
+    NSAssert(!self.imageCacheURL, @"");
+    NSAssert(self.image, @"");
+    
+    // save file to cache folder TODO asynchronus? Maybe no need to convert to png
+    NSURL* url = [self constructFileURL];
+    NSFileManager* manager = [NSFileManager defaultManager];
+    //NSAssert([manager fileExistsAtPath:[url path]] == false, @"");
+    NSData* data = [NSData dataWithData:UIImagePNGRepresentation(_image)];
+    if ([manager createFileAtPath:[url path] contents:data attributes:nil]) {
+        self.imageCacheURL = [url path];
+    } else {
+        NSLog(@"Failed to save image");
+    }
+}
+
 // NSURLConnectionDataDelegate
 
 - (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data {
@@ -172,16 +192,9 @@ totalBytesExpectedToWrite:(NSInteger)totalBytesExpectedToWrite {
             NSAssert(!_image, @"");
             _image = [UIImage imageWithData:_download_cache];
             NSLog(@"Image downloaded. Width:%f Height%f",_image.size.width, _image.size.height);
-            [self updateProgress];
             
-            // save file to cache folder TODO asynchronus? Maybe no need to convert to png
-            NSURL* url = [self constructFileURL];
-            NSFileManager* manager = [NSFileManager defaultManager];
-            //NSAssert([manager fileExistsAtPath:[url path]] == false, @"");
-            NSData* data = [NSData dataWithData:UIImagePNGRepresentation(_image)];
-            if (![manager createFileAtPath:[url path] contents:data attributes:nil]) {
-                NSLog(@"Failed to save image");
-            }
+            [self updateProgress];
+            [self cacheImage];
         } else {
             _download_progress(0, @"下载失败");
         }
@@ -192,11 +205,15 @@ totalBytesExpectedToWrite:(NSInteger)totalBytesExpectedToWrite {
                                                             options:kNilOptions
                                                               error:&error];
         if (error) {
-            _upload_progress(0, [error localizedFailureReason]);
+            if (_upload_progress) {
+                _upload_progress(0, [error localizedFailureReason]);
+            }
         } else {
             NSDictionary* json = [obj objectForKey:@"content"];
             [self updateMeta:json];
-            _upload_progress(100, nil);
+            if (_upload_progress) {
+                _upload_progress(100, nil);
+            }
         }
     }
     [self clear];
@@ -207,7 +224,9 @@ totalBytesExpectedToWrite:(NSInteger)totalBytesExpectedToWrite {
         NSAssert(!_image, @"");
         _download_progress(0, [error localizedFailureReason]);
     } else if (_upload_connection == connection) {
-        _upload_progress(0, [error localizedFailureReason]);
+        if (_upload_progress) {
+            _upload_progress(0, [error localizedFailureReason]);
+        }
     }
     [self clear];
 }

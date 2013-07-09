@@ -83,6 +83,12 @@
     [self saveContext];
 }
 
+- (void)applicationDidReceiveMemoryWarning:(UIApplication *)application {
+    // try to clean up as much memory as possible. next step is to terminate app
+    
+}
+
+
 - (void)saveContext
 {    
     NSError *error;

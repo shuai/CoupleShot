@@ -13,7 +13,13 @@ JNSConfig* _config;
 @implementation JNSConfig
 
 @dynamic cachedUser;
+@dynamic nextImageID;
 
++ (NSNumber*)uniqueImageID {
+    NSNumber* number = [NSNumber numberWithInt:[JNSConfig config].nextImageID.intValue + 1];
+    [JNSConfig config].nextImageID = number;
+    return number;
+}
 
 +(void)setConfig:(JNSConfig*)config {
     NSAssert(!_config, @"");

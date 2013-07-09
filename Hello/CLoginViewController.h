@@ -9,6 +9,6 @@
 #import <UIKit/UIKit.h>
 #import "JNSUser.h"
 
-@interface CLoginViewController : UIViewController<JNSUserDelegate>
+@interface CLoginViewController : UIViewController<JNSUserDelegate, UITextFieldDelegate>
 
 @end

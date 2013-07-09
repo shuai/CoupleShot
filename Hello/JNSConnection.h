@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 
 extern NSString* kHost;
+extern NSString* kSignUpURL;
 extern NSString* kSignInURL;
 extern NSString* kPairURL;
 extern NSString* kPairConfirmURL;

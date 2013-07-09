@@ -14,8 +14,10 @@
 
 // Core Data
 @property (nonatomic, retain) JNSUser * cachedUser;
+@property NSNumber* nextImageID;
 
-+(void)setConfig:(JNSConfig*)config;
-+(JNSConfig*)config;
++ (NSNumber*)uniqueImageID;
++ (void)setConfig:(JNSConfig*)config;
++ (JNSConfig*)config;
 
 @end

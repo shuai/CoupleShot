@@ -8,7 +8,8 @@
 
 #import "JNSConnection.h"
 
-NSString* kHost = @"http://192.168.1.100";
+NSString* kHost = @"http://124.205.11.211";
+NSString* kSignUpURL = @"/signup";
 NSString* kSignInURL = @"/signin";
 NSString* kPairURL = @"/api/pair";
 NSString* kPairConfirmURL = @"/api/pair";
@@ -80,9 +81,11 @@ NSString* kPostURL = @"/api/image";
             NSLog(@"JSON:\n %@", [json description]);            
         } else {
             NSDictionary* obj = [NSJSONSerialization JSONObjectWithData:_data options:kNilOptions error:&error];
-            error = [NSError errorWithDomain:[obj objectForKey:@"msg"]
+            error = [NSError errorWithDomain:@"Network"
                                         code:_response.statusCode
-                                    userInfo:nil];
+                                    userInfo:[NSDictionary dictionaryWithObject:[obj objectForKey:@"msg"]
+                                                                         forKey: NSLocalizedFailureReasonErrorKey]];
+            
         }
     }
     _completion(self, _response, json, error);

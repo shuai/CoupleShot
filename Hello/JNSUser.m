@@ -38,7 +38,7 @@ JNSUser* activeUser;
 }
 
 -(void)pairWithUser: (NSString*) user Completion:(void (^)(NSString*))completion {
-    NSAssert(!_connection, @"");
+    NSAssert(!_connection, @"pairWithUser called when _connection exists");
   
     NSString* body = [NSString stringWithFormat:@"user=%@", user];
     _connection = [JNSConnection connectionWithMethod:false
@@ -50,7 +50,8 @@ JNSUser* activeUser;
            [self updateJSON:json];
        }
        
-       completion([error description]);
+       _connection = nil;
+       completion([error localizedFailureReason]);
    }];
 }
 

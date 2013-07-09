@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="3381.3" systemVersion="12E55" minimumToolsVersion="Xcode 4.3" macOSVersion="Automatic" iOSVersion="Automatic">
     <entity name="JNSConfig" representedClassName="JNSConfig" syncable="YES">
+        <attribute name="nextImageID" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
         <relationship name="cachedUser" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="JNSUser" syncable="YES"/>
     </entity>
     <entity name="JNSTimeline" representedClassName="JNSTimeline" syncable="YES">
@@ -9,6 +10,7 @@
     <entity name="JNSTimelineEntry" representedClassName="JNSTimelineEntry" syncable="YES">
         <attribute name="height" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
         <attribute name="image_url" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="imageCacheURL" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="timestamp" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
         <attribute name="width" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
     </entity>

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="4457.6" systemVersion="12E55" targetRuntime="iOS.CocoaTouch" variant="6xAndEarlier" propertyAccessControl="none" useAutolayout="YES" initialViewController="2">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="4457.6" systemVersion="12E55" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="2">
     <dependencies>
         <deployment defaultVersion="1552" identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3682.6"/>
@@ -10,7 +10,7 @@
             <objects>
                 <viewController storyboardIdentifier="main_view" id="2" customClass="CViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="3">
-                        <rect key="frame" x="0.0" y="20" width="320" height="548"/>
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Wj5-k6-X6R">
@@ -51,53 +51,105 @@
             <objects>
                 <viewController storyboardIdentifier="login_view" title="Sign In" id="Z2n-Kh-LGQ" customClass="CLoginViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="ZSC-n5-AdE">
-                        <rect key="frame" x="0.0" y="20" width="320" height="548"/>
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="right" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="DjJ-0U-oJm">
-                                <rect key="frame" x="221" y="282" width="59" height="44"/>
-                                <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
-                                <state key="normal" title="Start">
-                                    <color key="titleColor" red="0.19607843459999999" green="0.30980393290000002" blue="0.52156865600000002" alpha="1" colorSpace="calibratedRGB"/>
-                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <state key="highlighted">
-                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
+                            <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="qNX-Ug-enU">
+                                <rect key="frame" x="0.0" y="524" width="320" height="44"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
+                                <items>
+                                    <barButtonItem systemItem="flexibleSpace" id="fnp-Dm-QYA"/>
+                                    <barButtonItem title="开始" id="Yug-5g-ENk">
+                                        <connections>
+                                            <action selector="start:" destination="Z2n-Kh-LGQ" id="02d-I4-5DF"/>
+                                        </connections>
+                                    </barButtonItem>
+                                </items>
+                            </toolbar>
+                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="3F5-zk-40V">
+                                <rect key="frame" x="80" y="166" width="161" height="29"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <segments>
+                                    <segment title="新用户"/>
+                                    <segment title="登录"/>
+                                </segments>
                                 <connections>
-                                    <action selector="buttonLoginTouched:" destination="Z2n-Kh-LGQ" eventType="touchUpInside" id="5CQ-sk-JAw"/>
+                                    <action selector="segmentsChanged:" destination="Z2n-Kh-LGQ" eventType="valueChanged" id="e4F-bl-Id9"/>
                                 </connections>
-                            </button>
-                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="right" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="用户名" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="L1K-Tc-wxz">
-                                <rect key="frame" x="40" y="200" width="240" height="30"/>
+                            </segmentedControl>
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" text="使用 CoupleShot 记录你们的每个瞬间!" translatesAutoresizingMaskIntoConstraints="NO" id="2gI-O5-tVj">
+                                <rect key="frame" x="30" y="294" width="260" height="124"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="124" id="z8N-WP-uiv"/>
+                                </constraints>
+                                <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <textInputTraits key="textInputTraits" keyboardType="emailAddress"/>
-                            </textField>
-                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="right" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="密码" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="pax-nV-MXg">
-                                <rect key="frame" x="40" y="244" width="240" height="30"/>
-                                <color key="textColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="14"/>
-                                <textInputTraits key="textInputTraits" secureTextEntry="YES"/>
-                            </textField>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                            </textView>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="iZi-Yi-i71" customClass="JNSFormView">
+                                <rect key="frame" x="30" y="214" width="260" height="72"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <subviews>
+                                    <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="right" contentVerticalAlignment="center" placeholder="电子邮件" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="L1K-Tc-wxz">
+                                        <rect key="frame" x="21" y="-1" width="239" height="36"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="239" id="47J-6g-PoP"/>
+                                            <constraint firstAttribute="height" constant="36" id="8KY-fP-RBc"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                        <textInputTraits key="textInputTraits" autocorrectionType="no" keyboardType="emailAddress" returnKeyType="next"/>
+                                        <connections>
+                                            <outlet property="delegate" destination="Z2n-Kh-LGQ" id="Pfh-uy-ssJ"/>
+                                        </connections>
+                                    </textField>
+                                    <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="right" contentVerticalAlignment="center" placeholder="密码" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="pax-nV-MXg">
+                                        <rect key="frame" x="21" y="36" width="239" height="36"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="36" id="O3d-26-dMZ"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                        <textInputTraits key="textInputTraits" returnKeyType="go" secureTextEntry="YES"/>
+                                        <connections>
+                                            <outlet property="delegate" destination="Z2n-Kh-LGQ" id="0xc-2f-jda"/>
+                                        </connections>
+                                    </textField>
+                                </subviews>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstItem="L1K-Tc-wxz" firstAttribute="trailing" secondItem="iZi-Yi-i71" secondAttribute="trailing" id="42I-V2-os7"/>
+                                    <constraint firstItem="L1K-Tc-wxz" firstAttribute="trailing" secondItem="pax-nV-MXg" secondAttribute="trailing" id="DhI-Oc-YhV"/>
+                                    <constraint firstItem="L1K-Tc-wxz" firstAttribute="leading" secondItem="pax-nV-MXg" secondAttribute="leading" id="Jor-Fz-eG7"/>
+                                    <constraint firstItem="L1K-Tc-wxz" firstAttribute="top" secondItem="iZi-Yi-i71" secondAttribute="top" constant="-1" id="ReZ-Ib-ShN"/>
+                                    <constraint firstItem="pax-nV-MXg" firstAttribute="top" secondItem="L1K-Tc-wxz" secondAttribute="bottom" constant="1" id="dZ8-aI-EdT"/>
+                                    <constraint firstItem="L1K-Tc-wxz" firstAttribute="leading" secondItem="iZi-Yi-i71" secondAttribute="leading" constant="21" id="qUV-gn-TYE"/>
+                                </constraints>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="DjJ-0U-oJm" firstAttribute="trailing" secondItem="L1K-Tc-wxz" secondAttribute="trailing" id="2gJ-Ri-HH3"/>
-                            <constraint firstItem="DjJ-0U-oJm" firstAttribute="trailing" secondItem="pax-nV-MXg" secondAttribute="trailing" id="AFk-5O-Va1"/>
-                            <constraint firstItem="pax-nV-MXg" firstAttribute="top" secondItem="L1K-Tc-wxz" secondAttribute="bottom" constant="14" id="I1v-79-uIf"/>
-                            <constraint firstItem="L1K-Tc-wxz" firstAttribute="leading" secondItem="ZSC-n5-AdE" secondAttribute="leading" constant="40" id="JpH-xJ-MtK"/>
-                            <constraint firstItem="L1K-Tc-wxz" firstAttribute="top" secondItem="ZSC-n5-AdE" secondAttribute="top" constant="200" id="KJE-vE-PDA"/>
-                            <constraint firstItem="DjJ-0U-oJm" firstAttribute="top" secondItem="pax-nV-MXg" secondAttribute="bottom" constant="8" symbolic="YES" id="Oah-RD-Zzo"/>
-                            <constraint firstItem="L1K-Tc-wxz" firstAttribute="leading" secondItem="pax-nV-MXg" secondAttribute="leading" id="mhR-yt-4BV"/>
-                            <constraint firstAttribute="trailing" secondItem="L1K-Tc-wxz" secondAttribute="trailing" constant="40" id="ups-hh-AAt"/>
+                            <constraint firstItem="qNX-Ug-enU" firstAttribute="bottom" secondItem="ZSC-n5-AdE" secondAttribute="bottom" id="ES6-Dh-DMt"/>
+                            <constraint firstItem="iZi-Yi-i71" firstAttribute="centerX" secondItem="qNX-Ug-enU" secondAttribute="centerX" id="Gn6-W8-UXh"/>
+                            <constraint firstItem="iZi-Yi-i71" firstAttribute="top" secondItem="ZSC-n5-AdE" secondAttribute="top" constant="214" id="QIr-n8-mfk"/>
+                            <constraint firstItem="iZi-Yi-i71" firstAttribute="centerX" secondItem="3F5-zk-40V" secondAttribute="centerX" id="SgS-IQ-ny2"/>
+                            <constraint firstItem="iZi-Yi-i71" firstAttribute="trailing" secondItem="2gI-O5-tVj" secondAttribute="trailing" id="kUh-ls-3Wn"/>
+                            <constraint firstItem="qNX-Ug-enU" firstAttribute="leading" secondItem="ZSC-n5-AdE" secondAttribute="leading" id="p7B-aZ-mR4"/>
+                            <constraint firstItem="2gI-O5-tVj" firstAttribute="top" secondItem="iZi-Yi-i71" secondAttribute="bottom" constant="8" symbolic="YES" id="qYa-Ok-Rpd"/>
+                            <constraint firstItem="iZi-Yi-i71" firstAttribute="top" secondItem="3F5-zk-40V" secondAttribute="bottom" constant="20" id="qbI-Wr-BME"/>
+                            <constraint firstItem="iZi-Yi-i71" firstAttribute="centerX" secondItem="ZSC-n5-AdE" secondAttribute="centerX" id="scU-SB-hGO"/>
+                            <constraint firstAttribute="bottom" secondItem="iZi-Yi-i71" secondAttribute="bottom" constant="282" id="vZV-qp-WGT"/>
+                            <constraint firstItem="iZi-Yi-i71" firstAttribute="leading" secondItem="2gI-O5-tVj" secondAttribute="leading" id="yuL-Sa-rKN"/>
                         </constraints>
                     </view>
                     <extendedEdge key="edgesForExtendedLayout"/>
-                    <navigationItem key="navigationItem" id="xEw-CC-RUG"/>
+                    <navigationItem key="navigationItem" title="登录" id="xEw-CC-RUG"/>
                     <nil key="simulatedTopBarMetrics"/>
                     <connections>
+                        <outlet property="formView" destination="iZi-Yi-i71" id="yGI-Xp-Se3"/>
                         <outlet property="pwdField" destination="pax-nV-MXg" id="InH-uS-kFd"/>
-                        <outlet property="signinButton" destination="DjJ-0U-oJm" id="KWg-E3-y4h"/>
+                        <outlet property="segmentControl" destination="3F5-zk-40V" id="dgq-mb-FNs"/>
+                        <outlet property="startButton" destination="Yug-5g-ENk" id="xJT-bA-cq0"/>
                         <outlet property="userField" destination="L1K-Tc-wxz" id="N4Q-wR-I8e"/>
                     </connections>
                 </viewController>
@@ -105,56 +157,28 @@
             </objects>
             <point key="canvasLocation" x="750" y="-618"/>
         </scene>
-        <!--Pair View Controller-->
+        <!--Pair View Controller - 找到另一半-->
         <scene sceneID="2Z7-A6-kPu">
             <objects>
                 <viewController storyboardIdentifier="pair_view" id="kSX-Oh-RZk" customClass="JNSPairViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="Lda-ig-KQU">
-                        <rect key="frame" x="0.0" y="20" width="320" height="548"/>
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" fixedFrame="YES" text="快找到你的另一半吧" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zvM-e1-c9K">
-                                <rect key="frame" x="27" y="39" width="267" height="22"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="p4s-v1-sUL">
-                                <rect key="frame" x="221" y="98" width="73" height="31"/>
-                                <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
-                                <state key="normal" title="发送请求">
-                                    <color key="titleColor" red="0.19607843459999999" green="0.30980393290000002" blue="0.52156865600000002" alpha="1" colorSpace="calibratedRGB"/>
-                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <state key="highlighted">
-                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <connections>
-                                    <action selector="buttonTouched:" destination="kSX-Oh-RZk" eventType="touchUpInside" id="4jX-Tb-AO4"/>
-                                </connections>
-                            </button>
                             <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Ta的账号" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="TXM-zw-2N8">
-                                <rect key="frame" x="27" y="98" width="174" height="30"/>
+                                <rect key="frame" x="20" y="20" width="280" height="30"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
                             <activityIndicatorView opaque="NO" contentMode="scaleToFill" fixedFrame="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="EhR-oM-t41">
-                                <rect key="frame" x="247" y="103" width="20" height="20"/>
+                                <rect key="frame" x="150" y="66" width="20" height="20"/>
                             </activityIndicatorView>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" fixedFrame="YES" text="" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="sMa-Qw-LuD">
-                                <rect key="frame" x="27" y="154" width="267" height="21"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
                     <extendedEdge key="edgesForExtendedLayout"/>
-                    <navigationItem key="navigationItem" id="ja2-pw-C9J"/>
+                    <navigationItem key="navigationItem" title="找到另一半" id="ja2-pw-C9J"/>
                     <connections>
-                        <outlet property="button" destination="p4s-v1-sUL" id="WVo-QB-KVI"/>
-                        <outlet property="errorLabel" destination="sMa-Qw-LuD" id="dr7-DO-RVp"/>
                         <outlet property="indicator" destination="EhR-oM-t41" id="eEj-lq-m3n"/>
                         <outlet property="userField" destination="TXM-zw-2N8" id="cVh-Wo-MX9"/>
                     </connections>
@@ -184,11 +208,11 @@
             <objects>
                 <viewController storyboardIdentifier="pair_waiting_view" id="ztk-6L-3Da" customClass="JNSPairWaitingViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="TjW-Ti-lqa">
-                        <rect key="frame" x="0.0" y="20" width="320" height="548"/>
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" fixedFrame="YES" text="" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mfZ-hO-nwS">
-                                <rect key="frame" x="20" y="263" width="280" height="21"/>
+                                <rect key="frame" x="20" y="20" width="280" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <nil key="highlightedColor"/>
@@ -211,7 +235,7 @@
             <objects>
                 <viewController storyboardIdentifier="pair_confirm_view" id="PiV-lK-HuL" customClass="JNSPairConfirmViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="bx5-ZL-sxe">
-                        <rect key="frame" x="0.0" y="20" width="320" height="548"/>
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" fixedFrame="YES" text="" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3tH-Nm-ugO">
@@ -262,6 +286,58 @@
             <point key="canvasLocation" x="697" y="187"/>
         </scene>
     </scenes>
+    <classes>
+        <class className="CLoginViewController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/CLoginViewController.h"/>
+            <relationships>
+                <relationship kind="action" name="segmentsChanged:"/>
+                <relationship kind="action" name="start:"/>
+                <relationship kind="outlet" name="formView" candidateClass="UIView"/>
+                <relationship kind="outlet" name="pwdField" candidateClass="UITextField"/>
+                <relationship kind="outlet" name="segmentControl" candidateClass="UISegmentedControl"/>
+                <relationship kind="outlet" name="startButton" candidateClass="UIBarButtonItem"/>
+                <relationship kind="outlet" name="userField" candidateClass="UITextField"/>
+            </relationships>
+        </class>
+        <class className="CViewController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/CViewController.h"/>
+            <relationships>
+                <relationship kind="action" name="buttonTouched:"/>
+                <relationship kind="outlet" name="addButton" candidateClass="UIButton"/>
+                <relationship kind="outlet" name="tableView" candidateClass="UITableView"/>
+            </relationships>
+        </class>
+        <class className="JNSFormView" superclassName="UIView">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/JNSFormView.h"/>
+        </class>
+        <class className="JNSPairConfirmViewController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/JNSPairConfirmViewController.h"/>
+            <relationships>
+                <relationship kind="action" name="confirmButtonTouched:"/>
+                <relationship kind="action" name="ignoreButtonTouched:"/>
+                <relationship kind="outlet" name="label" candidateClass="UILabel"/>
+            </relationships>
+        </class>
+        <class className="JNSPairViewController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/JNSPairViewController.h"/>
+            <relationships>
+                <relationship kind="outlet" name="indicator" candidateClass="UIActivityIndicatorView"/>
+                <relationship kind="outlet" name="userField" candidateClass="UITextField"/>
+            </relationships>
+        </class>
+        <class className="JNSPairWaitingViewController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/JNSPairWaitingViewController.h"/>
+            <relationships>
+                <relationship kind="outlet" name="label" candidateClass="UILabel"/>
+            </relationships>
+        </class>
+        <class className="JNSWizardViewController" superclassName="UINavigationController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/JNSWizardViewController.h"/>
+        </class>
+        <class className="NSLayoutConstraint" superclassName="NSObject">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/NSLayoutConstraint.h"/>
+        </class>
+    </classes>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar"/>
         <simulatedOrientationMetrics key="orientation"/>

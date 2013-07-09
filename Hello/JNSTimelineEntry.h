@@ -20,6 +20,7 @@
 @property (nonatomic, retain) NSNumber * width;
 @property (nonatomic, retain) NSNumber * height;
 @property (nonatomic, retain) NSString * image_url;
+@property (nonatomic, retain) NSString * imageCacheURL; // local cache
 
 
 +(JNSTimelineEntry*)entryWithImage:(UIImage*)image Context:(NSManagedObjectContext*)context;
