@@ -206,7 +206,7 @@ totalBytesExpectedToWrite:(NSInteger)totalBytesExpectedToWrite {
                                                               error:&error];
         if (error) {
             if (_upload_progress) {
-                _upload_progress(0, [error localizedFailureReason]);
+                _upload_progress(0, [error localizedDescription]);
             }
         } else {
             NSDictionary* json = [obj objectForKey:@"content"];
@@ -222,10 +222,10 @@ totalBytesExpectedToWrite:(NSInteger)totalBytesExpectedToWrite {
 - (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error {
     if (_download_connection == connection) {
         NSAssert(!_image, @"");
-        _download_progress(0, [error localizedFailureReason]);
+        _download_progress(0, [error localizedDescription]);
     } else if (_upload_connection == connection) {
         if (_upload_progress) {
-            _upload_progress(0, [error localizedFailureReason]);
+            _upload_progress(0, [error localizedDescription]);
         }
     }
     [self clear];

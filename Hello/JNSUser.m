@@ -14,6 +14,7 @@ JNSUser* activeUser;
 
 @interface JNSUser() {
     JNSConnection* _connection;
+    JNSConnection* _syncToken;
 }
 
 @end
@@ -40,10 +41,10 @@ JNSUser* activeUser;
 -(void)pairWithUser: (NSString*) user Completion:(void (^)(NSString*))completion {
     NSAssert(!_connection, @"pairWithUser called when _connection exists");
   
-    NSString* body = [NSString stringWithFormat:@"user=%@", user];
+    NSString* url = [NSString stringWithFormat:@"%@?user=%@", kPairURL, user];
     _connection = [JNSConnection connectionWithMethod:false
-                                                  URL:kPairURL
-                                               Params:body
+                                                  URL:url
+                                               Params:nil
                                            Completion:^(JNSConnection* connection, NSHTTPURLResponse *response, NSDictionary *json, NSError *error)
    {
        if (json) {
@@ -51,7 +52,7 @@ JNSUser* activeUser;
        }
        
        _connection = nil;
-       completion([error localizedFailureReason]);
+       completion([error localizedDescription]);
    }];
 }
 
@@ -67,10 +68,10 @@ JNSUser* activeUser;
     NSAssert(!_connection, @"");
     NSAssert(self.request && self.request.length, @"");
 
-    NSString* body = [NSString stringWithFormat:@"user=%@", self.request];
+    NSString* url = [NSString stringWithFormat:@"%@?user=%@", kPairConfirmURL, self.request];
     _connection = [JNSConnection connectionWithMethod:false
-                                                  URL:kPairConfirmURL
-                                               Params:body
+                                                  URL:url
+                                               Params:nil
                                            Completion:^(JNSConnection* connection, NSHTTPURLResponse *response, NSDictionary *json, NSError *error)
    {
        if (json) {
@@ -78,6 +79,19 @@ JNSUser* activeUser;
        }
        completion([error description]);
    }];
+}
+
+-(void)syncDeviceToken:(NSData*)deviceToken {
+    if (!_syncToken) {
+        NSDictionary* params = [NSDictionary dictionaryWithObject:[deviceToken base64Encoding] forKey:@"token"];
+        _syncToken = [JNSConnection connectionWithMethod:false
+                                                     URL:kSyncTokenURL
+                                                  Params:params
+                                              Completion:^(JNSConnection* connection, NSHTTPURLResponse *response, NSDictionary *json, NSError *error)
+                      {
+                          
+                      }];
+    }
 }
 
 @end

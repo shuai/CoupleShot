@@ -15,20 +15,16 @@ extern NSString* kPairURL;
 extern NSString* kPairConfirmURL;
 extern NSString* kTimelineURL;
 extern NSString* kPostURL;
+extern NSString* kSyncTokenURL;
 
 
 @interface JNSConnection : NSObject<NSURLConnectionDataDelegate>
 
--(id) initWithMethod:(BOOL)get
-                 URL:(NSString*)url_str
-              Params:(NSString*)params
-          Completion:(void (^)(JNSConnection*, NSHTTPURLResponse*, NSDictionary*, NSError*))completion;
 
 +(JNSConnection*) connectionWithRequest:(NSURLRequest*)request
                              Completion:(void (^)(JNSConnection*, NSHTTPURLResponse*, NSDictionary*, NSError*))completion;
 +(JNSConnection*) connectionWithMethod:(BOOL)get
                                    URL:(NSString*)url
-                                Params:(NSString*)params
+                                Params:(NSDictionary*)params
                             Completion:(void (^)(JNSConnection*, NSHTTPURLResponse*, NSDictionary*, NSError*))completion;
-
 @end

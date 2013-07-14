@@ -15,9 +15,15 @@
 // Core Data
 @property (nonatomic, retain) JNSUser * cachedUser;
 @property NSNumber* nextImageID;
+@property bool tokenSent;
+
+//
+@property (nonatomic) NSData* deviceToken;
 
 + (NSNumber*)uniqueImageID;
 + (void)setConfig:(JNSConfig*)config;
 + (JNSConfig*)config;
+
+
 
 @end

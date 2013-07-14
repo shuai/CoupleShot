@@ -38,8 +38,6 @@ const int kContentMargin = 5;
     [self.view bringSubviewToFront:(self.addButton)];
     self.tableView.delegate = self;
     self.tableView.dataSource = self;
-    
-    [self loadTimeline];
 }
 
 - (void)loadTimeline {
@@ -51,7 +49,7 @@ const int kContentMargin = 5;
         [user.timeline loadLatestCompletion:^(unsigned int count, NSError *error) {
             if (error) {
                 UIAlertView* view = [[UIAlertView alloc] initWithTitle:@"加载错误"
-                                                               message:[error localizedFailureReason]
+                                                               message:[error localizedDescription]
                                                               delegate:nil
                                                      cancelButtonTitle:@"确定"
                                                      otherButtonTitles:nil];
@@ -77,16 +75,14 @@ const int kContentMargin = 5;
 }
 
 - (void)wizardViewWillDisappear {
+}
+
+- (void)viewWillAppear:(BOOL)animated {
     [self loadTimeline];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
-    JNSUser* user = [JNSUser activeUser];
-    if (!user || !user.partner) {
-        JNSWizardViewController* wizard = [[self storyboard] instantiateViewControllerWithIdentifier:@"wizard_view"];
-        wizard.delegate = self;
-        [self presentViewController:wizard animated:false completion:nil];
-    } 
+
 }
 
 - (void)didReceiveMemoryWarning

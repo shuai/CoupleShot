@@ -48,10 +48,10 @@
         timestamp = [((JNSTimelineEntry*)[self.entries lastObject]).timestamp longLongValue] + 1;
     }
     
-    NSString* params = [NSString stringWithFormat:@"timestamp=%llu", timestamp];
+    NSString* url = [NSString stringWithFormat:@"%@?timestamp=%llu", kTimelineURL, timestamp];
     _connection = [JNSConnection connectionWithMethod:true
-                                                  URL:kTimelineURL
-                                               Params:params
+                                                  URL:url
+                                               Params:nil
                                            Completion:^(JNSConnection* connection, NSHTTPURLResponse *response, NSDictionary *json, NSError *error)
    {
        if (response.statusCode == 200 && json && error == nil) {

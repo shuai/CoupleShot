@@ -11,6 +11,8 @@
 #import "CViewController.h"
 #import "JNSConfig.h"
 #import <CoreData/CoreData.h>
+#import "JNSPairViewController.h"
+#import "JNSPairWaitingViewController.h"
 
 @interface CAppDelegate() {
 }
@@ -49,10 +51,24 @@
         NSAssert([result count] == 1, @"");
         [JNSConfig setConfig:[result firstObject]];
     }
-            
+
+    [self.window makeKeyAndVisible];
+    
+    JNSUser* user = [JNSUser activeUser];
+    if (!user || !user.partner) {
+        JNSWizardViewController* wizard = [[self.window.rootViewController storyboard] instantiateViewControllerWithIdentifier:@"wizard_view"];
+        [self.window.rootViewController presentViewController:wizard animated:false completion:nil];
+    }
+    
+    if (![JNSConfig config].deviceToken) {
+        NSLog(@"Register for push notification");
+        int types = UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound | UIRemoteNotificationTypeAlert;
+        [application registerForRemoteNotificationTypes:types];
+    }
+    
     return YES;
 }
-							
+
 - (void)applicationWillResignActive:(UIApplication *)application
 {
     // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
@@ -86,6 +102,27 @@
 - (void)applicationDidReceiveMemoryWarning:(UIApplication *)application {
     // try to clean up as much memory as possible. next step is to terminate app
     
+}
+
+// notification
+- (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
+    [JNSConfig config].deviceToken = deviceToken;
+}
+
+- (void)application:(UIApplication *)application didFailToRegisterForRemoteNotificationsWithError:(NSError *)error {
+    if ([error code] != 3010) {
+        NSLog(@"RETRY Register for push notification");
+        int types = UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound | UIRemoteNotificationTypeAlert;
+        [application registerForRemoteNotificationTypes:types];
+    }
+}
+
+- (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo {
+    NSLog(@"didReceiveRemoteNotification: %@", [userInfo description]);
+    NSDictionary* user = [userInfo objectForKey:@"user"];
+    if (user) {
+        [[JNSUser activeUser] updateJSON:user];
+    }
 }
 
 

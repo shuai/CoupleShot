@@ -8,13 +8,15 @@
 
 #import "JNSConnection.h"
 
-NSString* kHost = @"http://124.205.11.211";
+NSString* kHost = @"http://192.168.1.100";
 NSString* kSignUpURL = @"/signup";
 NSString* kSignInURL = @"/signin";
 NSString* kPairURL = @"/api/pair";
 NSString* kPairConfirmURL = @"/api/pair";
 NSString* kTimelineURL = @"/api/timeline";
 NSString* kPostURL = @"/api/image";
+NSString* kSyncTokenURL = @"/api/synctoken";
+
 
 @interface JNSConnection() {
     NSHTTPURLResponse* _response;
@@ -28,17 +30,38 @@ NSString* kPostURL = @"/api/image";
 
 -(id) initWithMethod:(BOOL)get
                  URL:(NSString*)url_str
-              Params:(NSString*)params
+              Params:(NSDictionary*)params
           Completion:(void (^)(JNSConnection*, NSHTTPURLResponse*, NSDictionary*, NSError*))completion {
     
-    url_str = [NSString stringWithFormat:@"%@?%@", url_str, params];
-
     NSLog(@"JNSConnection init %@ params:%@", get?@"GET":@"POST", params);
 
     NSURL* url = [NSURL URLWithString:url_str relativeToURL: [NSURL URLWithString:kHost]];
     NSMutableURLRequest* request = [NSMutableURLRequest requestWithURL:url];
     [request setHTTPMethod:get?@"GET":@"POST"];
 
+    // body params
+    if (!get && [params count]) {
+        NSString *boundary = @"---------------------------14737809831466499882746641449";
+        NSString *contentType = [NSString stringWithFormat:@"multipart/form-data; boundary=%@",boundary];
+        [request addValue:contentType forHTTPHeaderField: @"Content-Type"];
+        
+        NSMutableData *postbody = [NSMutableData data];
+        
+        for (NSString* key in params) {
+            [postbody appendData:[[NSString stringWithFormat:@"\r\n--%@\r\n",boundary]
+                                  dataUsingEncoding:NSUTF8StringEncoding]];
+            NSString* disposition = [NSString stringWithFormat:
+                                     @"Content-Disposition: form-data; name=\"%@\";\r\n\r\n", key];
+            [postbody appendData:[disposition dataUsingEncoding:NSUTF8StringEncoding]];
+            [postbody appendData:[((NSString*)[params objectForKey:key]) dataUsingEncoding:NSUTF8StringEncoding]];
+        }
+
+        
+        [postbody appendData:[[NSString stringWithFormat:@"\r\n--%@--\r\n",boundary]
+                              dataUsingEncoding:NSUTF8StringEncoding]];
+        [request setHTTPBody:postbody];
+    }
+    
     return [self initWithRequest:request Completion:completion];
 }
 
@@ -56,7 +79,6 @@ NSString* kPostURL = @"/api/image";
 
 - (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data {
     [_data appendData:data];
-    NSLog(@"didReceiveData, length:%d", data.length);
 }
 
 - (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response {
@@ -65,8 +87,6 @@ NSString* kPostURL = @"/api/image";
     
     _response = (NSHTTPURLResponse*)response;
     _data = [NSMutableData new];
-    
-    NSLog(@"didReceiveResponse, relativePath:%@, status:%d", _response.URL.relativePath, [_response statusCode]);
 }
 
 - (void)connectionDidFinishLoading:(NSURLConnection *)connection {
@@ -84,7 +104,7 @@ NSString* kPostURL = @"/api/image";
             error = [NSError errorWithDomain:@"Network"
                                         code:_response.statusCode
                                     userInfo:[NSDictionary dictionaryWithObject:[obj objectForKey:@"msg"]
-                                                                         forKey: NSLocalizedFailureReasonErrorKey]];
+                                                                         forKey: NSLocalizedDescriptionKey]];
             
         }
     }
@@ -103,7 +123,7 @@ NSString* kPostURL = @"/api/image";
 
 +(JNSConnection*) connectionWithMethod:(BOOL)get
                                    URL:(NSString*)url
-                                Params:(NSString*)params
+                                Params:(NSDictionary*)params
                             Completion:(void (^)(JNSConnection*, NSHTTPURLResponse*, NSDictionary*, NSError*))completion {
     JNSConnection* connection = [[JNSConnection alloc] initWithMethod:get
                                                                   URL:url
@@ -111,7 +131,6 @@ NSString* kPostURL = @"/api/image";
                                                            Completion:completion];
     return connection;
 }
-
 
 
 @end

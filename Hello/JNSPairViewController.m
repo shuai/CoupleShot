@@ -19,7 +19,6 @@
 @implementation JNSPairViewController
 
 - (void)viewDidLoad {
-    [self.indicator setHidden:true];
     [self alertRequest];
     UIBarButtonItem* right = [[UIBarButtonItem alloc] initWithTitle:@"发送请求"
                                                               style:UIBarButtonItemStyleDone
@@ -29,6 +28,7 @@
 }
 
 -(void)viewWillAppear:(BOOL)animated {
+    [self.indicator setHidden:true];
     [self.navigationController setNavigationBarHidden:false animated:animated];
 }
 
@@ -38,43 +38,23 @@
         [self.indicator startAnimating];
 
         JNSUser* current_user = [JNSUser activeUser];
+        self.navigationItem.rightBarButtonItem.enabled = NO;
         
         [current_user pairWithUser:self.userField.text Completion:^(NSString* msg){
-            if (current_user.partner) {
-                [self.parentViewController dismissViewControllerAnimated:YES completion:nil];
-            } else if (current_user.request) {
-                if (current_user.incoming) {
-                    [self alertRequest];
-                } else {
-                    JNSPairWaitingViewController* view = [self.storyboard instantiateViewControllerWithIdentifier:@"pair_waiting_view"];
-                    
-                    [self.navigationController pushViewController:view animated:YES];
-                }
-            } else {
+            if (msg) {
                 UIAlertView* view = [[UIAlertView alloc] initWithTitle:@"请求失败"
                                                                message:msg
                                                               delegate:nil
                                                      cancelButtonTitle:@"确定"
                                                      otherButtonTitles:nil];
                 [view show];
+                self.navigationItem.rightBarButtonItem.enabled = YES;
                 [self.indicator setHidden:true];
             }
         }];
     }
 }
 
-- (void)alertRequest {
-    JNSUser* current_user = [JNSUser activeUser];
-
-    if (current_user.request && current_user.incoming) {
-        UIAlertView* view = [[UIAlertView alloc] initWithTitle:@"通知"
-                                                       message:[NSString stringWithFormat:@"%@ 请求和您分享", current_user.request]
-                                                      delegate:self
-                                             cancelButtonTitle:@"取消"
-                                             otherButtonTitles:@"接受请求", nil];
-        [view show];
-    }
-}
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
     bool accept = buttonIndex == 1;
@@ -85,6 +65,19 @@
             [self.navigationController dismissViewControllerAnimated:YES completion:nil];
         }
     }];
+}
+
+- (void)alertRequest {
+    JNSUser* current_user = [JNSUser activeUser];
+    
+    if (current_user.request && current_user.incoming) {
+        UIAlertView* view = [[UIAlertView alloc] initWithTitle:@"通知"
+                                                       message:[NSString stringWithFormat:@"%@ 请求和您分享", current_user.request]
+                                                      delegate:self
+                                             cancelButtonTitle:@"取消"
+                                             otherButtonTitles:@"接受请求", nil];
+        [view show];
+    }
 }
 
 @end

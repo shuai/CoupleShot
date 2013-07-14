@@ -69,10 +69,10 @@
 }
 
 - (void)signin {
-    NSString* body = [NSString stringWithFormat:@"user=%@&pwd=%@", self.userField.text, self.pwdField.text];
+    NSString* url = [NSString stringWithFormat:@"%@?user=%@&pwd=%@", kSignInURL, self.userField.text, self.pwdField.text];
     _connection = [JNSConnection connectionWithMethod:false
-                                                  URL:kSignInURL
-                                               Params:body
+                                                  URL:url
+                                               Params:nil
                                            Completion:^(JNSConnection* connection, NSHTTPURLResponse *response, NSDictionary *json, NSError *error)
    {
        [UIApplication sharedApplication].networkActivityIndicatorVisible = false;
@@ -82,7 +82,7 @@
            [self succeeded:json];
        } else {
            UIAlertView* view = [[UIAlertView alloc] initWithTitle:@"登录失败"
-                                                          message:[error localizedFailureReason]
+                                                          message:[error localizedDescription]
                                                          delegate:nil
                                                 cancelButtonTitle:@"取消"
                                                 otherButtonTitles:nil];
@@ -93,10 +93,10 @@
 }
 
 - (void)signup {
-    NSString* body = [NSString stringWithFormat:@"user=%@&pwd=%@", self.userField.text, self.pwdField.text];
+    NSString* url = [NSString stringWithFormat:@"%@?user=%@&pwd=%@", kSignUpURL, self.userField.text, self.pwdField.text];
     _connection = [JNSConnection connectionWithMethod:false
-                                                  URL:kSignUpURL
-                                               Params:body
+                                                  URL:url
+                                               Params:nil
                                            Completion:^(JNSConnection* connection, NSHTTPURLResponse *response, NSDictionary *json, NSError *error)
    {
        [UIApplication sharedApplication].networkActivityIndicatorVisible = false;
@@ -106,7 +106,7 @@
            [self succeeded:json];
        } else {
            UIAlertView* view = [[UIAlertView alloc] initWithTitle:@"注册失败"
-                                                          message:[error localizedFailureReason]
+                                                          message:[error localizedDescription]
                                                          delegate:nil
                                                 cancelButtonTitle:@"取消"
                                                 otherButtonTitles:nil];
@@ -122,18 +122,6 @@
                                    JSON:json
                                 Context:[JNSConfig config].managedObjectContext];
     [[JNSConfig config] setCachedUser:user];
-    
-    if (user.partner) {
-        [self.parentViewController dismissViewControllerAnimated:YES completion:nil];
-    } else if (user.request && !user.incoming) {
-        JNSPairWaitingViewController* view = [self.storyboard instantiateViewControllerWithIdentifier:@"pair_waiting_view"];
-        [self.navigationController pushViewController:view animated:true];
-    } else {
-        JNSPairViewController* view =
-        [self.storyboard instantiateViewControllerWithIdentifier:@"pair_view"];
-        
-        [self.navigationController pushViewController:view animated:true];
-    }    
 }
 
 // UITextFieldDelegate

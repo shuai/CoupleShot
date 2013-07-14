@@ -26,7 +26,7 @@
 @property NSString* partner;
 @property NSString* email;
 @property NSString* request;
-@property bool incoming;
+@property Boolean incoming;
 @property JNSTimeline* timeline;
 
 // to load from network
@@ -35,5 +35,7 @@
 
 -(void)pairWithUser: (NSString*) user Completion:(void (^)(NSString*))completion;
 -(void)confirmRequest:(bool)confirm Completion:(void (^)(NSString*))completion;
+-(void)syncDeviceToken:(NSData*)deviceToken;
+-(void)updateJSON:(NSDictionary*)json;
 
 @end
