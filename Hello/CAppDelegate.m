@@ -119,12 +119,16 @@
 
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo {
     NSLog(@"didReceiveRemoteNotification: %@", [userInfo description]);
-    NSDictionary* user = [userInfo objectForKey:@"user"];
-    if (user) {
-        [[JNSUser activeUser] updateJSON:user];
+    NSString* type = [userInfo valueForKey:@"type"];
+    if ([type compare:@"post"] == NSOrderedSame) {
+        [[JNSUser activeUser].timeline loadLatest];
+    } else if ([type compare:@"pair"] == NSOrderedSame) {
+        NSDictionary* user = [userInfo objectForKey:@"user"];
+        if (user) {
+            [[JNSUser activeUser] updateJSON:user];
+        }
     }
 }
-
 
 - (void)saveContext
 {    

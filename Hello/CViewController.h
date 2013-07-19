@@ -11,6 +11,6 @@
 #import "JNSWizardViewController.h"
 
 @interface CViewController : UIViewController <UITableViewDelegate, UITableViewDataSource,  UINavigationControllerDelegate, UIImagePickerControllerDelegate,
-    JNSUserDelegate, JNSWizardViewDelegate>
+    JNSTimelineDelegate>
 
 @end

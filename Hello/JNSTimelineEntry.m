@@ -104,9 +104,11 @@
     _download_connection = [NSURLConnection connectionWithRequest:request delegate:self];
 }
 
--(void) upload {
+-(void) uploadWithCallback:(void(^)(unsigned progress, NSString* error))block {
     NSAssert(!_upload_connection, @"");
     NSAssert(!_download_connection, @"");
+
+    _upload_progress = block;
 
     NSString* url_str = [NSString stringWithFormat:@"%@?width=%d&height=%d",
                          kPostURL, (int)_image.size.width, (int)_image.size.height];
@@ -129,10 +131,6 @@
     [request setHTTPBody:postbody];
     
     _upload_connection = [NSURLConnection connectionWithRequest:request delegate:self];
-}
-
-- (void)trackUploadProgress:(void(^)(unsigned, NSString* error))block {
-    _upload_progress = block;
 }
 
 - (void)cacheImage {
@@ -210,6 +208,7 @@ totalBytesExpectedToWrite:(NSInteger)totalBytesExpectedToWrite {
             }
         } else {
             NSDictionary* json = [obj objectForKey:@"content"];
+            NSAssert(json,@"");
             [self updateMeta:json];
             if (_upload_progress) {
                 _upload_progress(100, nil);

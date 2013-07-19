@@ -38,7 +38,9 @@ JNSConfig* _config;
     if ([keyPath compare:@"cachedUser"] == NSOrderedSame) {
         if (self.deviceToken) {
             JNSUser* user = [change valueForKey:NSKeyValueChangeNewKey];
-            [user syncDeviceToken:self.deviceToken];
+            if (![user isEqual:[NSNull null]]) {
+                [user syncDeviceToken:self.deviceToken];
+            }
         }
     }
 }

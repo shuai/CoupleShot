@@ -15,10 +15,24 @@
 }
 @end
 
+@interface JNSTimeline (CoreDataGeneratedAccessors)
+- (void)insertObject:(JNSTimelineEntry *)value inEntriesAtIndex:(NSUInteger)idx;
+- (void)removeObjectFromEntriesAtIndex:(NSUInteger)idx;
+- (void)insertEntries:(NSArray *)value atIndexes:(NSIndexSet *)indexes;
+- (void)removeEntriesAtIndexes:(NSIndexSet *)indexes;
+- (void)replaceObjectInEntriesAtIndex:(NSUInteger)idx withObject:(JNSTimelineEntry *)value;
+- (void)replaceEntriesAtIndexes:(NSIndexSet *)indexes withEntries:(NSArray *)values;
+- (void)addEntriesObject:(JNSTimelineEntry *)value;
+- (void)removeEntriesObject:(JNSTimelineEntry *)value;
+- (void)addEntries:(NSOrderedSet *)values;
+- (void)removeEntries:(NSOrderedSet *)values;
+@end
+
 
 @implementation JNSTimeline
 
-@dynamic entries;
+@synthesize delegate;
+@dynamic entries, latestTimestamp;
 
 +(id)timelineWithContext:(NSManagedObjectContext*)context {
     NSEntityDescription *entity = [NSEntityDescription entityForName:@"JNSTimeline"
@@ -33,29 +47,38 @@
     JNSTimelineEntry* entry = [JNSTimelineEntry entryWithImage:image
                                                        Context:[self managedObjectContext]];
     [self addEntriesObject:entry];
-    [entry upload];
+    [entry uploadWithCallback:^(unsigned int progress, NSString *error) {
+        [self entry:entry UploadProgressUpdatedWithError:error];
+    }];
 }
 
--(void)loadLatestCompletion:(void(^)(unsigned add, NSError* error))completion {
+-(void)entry:(JNSTimelineEntry*)entry UploadProgressUpdatedWithError:(NSString *)error {
+    if ([entry.timestamp compare:self.latestTimestamp] == NSOrderedDescending) {
+        NSLog(@"Update latest timeline timestamp to %@",entry.timestamp);
+        self.latestTimestamp = entry.timestamp;
+    }
+    
+    [self.delegate entry:entry UploadProgressUpdatedWithError:error];
+}
+
+-(void)loadLatest {
     if (_connection) {
         NSLog(@"[JNSTimeline loadLatest] already loading");
         return;
     }
-
-    // TODO read the latest timestamp    
-    UInt64 timestamp = 0;
-    if ([self.entries count]) {
-        timestamp = [((JNSTimelineEntry*)[self.entries lastObject]).timestamp longLongValue] + 1;
-    }
     
+    UInt64 timestamp = [self.latestTimestamp longLongValue] + 1;
     NSString* url = [NSString stringWithFormat:@"%@?timestamp=%llu", kTimelineURL, timestamp];
     _connection = [JNSConnection connectionWithMethod:true
                                                   URL:url
                                                Params:nil
                                            Completion:^(JNSConnection* connection, NSHTTPURLResponse *response, NSDictionary *json, NSError *error)
    {
-       if (response.statusCode == 200 && json && error == nil) {
+       _connection = nil;
+       
+       if (!error) {
            NSArray* data = [json objectForKey:@"data"];
+           NSMutableArray* indexies = [NSMutableArray new];
            for (NSString* str in data) {
                NSError* error;
                NSDictionary* obj = [NSJSONSerialization JSONObjectWithData:
@@ -64,20 +87,53 @@
                                                                      error:&error];
                JNSTimelineEntry* entry = [JNSTimelineEntry entryWithJSON:obj
                                                                  Context:self.managedObjectContext];
-               [self addEntriesObject:entry];
-           }
-           completion([data count], nil);
-       } else {
-           if (!error) {
-               if (json) {
-                   error = [NSError errorWithDomain:[json objectForKey:@"msg"] code:0 userInfo:nil];
+               if ([self.entries count] == 0) {
+                   [self addEntriesObject:entry];
+                   [indexies addObject:[NSNumber numberWithUnsignedInteger:0]];
                } else {
-                   // TODO
+                   __block NSUInteger index = 0;
+                   // Add entry to proper place
+                   [self.entries enumerateObjectsWithOptions: NSEnumerationReverse usingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+                                                                            
+                      JNSTimelineEntry* current = obj;
+                      if (current.timestamp != 0 &&
+                          [current.timestamp compare:entry.timestamp] == NSOrderedAscending ) {
+                          index = idx + 1;// TODO what if idx is the last?
+                          *stop = YES;
+                      }
+                       // TODO
+                      if (index == [self.entries count]) {
+                          //
+                          ;
+                      }
+                      [self insertObject:entry inEntriesAtIndex:index];
+                    }];
+                   [indexies addObject: [NSNumber numberWithUnsignedInteger:index]];
                }
+               
+               if ([entry.timestamp compare:self.latestTimestamp] == NSOrderedDescending) {
+                   NSLog(@"Update latest timeline timestamp to %@",entry.timestamp);
+                   self.latestTimestamp = entry.timestamp;
+               }
+
            }
-           completion(0, error);
+           [self.delegate didLoadLatestWithIndexes:indexies Error:error];
+       } else {
+           [self.delegate didLoadLatestWithIndexes:nil Error:error];
        }
    }];
+}
+
+// http://stackoverflow.com/questions/7385439/exception-thrown-in-nsorderedset-generated-accessors
+// Core data accessor
+
+- (void)insertObject:(JNSTimelineEntry *)value inEntriesAtIndex:(NSUInteger)idx {
+    NSIndexSet* indexes = [NSIndexSet indexSetWithIndex:idx];
+    [self willChange:NSKeyValueChangeInsertion valuesAtIndexes:indexes forKey:@"entries"];
+    NSMutableOrderedSet *tmpOrderedSet = [NSMutableOrderedSet orderedSetWithOrderedSet:[self mutableOrderedSetValueForKey:@"entries"]];
+    [tmpOrderedSet insertObject:value atIndex:idx];
+    [self setPrimitiveValue:tmpOrderedSet forKey:@"entries"];
+    [self didChange:NSKeyValueChangeInsertion valuesAtIndexes:indexes forKey:@"entries"];
 }
 
 @end

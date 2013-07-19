@@ -29,6 +29,11 @@
 		06A521D5174A6B660077C0C8 /* CViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 06A521D4174A6B660077C0C8 /* CViewController.m */; };
 		06DAA6231768BEC7005C334A /* JNSPairConfirmViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 06DAA6221768BEC7005C334A /* JNSPairConfirmViewController.m */; };
 		06DAA6261768CF3E005C334A /* JNSBaseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 06DAA6251768CF3E005C334A /* JNSBaseViewController.m */; };
+		06E02C151795B18700121ABA /* Hello-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 06A521BD174A6B660077C0C8 /* Hello-Info.plist */; };
+		06E02C181799965600121ABA /* JNSLoadManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 06E02C171799965600121ABA /* JNSLoadManager.m */; };
+		06E125B117959FD600A192EB /* tags.png in Resources */ = {isa = PBXBuildFile; fileRef = 06E125B017959C1600A192EB /* tags.png */; };
+		06E125B217959FD600A192EB /* menu2.png in Resources */ = {isa = PBXBuildFile; fileRef = 06E125AF17959BAF00A192EB /* menu2.png */; };
+		06E125B417959FFA00A192EB /* camera.png in Resources */ = {isa = PBXBuildFile; fileRef = 06E125B317959FFA00A192EB /* camera.png */; };
 		06ECF5BF17671E780028F7D6 /* CLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 06ECF5BE17671E780028F7D6 /* CLoginViewController.m */; };
 		06ECF5C2176838560028F7D6 /* JNSUser.m in Sources */ = {isa = PBXBuildFile; fileRef = 06ECF5C1176838550028F7D6 /* JNSUser.m */; };
 		06ECF5C5176845FC0028F7D6 /* JNSPairViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 06ECF5C4176845FC0028F7D6 /* JNSPairViewController.m */; };
@@ -70,6 +75,11 @@
 		06DAA6221768BEC7005C334A /* JNSPairConfirmViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JNSPairConfirmViewController.m; sourceTree = "<group>"; };
 		06DAA6241768CF3E005C334A /* JNSBaseViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JNSBaseViewController.h; sourceTree = "<group>"; };
 		06DAA6251768CF3E005C334A /* JNSBaseViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JNSBaseViewController.m; sourceTree = "<group>"; };
+		06E02C161799965600121ABA /* JNSLoadManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JNSLoadManager.h; sourceTree = "<group>"; };
+		06E02C171799965600121ABA /* JNSLoadManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JNSLoadManager.m; sourceTree = "<group>"; };
+		06E125AF17959BAF00A192EB /* menu2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = menu2.png; path = assets/menu2.png; sourceTree = "<group>"; };
+		06E125B017959C1600A192EB /* tags.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = tags.png; path = assets/tags.png; sourceTree = "<group>"; };
+		06E125B317959FFA00A192EB /* camera.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = camera.png; path = assets/camera.png; sourceTree = "<group>"; };
 		06ECF5BD17671E780028F7D6 /* CLoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CLoginViewController.h; sourceTree = "<group>"; };
 		06ECF5BE17671E780028F7D6 /* CLoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CLoginViewController.m; sourceTree = "<group>"; };
 		06ECF5C0176838550028F7D6 /* JNSUser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JNSUser.h; sourceTree = "<group>"; };
@@ -157,6 +167,8 @@
 				06DAA6251768CF3E005C334A /* JNSBaseViewController.m */,
 				062CB43D17761AF100182960 /* JNSTimeline.h */,
 				062CB43E17761AF100182960 /* JNSTimeline.m */,
+				06E02C161799965600121ABA /* JNSLoadManager.h */,
+				06E02C171799965600121ABA /* JNSLoadManager.m */,
 				062CB440177621B100182960 /* JNSTimelineEntry.h */,
 				06F97E44176C661E00F58AC9 /* JNSTimelineEntry.m */,
 				06F97E45176C681300F58AC9 /* JNSConnection.h */,
@@ -174,6 +186,9 @@
 		06A521BC174A6B660077C0C8 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				06E125B317959FFA00A192EB /* camera.png */,
+				06E125B017959C1600A192EB /* tags.png */,
+				06E125AF17959BAF00A192EB /* menu2.png */,
 				06252703178C748900579F1C /* lock.png */,
 				06252704178C748900579F1C /* user2.png */,
 				06A521BD174A6B660077C0C8 /* Hello-Info.plist */,
@@ -239,14 +254,18 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				06E125B417959FFA00A192EB /* camera.png in Resources */,
 				06A521C0174A6B660077C0C8 /* InfoPlist.strings in Resources */,
 				06A521C8174A6B660077C0C8 /* Default.png in Resources */,
+				06E125B117959FD600A192EB /* tags.png in Resources */,
 				06A521CA174A6B660077C0C8 /* Default@2x.png in Resources */,
 				06A521CC174A6B660077C0C8 /* Default-568h@2x.png in Resources */,
 				06A521CF174A6B660077C0C8 /* MainStoryboard_iPhone.storyboard in Resources */,
+				06E02C151795B18700121ABA /* Hello-Info.plist in Resources */,
 				06252706178C748900579F1C /* user2.png in Resources */,
 				06A521D2174A6B660077C0C8 /* MainStoryboard_iPad.storyboard in Resources */,
 				06252705178C748900579F1C /* lock.png in Resources */,
+				06E125B217959FD600A192EB /* menu2.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -267,6 +286,7 @@
 				06F97E48176C6E3B00F58AC9 /* JNSConnection.m in Sources */,
 				06ECF5C2176838560028F7D6 /* JNSUser.m in Sources */,
 				06ECF5C5176845FC0028F7D6 /* JNSPairViewController.m in Sources */,
+				06E02C181799965600121ABA /* JNSLoadManager.m in Sources */,
 				06ECF5C817684A190028F7D6 /* JNSPairWaitingViewController.m in Sources */,
 				062CB43F17761AF100182960 /* JNSTimeline.m in Sources */,
 				06DAA6231768BEC7005C334A /* JNSPairConfirmViewController.m in Sources */,

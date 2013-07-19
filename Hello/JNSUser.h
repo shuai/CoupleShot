@@ -11,15 +11,8 @@
 #import "JNSTimeline.h"
 #import "JNSConnection.h"
 
-@protocol JNSUserDelegate
-@optional
--(void)validationComplete;
-@end
-
-
 @interface JNSUser : NSManagedObject
 
-@property (weak) id<JNSUserDelegate> delegate;
 @property (readonly) bool valid;
 
 // Core Data

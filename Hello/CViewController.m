@@ -10,18 +10,21 @@
 #import <MobileCoreServices/MobileCoreServices.h>
 #import "JNSWizardViewController.h"
 #import "JNSUser.h"
+#import "JNSConfig.h"
 
 const int kContentMargin = 5;
 
 @interface CViewController ()
 @property (weak, nonatomic) IBOutlet UIButton *addButton;
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
+@property (weak, nonatomic) IBOutlet UIToolbar *toolbar;
 
 - (IBAction)buttonTouched:(id)sender;
 @end
 
 @implementation CViewController
 
+// MOVE
 -(void) entryWithIndex:(int)index LoadedWithError:(NSString*)err {
     NSLog(@"reloadRowsAtIndexPaths %d", index);
     
@@ -38,47 +41,24 @@ const int kContentMargin = 5;
     [self.view bringSubviewToFront:(self.addButton)];
     self.tableView.delegate = self;
     self.tableView.dataSource = self;
-}
-
-- (void)loadTimeline {
-    // Load timeline
-    JNSUser* user = [JNSUser activeUser];
-    if (user) {
-        user.delegate = self;
+    
+    // Camera Button
+    //self.addButton
+    CALayer* layer = self.addButton.layer;
+    layer.shadowColor = [UIColor whiteColor].CGColor;
+    layer.shadowOpacity = 1;
+    layer.shadowRadius = 10;
+    layer.shadowOffset = CGSizeMake(0, 0);
         
-        [user.timeline loadLatestCompletion:^(unsigned int count, NSError *error) {
-            if (error) {
-                UIAlertView* view = [[UIAlertView alloc] initWithTitle:@"加载错误"
-                                                               message:[error localizedDescription]
-                                                              delegate:nil
-                                                     cancelButtonTitle:@"确定"
-                                                     otherButtonTitles:nil];
-                [view show];
-            } else {
-                NSMutableArray* array = [NSMutableArray new];
-                for (int i=0; i<count; i++) {
-                    [array addObject:
-                     [NSIndexPath indexPathForRow: i
-                                        inSection:0]];
-                }
-                
-                if ([array count] != 0) {
-                    [self.tableView insertRowsAtIndexPaths:array
-                                          withRowAnimation:UITableViewRowAnimationFade];
-                    [_tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:[array count]-1 inSection:0]
-                                      atScrollPosition:UITableViewScrollPositionNone
-                                              animated:true];
-                }
-            }
-        }];
-    }    
-}
-
-- (void)wizardViewWillDisappear {
+    [[JNSConfig config] addObserver:self forKeyPath:@"cachedUser" options:0 context:nil];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
-    [self loadTimeline];
+    JNSUser* user = [JNSUser activeUser];
+    if (user) {
+        user.timeline.delegate = self;
+        [user.timeline loadLatest];
+    }
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -102,6 +82,62 @@ const int kContentMargin = 5;
     
     [self presentViewController:picker animated:true completion:nil];
 }
+
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
+    if (object == [JNSConfig config]) {
+        if ([JNSUser activeUser] == nil) {
+            // Reset table view
+            [self.tableView reloadData];
+            UIAlertView* view = [[UIAlertView alloc] initWithTitle:@"需要重新登录"
+                                                           message:@""
+                                                          delegate:nil
+                                                 cancelButtonTitle:@"确定"
+                                                 otherButtonTitles:nil];
+            [view show];
+
+            JNSWizardViewController* vc = [[self storyboard] instantiateViewControllerWithIdentifier:@"wizard_view"];
+            [self presentViewController:vc animated:YES completion:nil];
+        }
+    }
+}
+
+// JNSTimelineDelegate
+-(void)didLoadLatestWithIndexes:(NSArray*)indexes Error:(NSError*)error {
+    if (error) {
+        UIAlertView* view = [[UIAlertView alloc] initWithTitle:@"加载错误"
+                                                       message:[error localizedDescription]
+                                                      delegate:nil
+                                             cancelButtonTitle:@"确定"
+                                             otherButtonTitles:nil];
+        [view show];
+    } else {
+        NSMutableArray* array = [NSMutableArray new];
+        for (NSNumber* index in indexes) {
+            [array addObject:[NSIndexPath indexPathForRow: [index integerValue]
+                               inSection: 0]];
+        }
+        
+        
+        if ([array count] != 0) {
+            [self.tableView insertRowsAtIndexPaths:array
+                                  withRowAnimation:UITableViewRowAnimationFade];
+            
+            //scroll to bottom
+            [_tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:[[JNSUser activeUser].timeline.entries count]-1 inSection:0]
+                              atScrollPosition:UITableViewScrollPositionNone
+                                      animated:true];
+        }
+    }    
+}
+
+- (void)entry:(JNSTimelineEntry *)entry DownloadProgressUpdatedWithError:(NSString *)error {
+    
+}
+
+- (void)entry:(JNSTimelineEntry *)entry UploadProgressUpdatedWithError:(NSString *)error {
+    
+}
+
 
 // UITableView delegate
 
@@ -128,21 +164,21 @@ const int kContentMargin = 5;
     if (entry.image) {
         image_view.image = entry.image;
         
-        if (entry.uploading) {
-            UIProgressView* progress = [self createProgressViewInCell:cell];
-            [entry trackUploadProgress:^(unsigned int p, NSString *error) {
-                NSLog(@"Uploading progress:%d", p);
-                if (p == 100) {
-                    [UIView animateWithDuration:0.3 animations:^{
-                        progress.alpha = 0;
-                    } completion:^(BOOL finished) {
-                        [progress removeFromSuperview];
-                    }];
-                } else {
-                    progress.progress = p;
-                }
-            }];
-        }
+//        if (entry.uploading) {
+//            UIProgressView* progress = [self createProgressViewInCell:cell];
+//            [entry trackUploadProgress:^(unsigned int p, NSString *error) {
+//                NSLog(@"Uploading progress:%d", p);
+//                if (p == 100) {
+//                    [UIView animateWithDuration:0.3 animations:^{
+//                        progress.alpha = 0;
+//                    } completion:^(BOOL finished) {
+//                        [progress removeFromSuperview];
+//                    }];
+//                } else {
+//                    progress.progress = p;
+//                }
+//            }];
+//        }
     } else if (!entry.downloading) {
         UIProgressView* progress = [self createProgressViewInCell:cell];
         
@@ -212,7 +248,11 @@ const int kContentMargin = 5;
     }
     
     NSString* text;
-    if (interval < 5*60) {
+    if (entry.uploading) {
+        text = @"上传中...";
+    } else if (entry.image_url == nil) {
+        text = @"等待上传";
+    } else if (interval < 5*60) {
         text = @"刚刚";
     } else if (interval < 60*60) {
         text = [NSString stringWithFormat:@"%d分钟前", (int)interval/60];

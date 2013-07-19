@@ -5,6 +5,7 @@
         <relationship name="cachedUser" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="JNSUser" syncable="YES"/>
     </entity>
     <entity name="JNSTimeline" representedClassName="JNSTimeline" syncable="YES">
+        <attribute name="latestTimestamp" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
         <relationship name="entries" optional="YES" toMany="YES" deletionRule="Nullify" ordered="YES" destinationEntity="JNSTimelineEntry" syncable="YES"/>
     </entity>
     <entity name="JNSTimelineEntry" representedClassName="JNSTimelineEntry" syncable="YES">

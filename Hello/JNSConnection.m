@@ -7,8 +7,9 @@
 //
 
 #import "JNSConnection.h"
+#import "JNSConfig.h"
 
-NSString* kHost = @"http://192.168.1.100";
+NSString* kHost = @"http://192.168.1.102";
 NSString* kSignUpURL = @"/signup";
 NSString* kSignInURL = @"/signin";
 NSString* kPairURL = @"/api/pair";
@@ -92,14 +93,20 @@ NSString* kSyncTokenURL = @"/api/synctoken";
 - (void)connectionDidFinishLoading:(NSURLConnection *)connection {
     NSDictionary* json = nil;
     NSError* error;
+
+    NSString* body = [[NSString alloc] initWithData:_data encoding:NSUTF8StringEncoding];
+    NSLog(@"requestComplete:\n %@\n-------------\n%@\n", [_response description], body);
     
-    NSLog(@"requestComplete:\n %@\n", [_response description]);
 
     if ([[_response MIMEType] rangeOfString:@"json"].location != NSNotFound) {
         if (_response.statusCode == 200) {
             json = [NSJSONSerialization JSONObjectWithData:_data options:kNilOptions error:&error];
-            NSLog(@"JSON:\n %@", [json description]);            
         } else {
+            // Reset user
+            if (_response.statusCode == 401) {
+                [JNSConfig config].cachedUser = nil;
+            }
+            
             NSDictionary* obj = [NSJSONSerialization JSONObjectWithData:_data options:kNilOptions error:&error];
             error = [NSError errorWithDomain:@"Network"
                                         code:_response.statusCode

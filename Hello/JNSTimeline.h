@@ -10,28 +10,25 @@
 #import <CoreData/CoreData.h>
 #import "JNSTimelineEntry.h"
 
+@protocol JNSTimelineDelegate
+@optional
+-(void)didLoadLatestWithIndexes:(NSArray*)indexes Error:(NSError*)error;
+-(void)entry:(JNSTimelineEntry*)entry UploadProgressUpdatedWithError:(NSString*)error;
+-(void)entry:(JNSTimelineEntry*)entry DownloadProgressUpdatedWithError:(NSString*)error;
+@end
+
+
 @interface JNSTimeline : NSManagedObject
 
-// TODO sort by timestamp
+@property (weak) id<JNSTimelineDelegate> delegate;
+
+// Core Data
 @property (nonatomic, retain) NSOrderedSet *entries;
+@property (nonatomic, retain) NSNumber * latestTimestamp;
 
 +(id)timelineWithContext:(NSManagedObjectContext*)context;
 
--(void) addEntryWithImage:(UIImage*)image;
--(void)loadLatestCompletion:(void(^)(unsigned add, NSError* error))completion;
+- (void)addEntryWithImage:(UIImage*)image;
+- (void)loadLatest;
 
-@end
-
-@interface JNSTimeline (CoreDataGeneratedAccessors)
-
-- (void)insertObject:(JNSTimelineEntry *)value inEntriesAtIndex:(NSUInteger)idx;
-- (void)removeObjectFromEntriesAtIndex:(NSUInteger)idx;
-- (void)insertEntries:(NSArray *)value atIndexes:(NSIndexSet *)indexes;
-- (void)removeEntriesAtIndexes:(NSIndexSet *)indexes;
-- (void)replaceObjectInEntriesAtIndex:(NSUInteger)idx withObject:(JNSTimelineEntry *)value;
-- (void)replaceEntriesAtIndexes:(NSIndexSet *)indexes withEntries:(NSArray *)values;
-- (void)addEntriesObject:(JNSTimelineEntry *)value;
-- (void)removeEntriesObject:(JNSTimelineEntry *)value;
-- (void)addEntries:(NSOrderedSet *)values;
-- (void)removeEntries:(NSOrderedSet *)values;
 @end

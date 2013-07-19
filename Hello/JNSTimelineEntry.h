@@ -31,7 +31,6 @@
 - (void)awakeFromFetch;
 
 -(void) downloadContentProgress:(void(^)(unsigned progress, NSString* error))block;
--(void) upload;
-- (void)trackUploadProgress:(void(^)(unsigned progress, NSString* error))block;
+-(void) uploadWithCallback:(void(^)(unsigned progress, NSString* error))block;
 
 @end
