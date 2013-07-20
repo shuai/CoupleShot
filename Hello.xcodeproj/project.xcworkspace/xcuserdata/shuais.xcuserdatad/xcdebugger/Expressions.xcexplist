@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<VariablesViewState
+   version = "1.0">
+   <ContextStates>
+      <ContextState
+         contextName = "-[CAppDelegate application:didFinishLaunchingWithOptions:]:CAppDelegate.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "application">
+            </PersistentString>
+            <PersistentString
+               value = "user.partner">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[CViewController viewDidAppear:]:CViewController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.toolbar.backgroundColor">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[JNSTimelineEntry uploadWithCompletion:]:JNSTimelineEntry.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.imageCacheURL">
+            </PersistentString>
+            <PersistentString
+               value = "self.imageURL">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "+[JNSTimelineEntry entryWithJSON:Context:]:JNSTimelineEntry.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "entry.timestamp">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[JNSTimeline loadLatestCompletion:]:JNSTimeline.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "((JNSTimelineEntry*)[self.entries lastObject]).timestamp">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[CViewController createViewForEntry:]:CViewController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "entry.height">
+            </PersistentString>
+            <PersistentString
+               value = "[entry.width intValue]">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[JNSTimelineEntry updateMeta:]:JNSTimelineEntry.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.height">
+            </PersistentString>
+            <PersistentString
+               value = "self.timestamp">
+            </PersistentString>
+            <PersistentString
+               value = "responseObject">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[JNSUser confirmRequest:Completion:]:JNSUser.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.request">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[CViewController viewDidLoad]:CViewController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.toolbar.backgroundColor">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[JNSEntryView createLabel]:JNSEntryView.m">
+      </ContextState>
+      <ContextState
+         contextName = "-[CViewController tableView:cellForRowAtIndexPath:]:CViewController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "[_user.timeline.entries count]">
+            </PersistentString>
+            <PersistentString
+               value = "indexPath.row">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[JNSTimelineEntry connectionDidFinishLoading:]:JNSTimelineEntry.m">
+      </ContextState>
+      <ContextState
+         contextName = "-[JNSConfig observeValueForKeyPath:ofObject:change:context:]:JNSConfig.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "[NSNull null]">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[CLoginViewController validationCompleteWithConnection:Response:JSON:Error:]:CLoginViewController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "[JNSConfig config]">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+   </ContextStates>
+</VariablesViewState>
