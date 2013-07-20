@@ -9,7 +9,7 @@
 #import "JNSConnection.h"
 #import "JNSConfig.h"
 
-NSString* kHost = @"http://192.168.1.100";
+NSString* kHost = @"http://124.205.11.211";
 NSString* kSignUpURL = @"/signup";
 NSString* kSignInURL = @"/signin";
 NSString* kPairURL = @"/api/pair";

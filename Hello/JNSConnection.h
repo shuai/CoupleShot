@@ -21,9 +21,6 @@ extern NSString* kSyncTokenURL;
 
 @interface JNSConnection : NSObject<NSURLConnectionDataDelegate>
 
-+ (AFHTTPClient*)sharedClient;
-
-
 +(JNSConnection*) connectionWithRequest:(NSURLRequest*)request
                              Completion:(void (^)(JNSConnection*, NSHTTPURLResponse*, NSDictionary*, NSError*))completion;
 +(JNSConnection*) connectionWithMethod:(BOOL)get
