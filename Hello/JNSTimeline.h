@@ -11,10 +11,9 @@
 #import "JNSTimelineEntry.h"
 
 @protocol JNSTimelineDelegate
-@optional
+
 -(void)didLoadLatestWithIndexes:(NSArray*)indexes Error:(NSError*)error;
--(void)entry:(JNSTimelineEntry*)entry UploadProgressUpdatedWithError:(NSString*)error;
--(void)entry:(JNSTimelineEntry*)entry DownloadProgressUpdatedWithError:(NSString*)error;
+
 @end
 
 

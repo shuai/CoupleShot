@@ -10,8 +10,8 @@
     </entity>
     <entity name="JNSTimelineEntry" representedClassName="JNSTimelineEntry" syncable="YES">
         <attribute name="height" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
-        <attribute name="image_url" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="imageCacheURL" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="imageURL" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="timestamp" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
         <attribute name="width" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
     </entity>

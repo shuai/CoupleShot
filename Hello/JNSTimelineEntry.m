@@ -9,16 +9,16 @@
 #import "JNSTimelineEntry.h"
 #import "JNSConnection.h"
 #import "JNSConfig.h"
+#import "JNSAPIClient.h"
+#import "AFImageRequestOperation.h"
+#import "AFJSONRequestOperation.h"
 
 @interface JNSTimelineEntry(){
-    NSHTTPURLResponse* _response;
-    NSInteger _content_length;
-    NSURLConnection* _upload_connection;
-    NSURLConnection* _download_connection;
-    NSData* _download_cache;    
-    void(^_download_progress)(unsigned progress, NSString* error);
-    void(^_upload_progress)(unsigned, NSString* error);
 }
+
+@property (readwrite) UIImage* image;
+@property (readwrite) bool downloading;
+@property (readwrite) bool uploading;
 @end
 
 @implementation JNSTimelineEntry
@@ -26,25 +26,25 @@
 @dynamic timestamp;
 @dynamic width;
 @dynamic height;
-@dynamic image_url;
+@dynamic imageURL;
 @dynamic imageCacheURL;
 
-@synthesize image = _image;
+@synthesize image, uploading, downloading;
 
-+(JNSTimelineEntry*)entryWithImage:(UIImage*)image Context:(NSManagedObjectContext*)context {
++(JNSTimelineEntry*)entryWithImage:(UIImage*)image
+                           Context:(NSManagedObjectContext*)context {
     JNSTimelineEntry* entry = [JNSTimelineEntry entryWithContext:context];
     entry.image = image;
     entry.width = [NSNumber numberWithFloat: image.size.width];
     entry.height = [NSNumber numberWithFloat: image.size.height];
     [entry cacheImage];
-    
     // TODO timestamp?
     return entry;
 }
 
-+(JNSTimelineEntry*)entryWithJSON:(NSDictionary*)json Context:(NSManagedObjectContext*)context {
-    JNSTimelineEntry* entry = [JNSTimelineEntry entryWithContext:context];
-    
++(JNSTimelineEntry*)entryWithJSON:(NSDictionary*)json
+                          Context:(NSManagedObjectContext*)context {
+    JNSTimelineEntry* entry = [JNSTimelineEntry entryWithContext:context];    
     [entry updateMeta:json];
     return entry;
 }
@@ -62,7 +62,7 @@
 -(void) awakeFromFetch {
     // TODO load image from disk cache
     if (self.imageCacheURL) {
-        _image = [UIImage imageWithContentsOfFile:self.imageCacheURL];
+        self.image = [UIImage imageWithContentsOfFile:self.imageCacheURL];
     }
 }
 
@@ -83,54 +83,93 @@
             [NSString stringWithFormat:@"%@", [JNSConfig uniqueImageID]]];
 }
 
--(bool) downloading {
-    return _download_connection != nil;
+-(bool) needUpload {
+    return self.imageURL == nil;
 }
 
--(bool) uploading {
-    return _upload_connection != nil;
+-(bool) needDownload {
+    return self.imageCacheURL == nil;
 }
 
 // Downloading
 
--(void) downloadContentProgress:(void(^)(unsigned progress, NSString* error))block {
-    NSAssert(!_download_connection, @"");
-    NSAssert(!_download_progress, @"");
+-(void) downloadWithCompletion:(void(^)(NSString* error))completion {
+    NSAssert(self.needDownload, @"");
+    NSAssert(!self.downloading, @"");
     
-    _download_progress = block;
-    
-    NSURL* url = [NSURL URLWithString:self.image_url relativeToURL: [NSURL URLWithString:kHost]];
+    NSURL* url = [NSURL URLWithString:self.imageURL relativeToURL: [NSURL URLWithString:kHost]];
     NSURLRequest* request = [NSURLRequest requestWithURL:url];
-    _download_connection = [NSURLConnection connectionWithRequest:request delegate:self];
+    
+    JNSAPIClient* client = [JNSAPIClient sharedClient];
+
+    self.downloading = true;
+    
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"DownloadStarted"
+                                                        object:self
+                                                      userInfo:nil];
+
+    AFImageRequestOperation *operation = [AFImageRequestOperation imageRequestOperationWithRequest:request imageProcessingBlock:^UIImage *(UIImage *image_) {
+        return image_;
+    } success:^(NSURLRequest *request, NSHTTPURLResponse *response, UIImage *image_) {
+        self.downloading = false;
+        self.image = image_;
+        [self cacheImage];
+        completion(nil);
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"DownloadSucceeded"
+                                                            object:self
+                                                          userInfo:nil];
+    } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error) {
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"DownloadFailed"
+                                                            object:self
+                                                          userInfo:@{@"error": error}];
+    }];
+    
+    // TODO progress
+    
+    // TODO handle over to load manager
+    [client enqueueHTTPRequestOperation:operation];
 }
 
--(void) uploadWithCallback:(void(^)(unsigned progress, NSString* error))block {
-    NSAssert(!_upload_connection, @"");
-    NSAssert(!_download_connection, @"");
+-(void) uploadWithCompletion:(void(^)(NSString* error))completion {
+    NSAssert(!self.uploading, @"");
+    NSAssert(self.needUpload, @"");
 
-    _upload_progress = block;
+    self.uploading = YES;
 
-    NSString* url_str = [NSString stringWithFormat:@"%@?width=%d&height=%d",
-                         kPostURL, (int)_image.size.width, (int)_image.size.height];
-    NSURL* url = [NSURL URLWithString:url_str
-                        relativeToURL:[NSURL URLWithString:kHost]];
-    NSMutableURLRequest* request = [NSMutableURLRequest requestWithURL:url];
+    NSDictionary* params = @{@"width": [NSNumber numberWithInt:(int)self.image.size.width],
+                             @"height":[NSNumber numberWithInt:(int)self.image.size.height]};
     
-    [request setHTTPMethod:@"POST"];
-    NSString *boundary = @"---------------------------14737809831466499882746641449";
-    NSString *contentType = [NSString stringWithFormat:@"multipart/form-data; boundary=%@",boundary];
-    [request addValue:contentType forHTTPHeaderField: @"Content-Type"];
-    NSMutableData *postbody = [NSMutableData data];
-    [postbody appendData:[[NSString stringWithFormat:@"\r\n--%@\r\n",boundary] dataUsingEncoding:NSUTF8StringEncoding]];
-    [postbody appendData:[@"Content-Disposition: form-data; name=\"image\"; filename=\"1.png\"\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
-    [postbody appendData:[@"Content-Type: application/octet-stream\r\n\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
+    JNSAPIClient* client = [JNSAPIClient sharedClient];
+    // TODO read file
+    NSData *imageData = [NSData dataWithData:UIImagePNGRepresentation(self.image)];
+    NSMutableURLRequest *request = [client multipartFormRequestWithMethod:@"POST"
+                                                                  path:kPostURL
+                                                            parameters:params
+                                             constructingBodyWithBlock:^(id<AFMultipartFormData> formData) {
+        [formData appendPartWithFileData:imageData name:@"image" fileName:@"image.png" mimeType:@"image/png"];
+    }];
+
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"UploadStarted"
+                                                        object:self
+                                                      userInfo:nil];
+
+    AFJSONRequestOperation *operation = [AFJSONRequestOperation JSONRequestOperationWithRequest:request success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON) {
+        self.uploading = NO;
+        
+        [self updateMeta:[JSON objectForKey:@"content"]];
+        completion(nil);
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"UploadSucceeded" object:self userInfo:nil];
+    } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
+        self.uploading = NO;
+        
+        completion([error localizedDescription]);
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"UploadFailed" object:self userInfo:@{@"error": error}];
+    }];
+
+    // TODO progress
     
-    NSData* data = [NSData dataWithData:UIImagePNGRepresentation(_image)];
-    [postbody appendData:data];
-    [postbody appendData:[[NSString stringWithFormat:@"\r\n--%@--\r\n",boundary] dataUsingEncoding:NSUTF8StringEncoding]];
-    [request setHTTPBody:postbody];
-    
-    _upload_connection = [NSURLConnection connectionWithRequest:request delegate:self];
+    // TODO handle over to load manager
+    [[JNSAPIClient sharedClient] enqueueHTTPRequestOperation:operation];
 }
 
 - (void)cacheImage {
@@ -141,7 +180,7 @@
     NSURL* url = [self constructFileURL];
     NSFileManager* manager = [NSFileManager defaultManager];
     //NSAssert([manager fileExistsAtPath:[url path]] == false, @"");
-    NSData* data = [NSData dataWithData:UIImagePNGRepresentation(_image)];
+    NSData* data = [NSData dataWithData:UIImagePNGRepresentation(self.image)];
     if ([manager createFileAtPath:[url path] contents:data attributes:nil]) {
         self.imageCacheURL = [url path];
     } else {
@@ -149,111 +188,11 @@
     }
 }
 
-// NSURLConnectionDataDelegate
-
-- (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data {
-    [(NSMutableData*)_download_cache appendData:data];
-}
-
-- (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response {
-    NSAssert(!_response, @"");
-    NSAssert(!_download_cache, @"");
-
-    _response = (NSHTTPURLResponse*)response;
-    _content_length = [[_response.allHeaderFields valueForKey:@"Content-Length"] integerValue];
-    _download_cache = [NSMutableData new];
-    
-    //NSLog(@"didReceiveResponse, relativePath:%@, status:%d", _response.URL.relativePath, [_response statusCode]);
-}
-
-- (void)connection:(NSURLConnection *)connection
-   didSendBodyData:(NSInteger)bytesWritten
- totalBytesWritten:(NSInteger)totalBytesWritten
-totalBytesExpectedToWrite:(NSInteger)totalBytesExpectedToWrite {
-    // Remember this function is called for every connection
-    
-    if (_upload_progress) {
-        unsigned ratio = totalBytesWritten*100/totalBytesExpectedToWrite;
-        if (ratio > 99) {
-            ratio = 99;
-        }
-        _upload_progress(ratio, nil);
-    }
-}
-
-- (void)connectionDidFinishLoading:(NSURLConnection *)connection {
-    NSLog(@"requestComplete:\n %d\n", _response.statusCode);
-
-    // TODO better error handling
-    if (_download_connection == connection) {
-        if (_response.statusCode == 200) {
-            NSAssert(!_image, @"");
-            _image = [UIImage imageWithData:_download_cache];
-            NSLog(@"Image downloaded. Width:%f Height%f",_image.size.width, _image.size.height);
-            
-            [self updateProgress];
-            [self cacheImage];
-        } else {
-            _download_progress(0, @"下载失败");
-        }
-    } else if (_upload_connection == connection) {
-        // Update meta info
-        NSError* error;
-        NSDictionary* obj = [NSJSONSerialization JSONObjectWithData:_download_cache
-                                                            options:kNilOptions
-                                                              error:&error];
-        if (error) {
-            if (_upload_progress) {
-                _upload_progress(0, [error localizedDescription]);
-            }
-        } else {
-            NSDictionary* json = [obj objectForKey:@"content"];
-            NSAssert(json,@"");
-            [self updateMeta:json];
-            if (_upload_progress) {
-                _upload_progress(100, nil);
-            }
-        }
-    }
-    [self clear];
-}
-
-- (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error {
-    if (_download_connection == connection) {
-        NSAssert(!_image, @"");
-        _download_progress(0, [error localizedDescription]);
-    } else if (_upload_connection == connection) {
-        if (_upload_progress) {
-            _upload_progress(0, [error localizedDescription]);
-        }
-    }
-    [self clear];
-}
-
-- (void)clear {
-    _download_connection = nil;
-    _upload_connection = nil;
-    _response = nil;
-    _download_cache = nil;
-    _download_progress = nil;
-    _upload_progress = nil;
-    _content_length = 0;
-}
-
-- (void)updateProgress {
-    if (_content_length != 0) {
-        if (_download_progress) {
-            unsigned ratio = [_download_cache length]*100/_content_length;
-            _download_progress(ratio, nil);
-        }
-    }
-}
-
 - (void)updateMeta:(NSDictionary*)json {
     self.timestamp = [NSNumber numberWithLongLong:[[json objectForKey:@"time"] longLongValue]];
     self.width = [NSNumber numberWithInt:[[json objectForKey:@"width"] intValue]];
     self.height = [NSNumber numberWithInt:[[json objectForKey:@"height"] intValue]];
-    self.image_url = [json objectForKey:@"url"];    
+    self.imageURL = [json objectForKey:@"url"];    
 }
 
 @end

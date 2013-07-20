@@ -11,8 +11,8 @@
 #import "JNSWizardViewController.h"
 #import "JNSUser.h"
 #import "JNSConfig.h"
-
-const int kContentMargin = 5;
+#import "JNSLoadManager.h"
+#import "JNSEntryView.h"
 
 @interface CViewController ()
 @property (weak, nonatomic) IBOutlet UIButton *addButton;
@@ -31,8 +31,6 @@ const int kContentMargin = 5;
     [_tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:index inSection:0]]
                       withRowAnimation:UITableViewRowAnimationFade];
 }
-
-// user
 
 - (void)viewDidLoad
 {
@@ -129,15 +127,13 @@ const int kContentMargin = 5;
         }
     }    
 }
-
-- (void)entry:(JNSTimelineEntry *)entry DownloadProgressUpdatedWithError:(NSString *)error {
-    
-}
-
-- (void)entry:(JNSTimelineEntry *)entry UploadProgressUpdatedWithError:(NSString *)error {
-    
-}
-
+//
+//
+//- (UITableViewCell*)cellOfEntry:(JNSTimelineEntry*)entry {
+//    NSUInteger index = [[JNSUser activeUser].timeline.entries indexOfObject:entry];
+//    
+//    return [self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:index inSection:0]];
+//}
 
 // UITableView delegate
 
@@ -149,21 +145,26 @@ const int kContentMargin = 5;
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     JNSTimelineEntry* entry = [JNSUser activeUser].timeline.entries[indexPath.row];
-    return [self heightForEntry:entry];
+    return [JNSEntryView heightForEntry:entry];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    NSLog(@"cellForRow: %D", [indexPath row]);
     JNSTimelineEntry* entry = [JNSUser activeUser].timeline.entries[indexPath.row];
     
     UITableViewCell *cell = [UITableViewCell new];
-    cell.frame = CGRectMake(0, 0, 320, [self heightForEntry:entry]);
+    cell.frame = CGRectMake(0, 0, 320, [JNSEntryView heightForEntry:entry]);
 
-    UIImageView* image_view = [self createViewForEntry:entry];
-    [[cell contentView] addSubview:image_view];
+    id view = [[JNSEntryView alloc] initWithEntry:entry];
+    [[cell contentView] addSubview:view];
     
-    if (entry.image) {
-        image_view.image = entry.image;
-        
+    if (entry.needDownload && !entry.downloading) {
+        [[JNSLoadManager manager] queueEntry:entry];
+    }
+    
+//    if (entry.image) {
+//        image_view.image = entry.image;
+//        
 //        if (entry.uploading) {
 //            UIProgressView* progress = [self createProgressViewInCell:cell];
 //            [entry trackUploadProgress:^(unsigned int p, NSString *error) {
@@ -178,27 +179,27 @@ const int kContentMargin = 5;
 //                    progress.progress = p;
 //                }
 //            }];
-//        }
-    } else if (!entry.downloading) {
-        UIProgressView* progress = [self createProgressViewInCell:cell];
-        
-        [entry downloadContentProgress:^(unsigned p, NSString *error) {
-            NSLog(@"Downloading progress:%d", p);
-            if (p == 100) {
-                image_view.image = entry.image;
-                image_view.alpha = 0;
-
-                [UIView animateWithDuration:0.3 animations:^{
-                    progress.alpha = 0;
-                    image_view.alpha = 1;
-                } completion:^(BOOL finished) {
-                    [progress removeFromSuperview];
-                }];
-            } else {
-                progress.progress = p;
-            }
-        }];
-    }
+////        }
+//    } else if (!entry.downloading) {
+//        //UIProgressView* progress = [self createProgressViewInCell:cell];
+//        
+//        [[JNSLoadManager manager]queueEntry:entry];
+//        [entry downloadWithCompletion:^(NSString *error) {
+////            if (p == 100) {
+////                image_view.image = entry.image;
+////                image_view.alpha = 0;
+////                
+////                [UIView animateWithDuration:0.3 animations:^{
+////                    progress.alpha = 0;
+////                    image_view.alpha = 1;
+////                } completion:^(BOOL finished) {
+////                    [progress removeFromSuperview];
+////                }];
+////            } else {
+////                progress.progress = p;
+////            } 
+//        }];
+//    }
     
     
     return cell;
@@ -214,86 +215,6 @@ const int kContentMargin = 5;
     [[cell contentView] addSubview:progress];
     return progress;
 }
-
--(UIImageView*) createViewForEntry:(JNSTimelineEntry*)entry {
-    
-    int width = 320-kContentMargin*2;
-    int height = 240;
-    
-    if (entry.height) {
-        height = [entry.height intValue] * width / [entry.width intValue];
-    }
-
-    UIImageView* image_view = [[UIImageView alloc] initWithFrame:
-                               CGRectMake(kContentMargin, kContentMargin, width, height)];
-        
-    // slow
-    CALayer* layer = image_view.layer;
-    layer.cornerRadius = 5;
-    layer.borderColor = [[UIColor colorWithWhite:0.5 alpha:0.2] CGColor];
-    layer.borderWidth = 1;
-    layer.masksToBounds = true;
-    
-    //        layer.shadowColor = [UIColor blackColor].CGColor;
-    //        layer.shadowOpacity = 0.5;
-    //        layer.shadowRadius = 10;
-    //        layer.shadowOffset = CGSizeMake(3, 3);
-    
-    // Add time label
-    UILabel* label = [[UILabel alloc] init];
-    NSDate* date = [NSDate dateWithTimeIntervalSince1970: [entry.timestamp doubleValue]/1000];
-    int interval = -[date timeIntervalSinceNow];
-    if (interval < 0) {
-        interval = 0;
-    }
-    
-    NSString* text;
-    if (entry.uploading) {
-        text = @"上传中...";
-    } else if (entry.image_url == nil) {
-        text = @"等待上传";
-    } else if (interval < 5*60) {
-        text = @"刚刚";
-    } else if (interval < 60*60) {
-        text = [NSString stringWithFormat:@"%d分钟前", (int)interval/60];
-    } else if (interval < 24*60*60) {
-        text = [NSString stringWithFormat:@"%d小时前", (int)interval/3600];
-    } else {
-        text = [NSString stringWithFormat:@"%d天前", (int)interval/(24*3600)];
-    }
-    
-    [label setText:text];
-    label.font = [UIFont systemFontOfSize:9];
-    CGRect rect = CGRectMake(300 - [label intrinsicContentSize].width - 10,
-                             10,
-                             [label intrinsicContentSize].width+10,
-                             [label intrinsicContentSize].height+10);
-    label.frame = rect;
-    label.textAlignment = NSTextAlignmentCenter;
-    label.textColor = [UIColor colorWithWhite:0.8 alpha:1];
-    label.backgroundColor = [UIColor colorWithWhite:0.3 alpha:0.5];
-    label.layer.cornerRadius = 5;
-    label.layer.masksToBounds = YES;
-    
-    [image_view addSubview:label];
-    
-    return image_view;
-}
-
--(int) heightForEntry:(JNSTimelineEntry*)entry {
-    int height = 0;
-    
-    if ([entry.width intValue] != 0) {
-        int width = 320-kContentMargin*2;
-        height = [entry.height intValue]*width/[entry.width intValue] + kContentMargin - 2; // border
-    } else {
-        // TODO arbitraty default height
-        height = 240;
-    }
-    
-    return height;
-}
-
 
 // UIImagePickerControllerDelegate
 

@@ -9,6 +9,7 @@
 #import "JNSTimeline.h"
 #import "JNSTimelineEntry.h"
 #import "JNSConnection.h"
+#import "JNSLoadManager.h"
 
 @interface JNSTimeline() {
     JNSConnection* _connection;
@@ -47,18 +48,7 @@
     JNSTimelineEntry* entry = [JNSTimelineEntry entryWithImage:image
                                                        Context:[self managedObjectContext]];
     [self addEntriesObject:entry];
-    [entry uploadWithCallback:^(unsigned int progress, NSString *error) {
-        [self entry:entry UploadProgressUpdatedWithError:error];
-    }];
-}
-
--(void)entry:(JNSTimelineEntry*)entry UploadProgressUpdatedWithError:(NSString *)error {
-    if ([entry.timestamp compare:self.latestTimestamp] == NSOrderedDescending) {
-        NSLog(@"Update latest timeline timestamp to %@",entry.timestamp);
-        self.latestTimestamp = entry.timestamp;
-    }
-    
-    [self.delegate entry:entry UploadProgressUpdatedWithError:error];
+    [[JNSLoadManager manager] queueEntry:entry];
 }
 
 -(void)loadLatest {
@@ -122,6 +112,27 @@
            [self.delegate didLoadLatestWithIndexes:nil Error:error];
        }
    }];
+}
+
+- (void)registerNotificationForEntry:(JNSTimelineEntry*)entry {
+    [[NSNotificationCenter defaultCenter] addObserverForName:@"UploadFailed" object:entry queue:nil usingBlock:^(NSNotification *note) {
+        JNSTimelineEntry* source = note.object;
+        if ([source.timestamp compare:self.latestTimestamp] == NSOrderedDescending) {
+            NSLog(@"Update latest timeline timestamp to %@",source.timestamp);
+            self.latestTimestamp = source.timestamp;
+        }
+    }];
+}
+
+// overrides
+-(void) awakeFromFetch {
+    // Check entries that need to upload
+    [self.entries enumerateObjectsWithOptions:NSEnumerationReverse usingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+        JNSTimelineEntry* entry = obj;
+        if (entry.needUpload) {
+            [[JNSLoadManager manager] queueEntry:entry];
+        }
+    }];
 }
 
 // http://stackoverflow.com/questions/7385439/exception-thrown-in-nsorderedset-generated-accessors

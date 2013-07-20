@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "AFHTTPClient.h"
 
 extern NSString* kHost;
 extern NSString* kSignUpURL;
@@ -19,6 +20,8 @@ extern NSString* kSyncTokenURL;
 
 
 @interface JNSConnection : NSObject<NSURLConnectionDataDelegate>
+
++ (AFHTTPClient*)sharedClient;
 
 
 +(JNSConnection*) connectionWithRequest:(NSURLRequest*)request

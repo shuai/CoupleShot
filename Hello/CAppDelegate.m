@@ -6,13 +6,14 @@
 //  Copyright (c) 2013 joy. All rights reserved.
 //
 
+#import <CoreData/CoreData.h>
 #import "CAppDelegate.h"
 #import "JNSWizardViewController.h"
 #import "CViewController.h"
 #import "JNSConfig.h"
-#import <CoreData/CoreData.h>
 #import "JNSPairViewController.h"
 #import "JNSPairWaitingViewController.h"
+#import "AFNetworkActivityIndicatorManager.h"
 
 @interface CAppDelegate() {
 }
@@ -51,7 +52,8 @@
         NSAssert([result count] == 1, @"");
         [JNSConfig setConfig:[result firstObject]];
     }
-
+    
+    // Init views
     [self.window makeKeyAndVisible];
     
     JNSUser* user = [JNSUser activeUser];
@@ -59,6 +61,8 @@
         JNSWizardViewController* wizard = [[self.window.rootViewController storyboard] instantiateViewControllerWithIdentifier:@"wizard_view"];
         [self.window.rootViewController presentViewController:wizard animated:false completion:nil];
     }
+    
+    [[AFNetworkActivityIndicatorManager sharedManager] setEnabled:YES];
     
     if (![JNSConfig config].deviceToken) {
         NSLog(@"Register for push notification");

@@ -9,28 +9,36 @@
 #import <Foundation/Foundation.h>
 #import <CoreData/CoreData.h>
 
-@interface JNSTimelineEntry : NSManagedObject<NSURLConnectionDataDelegate>
 
-@property UIImage* image;
+
+@class JNSTimelineEntry;
+
+@interface JNSTimelineEntry : NSManagedObject
+
+@property (readonly) UIImage* image;
 @property (readonly) bool downloading;
 @property (readonly) bool uploading;
+@property (readonly) bool needUpload;
+@property (readonly) bool needDownload;
 
 // Core Data
 @property (nonatomic, retain) NSNumber * timestamp;
 @property (nonatomic, retain) NSNumber * width;
 @property (nonatomic, retain) NSNumber * height;
-@property (nonatomic, retain) NSString * image_url;
+@property (nonatomic, retain) NSString * imageURL;
 @property (nonatomic, retain) NSString * imageCacheURL; // local cache
 
 
-+(JNSTimelineEntry*)entryWithImage:(UIImage*)image Context:(NSManagedObjectContext*)context;
-+(JNSTimelineEntry*)entryWithJSON:(NSDictionary*)json Context:(NSManagedObjectContext*)context;
++(JNSTimelineEntry*)entryWithImage:(UIImage*)image
+                           Context:(NSManagedObjectContext*)context;
++(JNSTimelineEntry*)entryWithJSON:(NSDictionary*)json
+                          Context:(NSManagedObjectContext*)context;
 
 
 // overrides
 - (void)awakeFromFetch;
 
--(void) downloadContentProgress:(void(^)(unsigned progress, NSString* error))block;
--(void) uploadWithCallback:(void(^)(unsigned progress, NSString* error))block;
+-(void) downloadWithCompletion:(void(^)(NSString* error))completion;
+-(void) uploadWithCompletion:(void(^)(NSString* error))completion;
 
 @end

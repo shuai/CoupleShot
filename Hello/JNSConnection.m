@@ -9,7 +9,7 @@
 #import "JNSConnection.h"
 #import "JNSConfig.h"
 
-NSString* kHost = @"http://192.168.1.102";
+NSString* kHost = @"http://192.168.1.100";
 NSString* kSignUpURL = @"/signup";
 NSString* kSignInURL = @"/signin";
 NSString* kPairURL = @"/api/pair";
@@ -94,8 +94,8 @@ NSString* kSyncTokenURL = @"/api/synctoken";
     NSDictionary* json = nil;
     NSError* error;
 
-    NSString* body = [[NSString alloc] initWithData:_data encoding:NSUTF8StringEncoding];
-    NSLog(@"requestComplete:\n %@\n-------------\n%@\n", [_response description], body);
+    //NSString* body = [[NSString alloc] initWithData:_data encoding:NSUTF8StringEncoding];
+    //NSLog(@"requestComplete:\n %@\n-------------\n%@\n", [_response description], body);
     
 
     if ([[_response MIMEType] rangeOfString:@"json"].location != NSNotFound) {

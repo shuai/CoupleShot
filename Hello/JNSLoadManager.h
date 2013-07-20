@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 #import "JNSTimelineEntry.h"
 
+// Queue and retry policy
 @interface JNSLoadManager : NSObject
 
 + (JNSLoadManager*)manager;

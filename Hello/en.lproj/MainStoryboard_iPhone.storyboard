@@ -23,12 +23,13 @@
                                 <sections/>
                             </tableView>
                             <button opaque="NO" contentMode="scaleAspectFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Wj5-k6-X6R">
-                                <rect key="frame" x="20" y="517" width="32" height="32"/>
+                                <rect key="frame" x="15" y="505" width="48" height="49"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="31" id="ASz-bg-JnP"/>
+                                    <constraint firstAttribute="height" constant="48" id="Vum-Sm-RcT"/>
+                                    <constraint firstAttribute="width" constant="48" id="t8j-3y-oCe"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" type="boldSystem" size="button"/>
-                                <state key="normal" image="camera.png">
+                                <state key="normal" image="camera4.png">
                                     <color key="titleColor" red="0.19607843137254902" green="0.30980392156862746" blue="0.52156862745098043" alpha="1" colorSpace="calibratedRGB"/>
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
@@ -58,12 +59,11 @@
                         </subviews>
                         <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="OS0-rA-BhA" firstAttribute="leading" secondItem="Wj5-k6-X6R" secondAttribute="trailing" constant="-52" id="S7A-bZ-g3t"/>
-                            <constraint firstItem="Wj5-k6-X6R" firstAttribute="leading" secondItem="3" secondAttribute="leading" constant="20" symbolic="YES" id="YcI-qC-8t0"/>
+                            <constraint firstItem="Wj5-k6-X6R" firstAttribute="leading" secondItem="3" secondAttribute="leading" constant="15" id="YcI-qC-8t0"/>
                             <constraint firstItem="OS0-rA-BhA" firstAttribute="top" secondItem="3" secondAttribute="top" id="e9e-g7-bpE"/>
                             <constraint firstItem="OS0-rA-BhA" firstAttribute="trailing" secondItem="3" secondAttribute="trailing" id="fq3-cr-pyr"/>
                             <constraint firstItem="OS0-rA-BhA" firstAttribute="bottom" secondItem="3" secondAttribute="bottom" id="gy2-v4-9Vj"/>
-                            <constraint firstAttribute="bottom" secondItem="Wj5-k6-X6R" secondAttribute="bottom" constant="20" id="zOg-Rw-v04"/>
+                            <constraint firstAttribute="bottom" secondItem="Wj5-k6-X6R" secondAttribute="bottom" constant="15" id="zOg-Rw-v04"/>
                         </constraints>
                     </view>
                     <extendedEdge key="edgesForExtendedLayout"/>
@@ -329,7 +329,7 @@
         </scene>
     </scenes>
     <resources>
-        <image name="camera.png" width="32" height="32"/>
+        <image name="camera4.png" width="64" height="64"/>
         <image name="lock.png" width="32" height="32"/>
         <image name="menu2.png" width="32" height="32"/>
         <image name="tags.png" width="34" height="32"/>

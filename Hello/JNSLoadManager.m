@@ -10,12 +10,12 @@
 
 JNSLoadManager* _manager;
 
-const int MAX_DOWNLOAD = 2;
-const int MAX_UPLOAD = 2;
+const int MAX_SESSION = 2;
 
 @interface JNSLoadManager() {
-    int _downloading;
-    int _uploading;
+    NSMutableOrderedSet* _uploadQueue;
+    NSMutableOrderedSet* _downloadQueue;
+    int _sessions;
 }
 @end
 
@@ -30,8 +30,69 @@ const int MAX_UPLOAD = 2;
     return _manager;
 }
 
+- (JNSLoadManager*)init {
+    self = [super init];
+    if (self) {
+        _uploadQueue = [NSMutableOrderedSet new];
+        _downloadQueue = [NSMutableOrderedSet new];
+    }
+    return self;
+}
+
 - (void)queueEntry:(JNSTimelineEntry*)entry {
+    if([_uploadQueue indexOfObject:entry] != NSNotFound ||
+       [_downloadQueue indexOfObject:entry] != NSNotFound) {
+        return;
+    }
+        
+    if (entry.needUpload) {
+        [self uploadEntry:entry];
+    }
     
+    if (entry.needDownload) {
+        [_downloadQueue addObject:entry];
+        [self schedule];
+    }
+}
+
+- (void)schedule {
+    // TODO reentrance
+    
+    for (JNSTimelineEntry* entry in _uploadQueue) {
+        [self uploadEntry:entry];
+    }
+    [_uploadQueue removeAllObjects];
+ 
+    int download = MAX_SESSION - _sessions;
+    while (download-- > 0) {
+        if ([_downloadQueue count]) {
+            JNSTimelineEntry* entry = [_downloadQueue firstObject];
+            [_downloadQueue removeObject:entry];
+            [self downloadEntry:entry];
+        }
+    }
+}
+
+- (void)uploadEntry:(JNSTimelineEntry*)entry {
+    _sessions ++;
+    [entry uploadWithCompletion:^(NSString *error) {
+        _sessions --;
+        if (error) {
+            [_uploadQueue insertObject:entry atIndex:[_uploadQueue count]];
+        }
+        [self schedule];
+    }];
+}
+
+- (void)downloadEntry:(JNSTimelineEntry*)entry {
+    _sessions ++;
+    [entry downloadWithCompletion:^(NSString *error) {
+        _sessions --;
+        if (error) {
+            [_downloadQueue insertObject:entry atIndex:[_downloadQueue count]];
+        }
+        [self schedule];
+    }];    
 }
 
 @end
