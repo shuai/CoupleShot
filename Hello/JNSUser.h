@@ -13,7 +13,6 @@
 
 @interface JNSUser : NSManagedObject
 
-@property (readonly) bool valid;
 
 // Core Data
 @property NSString* partner;

@@ -10,10 +10,13 @@
 #import "JNSTimelineEntry.h"
 #import "JNSConnection.h"
 #import "JNSLoadManager.h"
+#import "AFJSONRequestOperation.h"
+#import "JNSAPIClient.h"
 
 @interface JNSTimeline() {
-    JNSConnection* _connection;
+    BOOL isLoading;
 }
+
 @end
 
 @interface JNSTimeline (CoreDataGeneratedAccessors)
@@ -33,7 +36,7 @@
 @implementation JNSTimeline
 
 @synthesize delegate;
-@dynamic entries, latestTimestamp;
+@dynamic entries, uploadIDs, latestTimestamp;
 
 +(id)timelineWithContext:(NSManagedObjectContext*)context {
     NSEntityDescription *entity = [NSEntityDescription entityForName:@"JNSTimeline"
@@ -47,71 +50,83 @@
 -(void) addEntryWithImage:(UIImage*)image {
     JNSTimelineEntry* entry = [JNSTimelineEntry entryWithImage:image
                                                        Context:[self managedObjectContext]];
+    entry.uniqueID = [JNSTimeline GetUUID];
+    
+    if (self.uploadIDs == nil) {
+        self.uploadIDs = [NSMutableArray new];
+    }
+    [self.uploadIDs addObject:entry.uniqueID];
+
     [self addEntriesObject:entry];
     [[JNSLoadManager manager] queueEntry:entry];
+    
+    // TODO listen to entry and update position when timestamp is known
 }
 
 -(void)loadLatest {
-    if (_connection) {
+    if (isLoading) {
         NSLog(@"[JNSTimeline loadLatest] already loading");
         return;
     }
     
     UInt64 timestamp = [self.latestTimestamp longLongValue] + 1;
-    NSString* url = [NSString stringWithFormat:@"%@?timestamp=%llu", kTimelineURL, timestamp];
-    _connection = [JNSConnection connectionWithMethod:true
-                                                  URL:url
-                                               Params:nil
-                                           Completion:^(JNSConnection* connection, NSHTTPURLResponse *response, NSDictionary *json, NSError *error)
-   {
-       _connection = nil;
-       
-       if (!error) {
-           NSArray* data = [json objectForKey:@"data"];
-           NSMutableArray* indexies = [NSMutableArray new];
-           for (NSString* str in data) {
-               NSError* error;
-               NSDictionary* obj = [NSJSONSerialization JSONObjectWithData:
-                                    [str dataUsingEncoding:NSUTF8StringEncoding]
-                                                                   options:kNilOptions
-                                                                     error:&error];
-               JNSTimelineEntry* entry = [JNSTimelineEntry entryWithJSON:obj
-                                                                 Context:self.managedObjectContext];
-               if ([self.entries count] == 0) {
-                   [self addEntriesObject:entry];
-                   [indexies addObject:[NSNumber numberWithUnsignedInteger:0]];
-               } else {
-                   __block NSUInteger index = 0;
-                   // Add entry to proper place
-                   [self.entries enumerateObjectsWithOptions: NSEnumerationReverse usingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-                                                                            
-                      JNSTimelineEntry* current = obj;
-                      if (current.timestamp != 0 &&
-                          [current.timestamp compare:entry.timestamp] == NSOrderedAscending ) {
-                          index = idx + 1;// TODO what if idx is the last?
-                          *stop = YES;
-                      }
-                       // TODO
-                      if (index == [self.entries count]) {
-                          //
-                          ;
-                      }
-                      [self insertObject:entry inEntriesAtIndex:index];
-                    }];
-                   [indexies addObject: [NSNumber numberWithUnsignedInteger:index]];
-               }
-               
-               if ([entry.timestamp compare:self.latestTimestamp] == NSOrderedDescending) {
-                   NSLog(@"Update latest timeline timestamp to %@",entry.timestamp);
-                   self.latestTimestamp = entry.timestamp;
-               }
 
-           }
-           [self.delegate didLoadLatestWithIndexes:indexies Error:error];
-       } else {
-           [self.delegate didLoadLatestWithIndexes:nil Error:error];
-       }
-   }];
+
+    NSURLRequest* request = [[JNSAPIClient sharedClient] requestWithMethod:@"GET"
+                                                                      path:kTimelineURL
+                                                                parameters:@{@"timestamp": [NSNumber numberWithLongLong: timestamp]}];
+    
+    AFJSONRequestOperation* opertion = [AFJSONRequestOperation JSONRequestOperationWithRequest:request success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON) {
+        isLoading = NO;
+        
+        NSArray* data = [JSON objectForKey:@"data"];
+        NSMutableArray* indexies = [NSMutableArray new];
+        for (NSString* str in data) {
+            NSError* error;
+            NSDictionary* obj = [NSJSONSerialization JSONObjectWithData:
+                                 [str dataUsingEncoding:NSUTF8StringEncoding]
+                                                                options:kNilOptions
+                                                                  error:&error];
+            // check unique id
+            if (self.uploadIDs && [self.uploadIDs indexOfObject:[obj objectForKey:@"id"]] != NSNotFound) {
+                NSLog(@"Ignoring local entry");
+                continue; // local entry, ignore
+            }
+            
+            JNSTimelineEntry* entry = [JNSTimelineEntry entryWithJSON:obj
+                                                              Context:self.managedObjectContext];
+            if ([self.entries count] == 0) {
+                [self addEntriesObject:entry];
+                [indexies addObject:[NSNumber numberWithUnsignedInteger:0]];
+            } else {
+                __block NSUInteger index = 0;
+                // Add entry to proper place
+                [self.entries enumerateObjectsWithOptions: NSEnumerationReverse usingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+                    
+                    JNSTimelineEntry* current = obj;
+                    if (current.timestamp != 0 &&
+                        [current.timestamp compare:entry.timestamp] == NSOrderedAscending ) {
+                        index = idx + 1;// TODO what if idx is the last?
+                        *stop = YES;
+                    }
+                    
+                    [self insertObject:entry inEntriesAtIndex:index];
+                }];
+                [indexies addObject: [NSNumber numberWithUnsignedInteger:index]];
+            }
+            
+            if ([entry.timestamp compare:self.latestTimestamp] == NSOrderedDescending) {
+                NSLog(@"Update latest timeline timestamp to %@",entry.timestamp);
+                self.latestTimestamp = entry.timestamp;
+            }
+        }
+        [self.delegate didLoadLatestWithIndexes:indexies Error:nil];
+    } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
+        isLoading = NO;
+        [self.delegate didLoadLatestWithIndexes:nil Error:error];        
+    }];
+    
+    [[JNSAPIClient sharedClient] enqueueHTTPRequestOperation:opertion];
 }
 
 - (void)registerNotificationForEntry:(JNSTimelineEntry*)entry {
@@ -122,6 +137,16 @@
             self.latestTimestamp = source.timestamp;
         }
     }];
+}
+
+// properties
+- (JNSTimelineEntry*)activeEntry {
+    // TODO change event
+    JNSTimelineEntry* last = self.entries.lastObject;
+    if (last && last.active) {
+        return last;
+    }
+    return nil;
 }
 
 // overrides
@@ -145,6 +170,14 @@
     [tmpOrderedSet insertObject:value atIndex:idx];
     [self setPrimitiveValue:tmpOrderedSet forKey:@"entries"];
     [self didChange:NSKeyValueChangeInsertion valuesAtIndexes:indexes forKey:@"entries"];
+}
+
++ (NSString *)GetUUID
+{
+    CFUUIDRef theUUID = CFUUIDCreate(NULL);
+    CFStringRef string = CFUUIDCreateString(NULL, theUUID);
+    CFRelease(theUUID);
+    return (__bridge NSString *)string;
 }
 
 @end

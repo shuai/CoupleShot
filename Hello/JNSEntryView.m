@@ -7,13 +7,19 @@
 //
 
 #import "JNSEntryView.h"
+#import "JNSClippedImageView.h"
+#import "JNSTemplateManager.h"
 
-const int kContentMargin = 5;
+const int kContentWidth = 310;
+const int kContentHMargin = (320 - kContentWidth)/2;
+const int kContentTopMargin = 5;
+const int kPhotoBottomPadding = 60;
 
 @interface JNSEntryView() {
     UILabel* _label;
     UIActivityIndicatorView* _spinner;
-    UIImageView* _image;
+    UIImageView* _image1;
+    UIImageView* _image2;
 }
 
 @property JNSTimelineEntry* entry;
@@ -23,50 +29,34 @@ const int kContentMargin = 5;
 
 @implementation JNSEntryView
 
++ (int)heightForEntry:(JNSTimelineEntry*)entry {    
+    return [self heightForContentOfEntry:entry] + kContentTopMargin;
+}
 
-+ (int)heightForEntry:(JNSTimelineEntry*)entry {
-    int height = 0;
++ (int)heightForContentOfEntry:(JNSTimelineEntry*)entry {
+    id<JNSTemplate> template = [[JNSTemplateManager manager] templateForEntry:entry];
     
-    if ([entry.width intValue] != 0) {
-        int width = 320-kContentMargin*2;
-        height = [entry.height intValue]*width/[entry.width intValue] + kContentMargin - 2; // border
-    } else {
-        // TODO arbitraty default height
-        height = 240;
-    }
+    struct JNSTemplateInfo info = [template infoWithEntry:entry Width:kContentWidth];
     
-    return height;
+    return info.frame.size.height;
 }
 
 - (JNSEntryView*)initWithEntry:(JNSTimelineEntry*)entry {
+    _entry = entry;
+
     self = [super init];
     if (self) {
-        self.frame = CGRectMake(0, 0, 320, [JNSEntryView heightForEntry:entry]);
-        _entry = entry;
+        self.backgroundColor = [UIColor colorWithWhite:1 alpha:1];
+        self.frame = CGRectMake(kContentHMargin, kContentTopMargin, kContentWidth, [JNSEntryView heightForContentOfEntry:entry]);
         
-        int width = 320-kContentMargin*2;
-        int height = 240;
-        
-        if (entry.height) {
-            height = [entry.height intValue] * width / [entry.width intValue];
-        }
-
-        CGRect frame = CGRectMake(kContentMargin, 0, width, height);
-        _image = [[UIImageView alloc] initWithFrame:frame];
-        _image.image = entry.image;
         // TODO slow
-        CALayer* layer = _image.layer;
+        CALayer* layer = self.layer;
         layer.cornerRadius = 5;
         layer.borderColor = [[UIColor colorWithWhite:0.5 alpha:0.2] CGColor];
         layer.borderWidth = 1;
         layer.masksToBounds = true;
         
-        //        layer.shadowColor = [UIColor blackColor].CGColor;
-        //        layer.shadowOpacity = 0.5;
-        //        layer.shadowRadius = 10;
-        //        layer.shadowOffset = CGSizeMake(3, 3);
-        
-        [self addSubview:_image];
+        [self updatePhotos];
         
         _label = [self createLabel];
         [self addSubview:_label];
@@ -81,48 +71,84 @@ const int kContentMargin = 5;
 }
 
 - (void)observeNotification:(NSNotification*)notification {
-    if (_entry.uploading || _entry.downloading) {
-        if (!_spinner) {
-            int size = 10;
-            _spinner = [[UIActivityIndicatorView alloc] initWithFrame:[self frameForViewSize:CGSizeMake(size, size)]];
-            _spinner.backgroundColor = [UIColor colorWithWhite:0.3 alpha:0.5];
-            _spinner.layer.cornerRadius = 5;
-            _spinner.layer.masksToBounds = YES;
-
-            _spinner.alpha = 0;
-            [self addSubview:_spinner];
-            [_spinner startAnimating];
-            
-            [UIView animateWithDuration:0.2 animations:^{
-                _spinner.alpha = 1;
-                if (_label) {
-                    _label.alpha = 0;
-                }
-            }];
+    if ([notification.name compare:@"contentChanged"] == NSOrderedSame) {
+        // update template
+        
+        // Image 1
+        if (_entry.subEntry1.imageCacheURL && _image1.image == nil) {
+            _image1.image = [UIImage imageWithContentsOfFile:_entry.subEntry1.imageCacheURL];
         }
         
+        if (_entry.subEntry2 && _entry.subEntry2.imageCacheURL && _image2.image == nil) {
+            _image2.image = [UIImage imageWithContentsOfFile:_entry.subEntry2.imageCacheURL];
+        }
+        
+        // TODO layout update
+
     } else {
-        UIView* oldLabel = _label;
-        UIView* oldSpinner = _spinner;
-        
-        _label = [self createLabel];
-        _label.alpha = 0;
-        [self addSubview:_label];
-        
-        [UIView animateWithDuration:0.4 animations:^{
-            if (oldSpinner) {
-                oldSpinner.alpha = 0;
+        // statue update
+        if (_entry.uploading || _entry.downloading) {
+            if (!_spinner) {
+                int size = 10;
+                _spinner = [[UIActivityIndicatorView alloc] initWithFrame:[self frameForViewSize:CGSizeMake(size, size)]];
+                _spinner.backgroundColor = [UIColor colorWithWhite:0.3 alpha:0.5];
+                _spinner.layer.cornerRadius = 5;
+                _spinner.layer.masksToBounds = YES;
+                
+                _spinner.alpha = 0;
+                [self addSubview:_spinner];
+                [_spinner startAnimating];
+                
+                [UIView animateWithDuration:0.2 animations:^{
+                    _spinner.alpha = 1;
+                    if (_label) {
+                        _label.alpha = 0;
+                    }
+                }];
             }
-            _label.alpha = 1;
-            oldLabel.alpha = 0;
-        } completion:^(BOOL finished) {
-            [oldLabel removeFromSuperview];
-            [oldSpinner removeFromSuperview];
-        }];
+            
+        } else {
+            UIView* oldLabel = _label;
+            UIView* oldSpinner = _spinner;
+            
+            _label = [self createLabel];
+            _label.alpha = 0;
+            [self addSubview:_label];
+            
+            [UIView animateWithDuration:0.4 animations:^{
+                if (oldSpinner) {
+                    oldSpinner.alpha = 0;
+                }
+                _label.alpha = 1;
+                oldLabel.alpha = 0;
+            } completion:^(BOOL finished) {
+                [oldLabel removeFromSuperview];
+                [oldSpinner removeFromSuperview];
+            }];
+        }
+    }
+}
+
+- (void)updatePhotos {    
+    id<JNSTemplate> template = [[JNSTemplateManager manager] templateForEntry:_entry];
+    struct JNSTemplateInfo info = [template infoWithEntry:_entry Width:kContentWidth];
+    
+    if (_entry.subEntry1) {
+        if (!_image1) {
+            _image1 = [[UIImageView alloc] initWithFrame:info.rect1];
+            _image1.image = [UIImage imageWithContentsOfFile:_entry.subEntry1.imageCacheURL];
+            [self addSubview:_image1];
+        }
+        _image1.frame = info.rect1;
     }
     
-    if (_entry.image && _image.image == nil) {
-        _image.image = _entry.image;
+    if (_entry.subEntry2) {
+        if (!_image2) {
+            _image2 = [[UIImageView alloc] initWithFrame:info.rect2];
+            _image2.image = [UIImage imageWithContentsOfFile:_entry.subEntry1.imageCacheURL];
+            [self addSubview:_image2];
+        }
+        _image2.frame = info.rect2;
     }
 }
 
@@ -139,7 +165,7 @@ const int kContentMargin = 5;
     if (_entry.needUpload) {
         text = @"等待上传";
     } else if (_entry.needDownload) {
-        text = @"等待下载";
+        text = @"";
     } else if (interval < 5*60) {
         text = @"刚刚";
     } else if (interval < 60*60) {

@@ -15,6 +15,8 @@
 		067BD3DF17759D1900AECB59 /* Model.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 067BD3DD17759D1900AECB59 /* Model.xcdatamodeld */; };
 		067BD3E11775A4ED00AECB59 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 067BD3E01775A4ED00AECB59 /* CoreData.framework */; };
 		0688531C175748D4009A0C46 /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0688531B175748D4009A0C46 /* MobileCoreServices.framework */; };
+		0698DB0E17A4EDC000EB0F3B /* JNSClippedImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0698DB0D17A4EDC000EB0F3B /* JNSClippedImageView.m */; };
+		0698DB1117A4F82D00EB0F3B /* JNSTemplateManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 0698DB1017A4F82D00EB0F3B /* JNSTemplateManager.m */; };
 		06A521B6174A6B660077C0C8 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 06A521B5174A6B660077C0C8 /* UIKit.framework */; };
 		06A521B8174A6B660077C0C8 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 06A521B7174A6B660077C0C8 /* Foundation.framework */; };
 		06A521BA174A6B660077C0C8 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 06A521B9174A6B660077C0C8 /* CoreGraphics.framework */; };
@@ -27,6 +29,7 @@
 		06A521CF174A6B660077C0C8 /* MainStoryboard_iPhone.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 06A521CD174A6B660077C0C8 /* MainStoryboard_iPhone.storyboard */; };
 		06A521D2174A6B660077C0C8 /* MainStoryboard_iPad.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 06A521D0174A6B660077C0C8 /* MainStoryboard_iPad.storyboard */; };
 		06A521D5174A6B660077C0C8 /* CViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 06A521D4174A6B660077C0C8 /* CViewController.m */; };
+		06D4010F179BF2CD004F1DE2 /* JNSTimelineSubEntry.m in Sources */ = {isa = PBXBuildFile; fileRef = 06D4010E179BF2CD004F1DE2 /* JNSTimelineSubEntry.m */; };
 		06DAA6231768BEC7005C334A /* JNSPairConfirmViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 06DAA6221768BEC7005C334A /* JNSPairConfirmViewController.m */; };
 		06DAA6261768CF3E005C334A /* JNSBaseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 06DAA6251768CF3E005C334A /* JNSBaseViewController.m */; };
 		06E02C181799965600121ABA /* JNSLoadManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 06E02C171799965600121ABA /* JNSLoadManager.m */; };
@@ -66,6 +69,10 @@
 		067BD3DE17759D1900AECB59 /* Model.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Model.xcdatamodel; sourceTree = "<group>"; };
 		067BD3E01775A4ED00AECB59 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		0688531B175748D4009A0C46 /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
+		0698DB0C17A4EDC000EB0F3B /* JNSClippedImageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JNSClippedImageView.h; sourceTree = "<group>"; };
+		0698DB0D17A4EDC000EB0F3B /* JNSClippedImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JNSClippedImageView.m; sourceTree = "<group>"; };
+		0698DB0F17A4F82D00EB0F3B /* JNSTemplateManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JNSTemplateManager.h; sourceTree = "<group>"; };
+		0698DB1017A4F82D00EB0F3B /* JNSTemplateManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JNSTemplateManager.m; sourceTree = "<group>"; };
 		06A521B2174A6B660077C0C8 /* Hello.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Hello.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		06A521B5174A6B660077C0C8 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		06A521B7174A6B660077C0C8 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -83,6 +90,8 @@
 		06A521D1174A6B660077C0C8 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = en; path = en.lproj/MainStoryboard_iPad.storyboard; sourceTree = "<group>"; };
 		06A521D3174A6B660077C0C8 /* CViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CViewController.h; sourceTree = "<group>"; };
 		06A521D4174A6B660077C0C8 /* CViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CViewController.m; sourceTree = "<group>"; };
+		06D4010D179BF2CD004F1DE2 /* JNSTimelineSubEntry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JNSTimelineSubEntry.h; sourceTree = "<group>"; };
+		06D4010E179BF2CD004F1DE2 /* JNSTimelineSubEntry.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JNSTimelineSubEntry.m; sourceTree = "<group>"; };
 		06DAA6211768BEC7005C334A /* JNSPairConfirmViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JNSPairConfirmViewController.h; sourceTree = "<group>"; };
 		06DAA6221768BEC7005C334A /* JNSPairConfirmViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JNSPairConfirmViewController.m; sourceTree = "<group>"; };
 		06DAA6241768CF3E005C334A /* JNSBaseViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JNSBaseViewController.h; sourceTree = "<group>"; };
@@ -234,6 +243,8 @@
 				062CB43E17761AF100182960 /* JNSTimeline.m */,
 				062CB440177621B100182960 /* JNSTimelineEntry.h */,
 				06F97E44176C661E00F58AC9 /* JNSTimelineEntry.m */,
+				06D4010D179BF2CD004F1DE2 /* JNSTimelineSubEntry.h */,
+				06D4010E179BF2CD004F1DE2 /* JNSTimelineSubEntry.m */,
 				0665C4831775CD4F00411CBF /* JNSConfig.h */,
 				0665C4841775CD4F00411CBF /* JNSConfig.m */,
 			);
@@ -294,6 +305,10 @@
 				06F905A41784784D006C6D50 /* JNSFormView.m */,
 				06E02CFD179AAEF700121ABA /* JNSEntryView.h */,
 				06E02CFE179AAEF700121ABA /* JNSEntryView.m */,
+				0698DB0C17A4EDC000EB0F3B /* JNSClippedImageView.h */,
+				0698DB0D17A4EDC000EB0F3B /* JNSClippedImageView.m */,
+				0698DB0F17A4F82D00EB0F3B /* JNSTemplateManager.h */,
+				0698DB1017A4F82D00EB0F3B /* JNSTemplateManager.m */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -372,10 +387,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0698DB0E17A4EDC000EB0F3B /* JNSClippedImageView.m in Sources */,
 				06E02CF6179A96BF00121ABA /* AFJSONRequestOperation.m in Sources */,
 				06E02CF5179A96BF00121ABA /* AFImageRequestOperation.m in Sources */,
 				06E02CF8179A96BF00121ABA /* AFPropertyListRequestOperation.m in Sources */,
 				06A521C2174A6B660077C0C8 /* main.m in Sources */,
+				06D4010F179BF2CD004F1DE2 /* JNSTimelineSubEntry.m in Sources */,
 				06E02CF9179A96BF00121ABA /* AFURLConnectionOperation.m in Sources */,
 				06A521C6174A6B660077C0C8 /* CAppDelegate.m in Sources */,
 				06F905A51784784D006C6D50 /* JNSFormView.m in Sources */,
@@ -387,6 +404,7 @@
 				06F97E48176C6E3B00F58AC9 /* JNSConnection.m in Sources */,
 				06ECF5C2176838560028F7D6 /* JNSUser.m in Sources */,
 				06ECF5C5176845FC0028F7D6 /* JNSPairViewController.m in Sources */,
+				0698DB1117A4F82D00EB0F3B /* JNSTemplateManager.m in Sources */,
 				06E02CF7179A96BF00121ABA /* AFNetworkActivityIndicatorManager.m in Sources */,
 				06E02C181799965600121ABA /* JNSLoadManager.m in Sources */,
 				06E02CFB179A96BF00121ABA /* UIImageView+AFNetworking.m in Sources */,

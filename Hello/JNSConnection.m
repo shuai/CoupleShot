@@ -9,13 +9,15 @@
 #import "JNSConnection.h"
 #import "JNSConfig.h"
 
-NSString* kHost = @"http://124.205.11.211";
+NSString* kHost = @"http://192.168.1.101"; //@"http://192.168.1.102";
+//NSString* kHost = @"http://124.205.11.211";
 NSString* kSignUpURL = @"/signup";
 NSString* kSignInURL = @"/signin";
 NSString* kPairURL = @"/api/pair";
 NSString* kPairConfirmURL = @"/api/pair";
 NSString* kTimelineURL = @"/api/timeline";
-NSString* kPostURL = @"/api/image";
+NSString* kNewEntryURL = @"/api/new-entry";
+NSString* kReplyEntryURL = @"/api/reply-entry";
 NSString* kSyncTokenURL = @"/api/synctoken";
 
 

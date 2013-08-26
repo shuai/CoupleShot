@@ -21,7 +21,6 @@ JNSUser* activeUser;
 
 @implementation JNSUser
 
-@synthesize valid;
 @dynamic partner, email, request, incoming, timeline;
 
 +(JNSUser*)userWithID:(NSString*)email JSON:(NSDictionary*)json Context:(NSManagedObjectContext*)context {

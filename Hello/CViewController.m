@@ -18,6 +18,7 @@
 @property (weak, nonatomic) IBOutlet UIButton *addButton;
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (weak, nonatomic) IBOutlet UIToolbar *toolbar;
+@property (weak, nonatomic) JNSTimelineEntry *activeEntry;
 
 - (IBAction)buttonTouched:(id)sender;
 @end
@@ -42,12 +43,12 @@
     
     // Camera Button
     //self.addButton
-    CALayer* layer = self.addButton.layer;
-    layer.shadowColor = [UIColor whiteColor].CGColor;
-    layer.shadowOpacity = 1;
-    layer.shadowRadius = 10;
-    layer.shadowOffset = CGSizeMake(0, 0);
-        
+//    CALayer* layer = self.addButton.layer;
+//    layer.shadowColor = [UIColor whiteColor].CGColor;
+//    layer.shadowOpacity = 1;
+//    layer.shadowRadius = 10;
+//    layer.shadowOffset = CGSizeMake(0, 0);
+    
     [[JNSConfig config] addObserver:self forKeyPath:@"cachedUser" options:0 context:nil];
 }
 
@@ -55,7 +56,6 @@
     JNSUser* user = [JNSUser activeUser];
     if (user) {
         user.timeline.delegate = self;
-        [user.timeline loadLatest];
     }
 }
 
@@ -66,7 +66,7 @@
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+    // TODO Dispose of any resources that can be recreated.
 }
 
 - (IBAction)buttonTouched:(id)sender {
@@ -108,52 +108,63 @@
                                              cancelButtonTitle:@"确定"
                                              otherButtonTitles:nil];
         [view show];
-    } else {
-        NSMutableArray* array = [NSMutableArray new];
-        for (NSNumber* index in indexes) {
-            [array addObject:[NSIndexPath indexPathForRow: [index integerValue]
-                               inSection: 0]];
-        }
+        return;
+    }
+    
+    NSMutableArray* array = [NSMutableArray new];
+    for (NSNumber* index in indexes) {
+        [array addObject:[NSIndexPath indexPathForRow: [index integerValue]
+                           inSection: 0]];
+    }
+    
+    if ([array count] != 0) {
+        [self.tableView insertRowsAtIndexPaths:array
+                              withRowAnimation:UITableViewRowAnimationFade];
         
+        //scroll to bottom
+        [_tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:[[JNSUser activeUser].timeline.entries count]-1 inSection:0]
+                          atScrollPosition:UITableViewScrollPositionNone
+                                  animated:true];
         
-        if ([array count] != 0) {
-            [self.tableView insertRowsAtIndexPaths:array
-                                  withRowAnimation:UITableViewRowAnimationFade];
-            
-            //scroll to bottom
-            [_tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:[[JNSUser activeUser].timeline.entries count]-1 inSection:0]
-                              atScrollPosition:UITableViewScrollPositionNone
-                                      animated:true];
+        //active entry may have changed
+        JNSTimelineEntry* last = [JNSUser activeUser].timeline.entries.lastObject;
+        if (_activeEntry) {
+            // TODO
         }
-    }    
+    }
+    
+    
 }
-//
-//
-//- (UITableViewCell*)cellOfEntry:(JNSTimelineEntry*)entry {
-//    NSUInteger index = [[JNSUser activeUser].timeline.entries indexOfObject:entry];
-//    
-//    return [self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:index inSection:0]];
-//}
 
 // UITableView delegate
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     NSAssert(section == 0, @"");
     NSLog(@"Number of rows in section %d: %d", section, [[JNSUser activeUser].timeline.entries count]);
-    return [[JNSUser activeUser].timeline.entries count];
+    return [[JNSUser activeUser].timeline.entries count] + 1; // 1 for the top padding
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    JNSTimelineEntry* entry = [JNSUser activeUser].timeline.entries[indexPath.row];
+    if (indexPath.row == 0) {
+        return 44+20;
+    }
+    
+    JNSTimelineEntry* entry = [JNSUser activeUser].timeline.entries[indexPath.row-1];
     return [JNSEntryView heightForEntry:entry];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    NSLog(@"cellForRow: %D", [indexPath row]);
-    JNSTimelineEntry* entry = [JNSUser activeUser].timeline.entries[indexPath.row];
-    
+    //NSLog(@"cellForRow: %D", [indexPath row]);
+
     UITableViewCell *cell = [UITableViewCell new];
-    cell.frame = CGRectMake(0, 0, 320, [JNSEntryView heightForEntry:entry]);
+    
+    if (indexPath.row == 0) {
+        return cell;
+    }
+    
+    JNSTimelineEntry* entry = [JNSUser activeUser].timeline.entries[indexPath.row-1];
+    
+    cell.frame = CGRectMake(0, 0, 320, [JNSEntryView heightForEntry:entry] + 5);
 
     id view = [[JNSEntryView alloc] initWithEntry:entry];
     [[cell contentView] addSubview:view];
@@ -162,59 +173,19 @@
         [[JNSLoadManager manager] queueEntry:entry];
     }
     
-//    if (entry.image) {
-//        image_view.image = entry.image;
-//        
-//        if (entry.uploading) {
-//            UIProgressView* progress = [self createProgressViewInCell:cell];
-//            [entry trackUploadProgress:^(unsigned int p, NSString *error) {
-//                NSLog(@"Uploading progress:%d", p);
-//                if (p == 100) {
-//                    [UIView animateWithDuration:0.3 animations:^{
-//                        progress.alpha = 0;
-//                    } completion:^(BOOL finished) {
-//                        [progress removeFromSuperview];
-//                    }];
-//                } else {
-//                    progress.progress = p;
-//                }
-//            }];
-////        }
-//    } else if (!entry.downloading) {
-//        //UIProgressView* progress = [self createProgressViewInCell:cell];
-//        
-//        [[JNSLoadManager manager]queueEntry:entry];
-//        [entry downloadWithCompletion:^(NSString *error) {
-////            if (p == 100) {
-////                image_view.image = entry.image;
-////                image_view.alpha = 0;
-////                
-////                [UIView animateWithDuration:0.3 animations:^{
-////                    progress.alpha = 0;
-////                    image_view.alpha = 1;
-////                } completion:^(BOOL finished) {
-////                    [progress removeFromSuperview];
-////                }];
-////            } else {
-////                progress.progress = p;
-////            } 
-//        }];
-//    }
-    
-    
     return cell;
 }
 
-- (UIProgressView*) createProgressViewInCell:(UITableViewCell*)cell {
-    UIProgressView* progress = [[UIProgressView alloc] initWithProgressViewStyle:UIProgressViewStyleDefault];
-    int y = (cell.frame.size.height - progress.intrinsicContentSize.height)/2;
-    int width = 150;
-    progress.frame = CGRectMake((self.view.window.frame.size.width - width)/2, y,
-                                150, progress.intrinsicContentSize.height);
-    progress.progress = 0;
-    [[cell contentView] addSubview:progress];
-    return progress;
-}
+//- (UIProgressView*) createProgressViewInCell:(UITableViewCell*)cell {
+//    UIProgressView* progress = [[UIProgressView alloc] initWithProgressViewStyle:UIProgressViewStyleDefault];
+//    int y = (cell.frame.size.height - progress.intrinsicContentSize.height)/2;
+//    int width = 150;
+//    progress.frame = CGRectMake((self.view.window.frame.size.width - width)/2, y,
+//                                150, progress.intrinsicContentSize.height);
+//    progress.progress = 0;
+//    [[cell contentView] addSubview:progress];
+//    return progress;
+//}
 
 // UIImagePickerControllerDelegate
 
@@ -232,23 +203,56 @@
         if (image == nil)
             image = [info objectForKey: UIImagePickerControllerOriginalImage];
         
-        [[JNSUser activeUser].timeline addEntryWithImage:image];
-        
-        [self.tableView insertRowsAtIndexPaths:
-         [NSArray arrayWithObject:
-          [NSIndexPath indexPathForRow: [[JNSUser activeUser].timeline.entries count]-1
-                             inSection:0]]
-                              withRowAnimation:UITableViewRowAnimationFade];
-        
+        image = [CViewController scaledImageWithImage:image];
+        JNSTimelineEntry* activeEntry = [JNSUser activeUser].timeline.activeEntry;
+        if (activeEntry) { // TODO
+            // add to existant
+            [activeEntry replyEntryWithImage:image];
+            // TODO refresh entry
+            
+        } else {
+            // Add as separate entry
+            [[JNSUser activeUser].timeline addEntryWithImage:image];
+            
+            [self.tableView insertRowsAtIndexPaths:
+             [NSArray arrayWithObject:
+              [NSIndexPath indexPathForRow: [[JNSUser activeUser].timeline.entries count]
+                                 inSection:0]]
+                                  withRowAnimation:UITableViewRowAnimationFade];
+        }
     }
     
     [self dismissViewControllerAnimated:YES completion:nil];
     
     // scroll to bottom
-    [_tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:[[JNSUser activeUser].timeline.entries count]-1
+    [_tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:[[JNSUser activeUser].timeline.entries count]
                                                           inSection:0]
                       atScrollPosition:UITableViewScrollPositionNone
                               animated:true];
+}
+
++ (UIImage*)scaledImageWithImage:(UIImage*)image;
+{
+    CGSize newSize = image.size;
+    if (newSize.width > 320) {
+        newSize = CGSizeMake(320, 320*image.size.height/image.size.width);
+    }
+    
+    // Create a graphics image context
+    UIGraphicsBeginImageContext(newSize);
+    
+    // Tell the old image to draw in this new context, with the desired
+    // new size
+    [image drawInRect:CGRectMake(0,0,newSize.width,newSize.height)];
+    
+    // Get the new image from the context
+    UIImage* newImage = UIGraphicsGetImageFromCurrentImageContext();
+    
+    // End the context
+    UIGraphicsEndImageContext();
+    
+    // Return the new image.
+    return newImage;
 }
 
 @end

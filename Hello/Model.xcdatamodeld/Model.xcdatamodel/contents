@@ -6,13 +6,21 @@
     </entity>
     <entity name="JNSTimeline" representedClassName="JNSTimeline" syncable="YES">
         <attribute name="latestTimestamp" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
+        <attribute name="uploadIDs" optional="YES" attributeType="Transformable" syncable="YES"/>
         <relationship name="entries" optional="YES" toMany="YES" deletionRule="Nullify" ordered="YES" destinationEntity="JNSTimelineEntry" syncable="YES"/>
     </entity>
     <entity name="JNSTimelineEntry" representedClassName="JNSTimelineEntry" syncable="YES">
+        <attribute name="expire" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
+        <attribute name="solo" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="timestamp" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
+        <attribute name="uniqueID" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="subEntry1" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="JNSTimelineSubEntry" syncable="YES"/>
+        <relationship name="subEntry2" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="JNSTimelineSubEntry" syncable="YES"/>
+    </entity>
+    <entity name="JNSTimelineSubEntry" representedClassName="JNSTimelineSubEntry" syncable="YES">
         <attribute name="height" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
         <attribute name="imageCacheURL" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="imageURL" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="timestamp" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
         <attribute name="width" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
     </entity>
     <entity name="JNSUser" representedClassName="JNSUser" syncable="YES">
@@ -27,6 +35,7 @@
         <element name="JNSConfig" positionX="0" positionY="0" width="0" height="0"/>
         <element name="JNSTimeline" positionX="0" positionY="0" width="0" height="0"/>
         <element name="JNSTimelineEntry" positionX="0" positionY="0" width="0" height="0"/>
+        <element name="JNSTimelineSubEntry" positionX="0" positionY="0" width="0" height="0"/>
         <element name="JNSUser" positionX="0" positionY="0" width="0" height="0"/>
     </elements>
 </model>

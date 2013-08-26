@@ -3,40 +3,32 @@
    version = "1.0">
    <ContextStates>
       <ContextState
-         contextName = "-[CAppDelegate application:didFinishLaunchingWithOptions:]:CAppDelegate.m">
+         contextName = "-[JNSEntryView createLabel]:JNSEntryView.m">
+      </ContextState>
+      <ContextState
+         contextName = "-[JNSTimelineEntry needUpload]:JNSTimelineEntry.m">
          <PersistentStrings>
             <PersistentString
-               value = "application">
-            </PersistentString>
-            <PersistentString
-               value = "user.partner">
+               value = "self.subEntry1.needUpload">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
       <ContextState
-         contextName = "-[CViewController viewDidAppear:]:CViewController.m">
+         contextName = "-[CLoginViewController validationCompleteWithConnection:Response:JSON:Error:]:CLoginViewController.m">
          <PersistentStrings>
             <PersistentString
-               value = "self.toolbar.backgroundColor">
+               value = "[JNSConfig config]">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
       <ContextState
-         contextName = "-[JNSTimelineEntry uploadWithCompletion:]:JNSTimelineEntry.m">
+         contextName = "-[CViewController createViewForEntry:]:CViewController.m">
          <PersistentStrings>
             <PersistentString
-               value = "self.imageCacheURL">
+               value = "entry.height">
             </PersistentString>
             <PersistentString
-               value = "self.imageURL">
-            </PersistentString>
-         </PersistentStrings>
-      </ContextState>
-      <ContextState
-         contextName = "+[JNSTimelineEntry entryWithJSON:Context:]:JNSTimelineEntry.m">
-         <PersistentStrings>
-            <PersistentString
-               value = "entry.timestamp">
+               value = "[entry.width intValue]">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -49,13 +41,116 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
-         contextName = "-[CViewController createViewForEntry:]:CViewController.m">
+         contextName = "-[JNSTimelineEntry uploadWithCompletion:]:JNSTimelineEntry.m">
          <PersistentStrings>
             <PersistentString
-               value = "entry.height">
+               value = "self.imageURL">
             </PersistentString>
             <PersistentString
-               value = "[entry.width intValue]">
+               value = "self.needUpload">
+            </PersistentString>
+            <PersistentString
+               value = "self.uniqueID">
+            </PersistentString>
+            <PersistentString
+               value = "self.imageCacheURL">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[JNSTimelineSubEntry initWithImage:Context:]:JNSTimelineSubEntry.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "image.size.width">
+            </PersistentString>
+            <PersistentString
+               value = "image.size.height">
+            </PersistentString>
+            <PersistentString
+               value = "self.width">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[JNSTimelineEntry updateFromJSON:]:JNSTimelineEntry.m">
+      </ContextState>
+      <ContextState
+         contextName = "-[JNSUser confirmRequest:Completion:]:JNSUser.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.request">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[JNSTimelineSubEntry initWithJSON:Context:]:JNSTimelineSubEntry.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.height">
+            </PersistentString>
+            <PersistentString
+               value = "self.imageURL">
+            </PersistentString>
+            <PersistentString
+               value = "self.width">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "+[JNSTimelineEntry entryWithJSON:Context:]:JNSTimelineEntry.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "entry.timestamp">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "__41-[JNSTimelineEntry uploadWithCompletion:]_block_invoke141:JNSTimelineEntry.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "JSON[@&quot;subentry2&quot;][@&quot;image&quot;][@&quot;url&quot;]">
+            </PersistentString>
+            <PersistentString
+               value = "[JSON description]">
+            </PersistentString>
+            <PersistentString
+               value = "entry.imageCacheURL">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[CViewController viewDidLoad]:CViewController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.toolbar.backgroundColor">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[CViewController tableView:cellForRowAtIndexPath:]:CViewController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "entry.needDownload">
+            </PersistentString>
+            <PersistentString
+               value = "[_user.timeline.entries count]">
+            </PersistentString>
+            <PersistentString
+               value = "indexPath.row">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[JNSTimelineEntry connectionDidFinishLoading:]:JNSTimelineEntry.m">
+      </ContextState>
+      <ContextState
+         contextName = "-[CAppDelegate application:didFinishLaunchingWithOptions:]:CAppDelegate.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "application">
+            </PersistentString>
+            <PersistentString
+               value = "user.partner">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -74,39 +169,6 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
-         contextName = "-[JNSUser confirmRequest:Completion:]:JNSUser.m">
-         <PersistentStrings>
-            <PersistentString
-               value = "self.request">
-            </PersistentString>
-         </PersistentStrings>
-      </ContextState>
-      <ContextState
-         contextName = "-[CViewController viewDidLoad]:CViewController.m">
-         <PersistentStrings>
-            <PersistentString
-               value = "self.toolbar.backgroundColor">
-            </PersistentString>
-         </PersistentStrings>
-      </ContextState>
-      <ContextState
-         contextName = "-[JNSEntryView createLabel]:JNSEntryView.m">
-      </ContextState>
-      <ContextState
-         contextName = "-[CViewController tableView:cellForRowAtIndexPath:]:CViewController.m">
-         <PersistentStrings>
-            <PersistentString
-               value = "[_user.timeline.entries count]">
-            </PersistentString>
-            <PersistentString
-               value = "indexPath.row">
-            </PersistentString>
-         </PersistentStrings>
-      </ContextState>
-      <ContextState
-         contextName = "-[JNSTimelineEntry connectionDidFinishLoading:]:JNSTimelineEntry.m">
-      </ContextState>
-      <ContextState
          contextName = "-[JNSConfig observeValueForKeyPath:ofObject:change:context:]:JNSConfig.m">
          <PersistentStrings>
             <PersistentString
@@ -115,10 +177,18 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
-         contextName = "-[CLoginViewController validationCompleteWithConnection:Response:JSON:Error:]:CLoginViewController.m">
+         contextName = "-[CViewController viewDidAppear:]:CViewController.m">
          <PersistentStrings>
             <PersistentString
-               value = "[JNSConfig config]">
+               value = "self.toolbar.backgroundColor">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[JNSEntryView constructSingleImage]:JNSEntryView.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "_entry.subEntry1">
             </PersistentString>
          </PersistentStrings>
       </ContextState>

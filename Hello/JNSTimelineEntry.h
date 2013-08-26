@@ -8,25 +8,26 @@
 
 #import <Foundation/Foundation.h>
 #import <CoreData/CoreData.h>
-
+#import "JNSTimelineSubEntry.h"
 
 
 @class JNSTimelineEntry;
 
 @interface JNSTimelineEntry : NSManagedObject
 
-@property (readonly) UIImage* image;
 @property (readonly) bool downloading;
 @property (readonly) bool uploading;
 @property (readonly) bool needUpload;
 @property (readonly) bool needDownload;
+@property (readonly) bool active;
 
 // Core Data
+@property Boolean solo;
 @property (nonatomic, retain) NSNumber * timestamp;
-@property (nonatomic, retain) NSNumber * width;
-@property (nonatomic, retain) NSNumber * height;
-@property (nonatomic, retain) NSString * imageURL;
-@property (nonatomic, retain) NSString * imageCacheURL; // local cache
+@property (nonatomic, retain) NSNumber * expire;
+@property (nonatomic, retain) NSString * uniqueID;
+@property (nonatomic, retain) JNSTimelineSubEntry * subEntry1;
+@property (nonatomic, retain) JNSTimelineSubEntry * subEntry2;
 
 
 +(JNSTimelineEntry*)entryWithImage:(UIImage*)image
@@ -38,7 +39,8 @@
 // overrides
 - (void)awakeFromFetch;
 
--(void) downloadWithCompletion:(void(^)(NSString* error))completion;
--(void) uploadWithCompletion:(void(^)(NSString* error))completion;
+- (void)downloadWithCompletion:(void(^)(NSString* error))completion;
+- (void)uploadWithCompletion:(void(^)(NSString* error))completion;
+- (void)replyEntryWithImage:(UIImage*)image;
 
 @end

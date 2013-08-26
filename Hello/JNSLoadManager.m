@@ -78,7 +78,7 @@ const int MAX_SESSION = 2;
     [entry uploadWithCompletion:^(NSString *error) {
         _sessions --;
         if (error) {
-            [_uploadQueue insertObject:entry atIndex:[_uploadQueue count]];
+            //[_uploadQueue insertObject:entry atIndex:[_uploadQueue count]];
         }
         [self schedule];
     }];
@@ -88,11 +88,11 @@ const int MAX_SESSION = 2;
     _sessions ++;
     [entry downloadWithCompletion:^(NSString *error) {
         _sessions --;
-        if (error) {
-            [_downloadQueue insertObject:entry atIndex:[_downloadQueue count]];
-        }
+//        if (error) {
+//            [_downloadQueue insertObject:entry atIndex:[_downloadQueue count]];
+//        }
         [self schedule];
-    }];    
+    }];
 }
 
 @end

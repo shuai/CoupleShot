@@ -79,7 +79,7 @@
        self.view.userInteractionEnabled = true;
        
        if (json) {
-           [self succeeded:json];
+           [self createUserFromJSON:json LoadTimeline:YES];
        } else {
            UIAlertView* view = [[UIAlertView alloc] initWithTitle:@"登录失败"
                                                           message:[error localizedDescription]
@@ -103,7 +103,7 @@
        self.view.userInteractionEnabled = true;
        
        if (json) {
-           [self succeeded:json];
+           [self createUserFromJSON:json LoadTimeline:NO];
        } else {
            UIAlertView* view = [[UIAlertView alloc] initWithTitle:@"注册失败"
                                                           message:[error localizedDescription]
@@ -117,10 +117,13 @@
     
 }
 
-- (void)succeeded:(NSDictionary*)json {
+- (void)createUserFromJSON:(NSDictionary*)json LoadTimeline:(BOOL)load {
     JNSUser* user = [JNSUser userWithID:self.userField.text
                                    JSON:json
                                 Context:[JNSConfig config].managedObjectContext];
+    if (load) {
+        [user.timeline loadLatest];
+    }
     [[JNSConfig config] setCachedUser:user];
 }
 

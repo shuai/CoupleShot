@@ -15,7 +15,8 @@ extern NSString* kSignInURL;
 extern NSString* kPairURL;
 extern NSString* kPairConfirmURL;
 extern NSString* kTimelineURL;
-extern NSString* kPostURL;
+extern NSString* kNewEntryURL;
+extern NSString* kReplyEntryURL;
 extern NSString* kSyncTokenURL;
 
 

@@ -20,10 +20,12 @@
 @interface JNSTimeline : NSManagedObject
 
 @property (weak) id<JNSTimelineDelegate> delegate;
+@property (weak, readonly) JNSTimelineEntry* activeEntry;
 
 // Core Data
 @property (nonatomic, retain) NSOrderedSet *entries;
 @property (nonatomic, retain) NSNumber * latestTimestamp;
+@property (nonatomic, retain) NSMutableArray* uploadIDs; // ids of entries not yet uploaded
 
 +(id)timelineWithContext:(NSManagedObjectContext*)context;
 
