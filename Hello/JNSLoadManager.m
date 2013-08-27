@@ -86,13 +86,10 @@ const int MAX_SESSION = 2;
 
 - (void)downloadEntry:(JNSTimelineEntry*)entry {
     _sessions ++;
-    [entry downloadWithCompletion:^(NSString *error) {
-        _sessions --;
-//        if (error) {
-//            [_downloadQueue insertObject:entry atIndex:[_downloadQueue count]];
-//        }
-        [self schedule];
-    }];
+    [entry download];
+    _sessions --;
+    [self schedule];
+    // TODO flow control
 }
 
 @end

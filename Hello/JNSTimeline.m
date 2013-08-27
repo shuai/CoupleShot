@@ -139,6 +139,19 @@
     }];
 }
 
+- (JNSTimelineEntry*)entryWithTimestamp:(NSNumber*)timestamp {
+    // Enumerate reversely because it's most likely the last entry
+    __block JNSTimelineEntry* result;
+    [self.entries enumerateObjectsWithOptions:NSEnumerationReverse usingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+        JNSTimelineEntry* entry = obj;
+        if ([entry.timestamp longLongValue] == [timestamp longLongValue]) {
+            result = entry;
+            *stop = YES;
+        }
+    }];
+    return result;
+}
+
 // properties
 - (JNSTimelineEntry*)activeEntry {
     // TODO change event

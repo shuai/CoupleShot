@@ -82,7 +82,7 @@ const int kActivePhotoBottomPadding = 60;
     
     int gap = 5;
     int photoWidth = (width - gap)/2;
-    int height = width*4/3;
+    int height = width;
     
     struct JNSTemplateInfo info;
     info.rect1 = CGRectMake(0, 0, photoWidth, height);

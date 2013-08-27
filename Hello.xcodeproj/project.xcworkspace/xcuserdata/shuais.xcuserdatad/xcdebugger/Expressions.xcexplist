@@ -3,6 +3,17 @@
    version = "1.0">
    <ContextStates>
       <ContextState
+         contextName = "-[JNSTimelineEntry downloading]:JNSTimelineEntry.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.subEntry1.downloading">
+            </PersistentString>
+            <PersistentString
+               value = "self.subEntry2.downloading">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "-[JNSEntryView createLabel]:JNSEntryView.m">
       </ContextState>
       <ContextState
@@ -29,6 +40,14 @@
             </PersistentString>
             <PersistentString
                value = "[entry.width intValue]">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[JNSTimelineEntry needDownload]:JNSTimelineEntry.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.subEntry2.needDownload">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -108,15 +127,26 @@
          contextName = "__41-[JNSTimelineEntry uploadWithCompletion:]_block_invoke141:JNSTimelineEntry.m">
          <PersistentStrings>
             <PersistentString
-               value = "JSON[@&quot;subentry2&quot;][@&quot;image&quot;][@&quot;url&quot;]">
-            </PersistentString>
-            <PersistentString
                value = "[JSON description]">
             </PersistentString>
             <PersistentString
                value = "entry.imageCacheURL">
             </PersistentString>
+            <PersistentString
+               value = "JSON[@&quot;subentry2&quot;][@&quot;image&quot;][@&quot;url&quot;]">
+            </PersistentString>
          </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[CViewController viewDidAppear:]:CViewController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.toolbar.backgroundColor">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[JNSTimelineEntry connectionDidFinishLoading:]:JNSTimelineEntry.m">
       </ContextState>
       <ContextState
          contextName = "-[CViewController viewDidLoad]:CViewController.m">
@@ -125,23 +155,6 @@
                value = "self.toolbar.backgroundColor">
             </PersistentString>
          </PersistentStrings>
-      </ContextState>
-      <ContextState
-         contextName = "-[CViewController tableView:cellForRowAtIndexPath:]:CViewController.m">
-         <PersistentStrings>
-            <PersistentString
-               value = "entry.needDownload">
-            </PersistentString>
-            <PersistentString
-               value = "[_user.timeline.entries count]">
-            </PersistentString>
-            <PersistentString
-               value = "indexPath.row">
-            </PersistentString>
-         </PersistentStrings>
-      </ContextState>
-      <ContextState
-         contextName = "-[JNSTimelineEntry connectionDidFinishLoading:]:JNSTimelineEntry.m">
       </ContextState>
       <ContextState
          contextName = "-[CAppDelegate application:didFinishLaunchingWithOptions:]:CAppDelegate.m">
@@ -169,18 +182,24 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
-         contextName = "-[JNSConfig observeValueForKeyPath:ofObject:change:context:]:JNSConfig.m">
+         contextName = "-[CViewController tableView:cellForRowAtIndexPath:]:CViewController.m">
          <PersistentStrings>
             <PersistentString
-               value = "[NSNull null]">
+               value = "entry.needDownload">
+            </PersistentString>
+            <PersistentString
+               value = "[_user.timeline.entries count]">
+            </PersistentString>
+            <PersistentString
+               value = "indexPath.row">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
       <ContextState
-         contextName = "-[CViewController viewDidAppear:]:CViewController.m">
+         contextName = "-[JNSConfig observeValueForKeyPath:ofObject:change:context:]:JNSConfig.m">
          <PersistentStrings>
             <PersistentString
-               value = "self.toolbar.backgroundColor">
+               value = "[NSNull null]">
             </PersistentString>
          </PersistentStrings>
       </ContextState>

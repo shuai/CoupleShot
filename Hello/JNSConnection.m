@@ -17,6 +17,7 @@ NSString* kPairURL = @"/api/pair";
 NSString* kPairConfirmURL = @"/api/pair";
 NSString* kTimelineURL = @"/api/timeline";
 NSString* kNewEntryURL = @"/api/new-entry";
+NSString* kEntryURL = @"/api/entry";
 NSString* kReplyEntryURL = @"/api/reply-entry";
 NSString* kSyncTokenURL = @"/api/synctoken";
 

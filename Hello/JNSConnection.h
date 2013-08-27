@@ -16,6 +16,7 @@ extern NSString* kPairURL;
 extern NSString* kPairConfirmURL;
 extern NSString* kTimelineURL;
 extern NSString* kNewEntryURL;
+extern NSString* kEntryURL;
 extern NSString* kReplyEntryURL;
 extern NSString* kSyncTokenURL;
 

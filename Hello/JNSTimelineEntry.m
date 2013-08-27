@@ -35,7 +35,7 @@
 +(JNSTimelineEntry*)entryWithJSON:(NSDictionary*)json
                           Context:(NSManagedObjectContext*)context {
     JNSTimelineEntry* entry = [JNSTimelineEntry entryWithContext:context];    
-    [entry updateFromJSON:json];
+    [entry initFromJSON:json];
     return entry;
 }
 
@@ -78,9 +78,36 @@
     
     self.subEntry2 = [[JNSTimelineSubEntry alloc] initWithImage:image Context:self.managedObjectContext];
     [self uploadWithCompletion:^(NSString *error) {
-        // TODO contentChanged??
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"ContentChanged"
+                                                            object:self
+                                                          userInfo:nil];
     }];
 }
+
+- (void)update {
+    NSAssert(!self.subEntry2, @"update what?");
+    JNSAPIClient* client = [JNSAPIClient sharedClient];
+
+    NSURLRequest* request = [client requestWithMethod:@"GET" path:kEntryURL parameters:@{@"timestamp": self.timestamp}];
+    AFJSONRequestOperation *operation = [AFJSONRequestOperation JSONRequestOperationWithRequest:request success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON) {
+        id entry2 = JSON[@"subentry2"];
+        NSAssert(entry2, @"");
+        
+        self.subEntry2 = [[JNSTimelineSubEntry alloc] initWithJSON:entry2 Context:self.managedObjectContext];
+        NSAssert(self.needDownload, @"");
+        [self download];
+        
+        // Send the notification now to be consistent, the entry view will change when recreated anyway
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"ContentChanged"
+                                                            object:self
+                                                          userInfo:nil];
+    } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
+        //TODO do something
+    }];
+    
+    [client enqueueHTTPRequestOperation:operation];
+}
+
 -(void) uploadWithCompletion:(void(^)(NSString* error))completion {
     NSAssert(!self.uploading, @"");
     NSAssert(self.needUpload, @"");
@@ -118,7 +145,9 @@
         
         AFJSONRequestOperation *operation = [AFJSONRequestOperation JSONRequestOperationWithRequest:request success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON) {
             self.uploading = NO;
-            entry.imageURL = JSON[@"subentry1"][@"image"][@"url"];
+            
+            [self updateFromJSON:JSON];
+            
             completion(nil);
             [[NSNotificationCenter defaultCenter] postNotificationName:@"UploadSucceeded" object:self userInfo:nil];
         } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
@@ -164,51 +193,49 @@
     }
 }
 
--(void) downloadWithCompletion:(void(^)(NSString* error))completion {
+-(void) download {
+    NSAssert(self.needDownload, @"");
     NSAssert(self.subEntry1, @"");
-
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"DownloadStarted"
-                                                        object:self
-                                                      userInfo:nil];
     
-    [self.subEntry1 downloadWithCompletion:^(NSString *error) {
-        if (error) {
-            completion(error);
-            [[NSNotificationCenter defaultCenter] postNotificationName:@"DownloadFailed"
-                                                                object:self
-                                                              userInfo:@{@"error": error}];
-            return;
-        }
-        
-        if (self.subEntry2) {
-            [self.subEntry2 downloadWithCompletion:^(NSString *error) {
-                if (error) {
-                    [[NSNotificationCenter defaultCenter] postNotificationName:@"DownloadFailed"
-                                                                        object:self
-                                                                      userInfo:@{@"error": error}];
-                    return;
-                }
-
-                [[NSNotificationCenter defaultCenter] postNotificationName:@"DownloadSucceeded"
+    if (self.subEntry1.needDownload) {
+        [self.subEntry1 downloadWithCompletion:^(NSString *error) {
+            [self didChangeValueForKey:@"downloading"];
+            if (!error) {
+                [self didChangeValueForKey:@"needDownload"];
+                [[NSNotificationCenter defaultCenter] postNotificationName:@"ContentChanged"
                                                                     object:self
                                                                   userInfo:nil];
-            }];
-            return;
-        }
+            }
+        }];
+    }
     
-        completion(nil);
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"DownloadSucceeded"
-                                                            object:self
-                                                          userInfo:nil];            
-    }];
+    if (self.subEntry2 && self.subEntry2.needDownload) {
+        [self.subEntry2 downloadWithCompletion:^(NSString *error) {
+            [self didChangeValueForKey:@"downloading"];
+            if (!error) {
+                [self didChangeValueForKey:@"needDownload"];
+                [[NSNotificationCenter defaultCenter] postNotificationName:@"ContentChanged"
+                                                                    object:self
+                                                                  userInfo:nil];
+            }
+        }];
+    }    
 }
-
 
 - (void)watchSubEntry:(JNSTimelineSubEntry*)entry {
     // register notifications
 }
 
+// update after uploading
 - (void)updateFromJSON:(NSDictionary*)json {
+    NSAssert([self.timestamp longLongValue] == 0, @"");
+    NSAssert(self.subEntry1, @"");
+    
+    self.timestamp = [NSNumber numberWithLongLong:[[json objectForKey:@"time"] longLongValue]];
+    self.subEntry1.imageURL = json[@"subentry1"][@"image"][@"url"];
+}
+
+- (void)initFromJSON:(NSDictionary*)json {
     self.timestamp = [NSNumber numberWithLongLong:[[json objectForKey:@"time"] longLongValue]];
     self.expire = [NSNumber numberWithLongLong:[[json objectForKey:@"expire"] longLongValue]];
     self.solo = [[json objectForKey:@"solo"] boolValue];
@@ -223,6 +250,9 @@
     if (entry2) {
         NSAssert(!self.subEntry2,@"");
         self.subEntry2 = [[JNSTimelineSubEntry alloc] initWithJSON:entry2 Context:self.managedObjectContext];
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"ContentChanged"
+                                                            object:self
+                                                          userInfo:nil];
     }
 }
 

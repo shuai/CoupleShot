@@ -39,8 +39,9 @@
 // overrides
 - (void)awakeFromFetch;
 
-- (void)downloadWithCompletion:(void(^)(NSString* error))completion;
+- (void)download;
 - (void)uploadWithCompletion:(void(^)(NSString* error))completion;
 - (void)replyEntryWithImage:(UIImage*)image;
+- (void)update;
 
 @end

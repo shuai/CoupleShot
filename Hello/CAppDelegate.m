@@ -131,6 +131,13 @@
         if (user) {
             [[JNSUser activeUser] updateJSON:user];
         }
+    } else if ([type compare:@"reply"] == NSOrderedSame) {
+        long long timestamp = [[userInfo objectForKey:@"entry_timestamp"] longLongValue];
+        NSAssert(timestamp != 0, @"");
+        
+        JNSTimelineEntry* entry = [[JNSUser activeUser].timeline entryWithTimestamp:[NSNumber numberWithLongLong:timestamp]];
+        NSAssert(entry, @"");
+        [entry update];
     }
 }
 

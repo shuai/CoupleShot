@@ -31,5 +31,6 @@
 
 - (void)addEntryWithImage:(UIImage*)image;
 - (void)loadLatest;
+- (JNSTimelineEntry*)entryWithTimestamp:(NSNumber*)timestamp;
 
 @end

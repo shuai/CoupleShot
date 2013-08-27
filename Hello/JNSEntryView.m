@@ -56,7 +56,7 @@ const int kPhotoBottomPadding = 60;
         layer.borderWidth = 1;
         layer.masksToBounds = true;
         
-        [self updatePhotos];
+        [self updateContent];
         
         _label = [self createLabel];
         [self addSubview:_label];
@@ -71,20 +71,9 @@ const int kPhotoBottomPadding = 60;
 }
 
 - (void)observeNotification:(NSNotification*)notification {
-    if ([notification.name compare:@"contentChanged"] == NSOrderedSame) {
+    if ([notification.name compare:@"ContentChanged"] == NSOrderedSame) {
         // update template
-        
-        // Image 1
-        if (_entry.subEntry1.imageCacheURL && _image1.image == nil) {
-            _image1.image = [UIImage imageWithContentsOfFile:_entry.subEntry1.imageCacheURL];
-        }
-        
-        if (_entry.subEntry2 && _entry.subEntry2.imageCacheURL && _image2.image == nil) {
-            _image2.image = [UIImage imageWithContentsOfFile:_entry.subEntry2.imageCacheURL];
-        }
-        
-        // TODO layout update
-
+        [self updateContent];
     } else {
         // statue update
         if (_entry.uploading || _entry.downloading) {
@@ -129,7 +118,7 @@ const int kPhotoBottomPadding = 60;
     }
 }
 
-- (void)updatePhotos {    
+- (void)updateContent {    
     id<JNSTemplate> template = [[JNSTemplateManager manager] templateForEntry:_entry];
     struct JNSTemplateInfo info = [template infoWithEntry:_entry Width:kContentWidth];
     
@@ -137,18 +126,32 @@ const int kPhotoBottomPadding = 60;
         if (!_image1) {
             _image1 = [[UIImageView alloc] initWithFrame:info.rect1];
             _image1.image = [UIImage imageWithContentsOfFile:_entry.subEntry1.imageCacheURL];
+            _image1.contentMode = UIViewContentModeScaleAspectFill;
+            _image1.clipsToBounds = YES;
+            _image1.frame = info.rect1;
             [self addSubview:_image1];
+        } else {
+            _image1.image = [UIImage imageWithContentsOfFile:_entry.subEntry1.imageCacheURL];
+            [UIView animateWithDuration:0.2 animations:^{
+                _image1.frame = info.rect1;
+            }];
         }
-        _image1.frame = info.rect1;
     }
     
     if (_entry.subEntry2) {
         if (!_image2) {
             _image2 = [[UIImageView alloc] initWithFrame:info.rect2];
-            _image2.image = [UIImage imageWithContentsOfFile:_entry.subEntry1.imageCacheURL];
+            _image2.image = [UIImage imageWithContentsOfFile:_entry.subEntry2.imageCacheURL];
+            _image2.contentMode = UIViewContentModeScaleAspectFill;
+            _image2.clipsToBounds = YES;
+            _image2.frame = info.rect2;            
             [self addSubview:_image2];
+        } else {
+            _image2.image = [UIImage imageWithContentsOfFile:_entry.subEntry2.imageCacheURL];
+            [UIView animateWithDuration:0.2 animations:^{
+                _image2.frame = info.rect2;
+            }];
         }
-        _image2.frame = info.rect2;
     }
 }
 

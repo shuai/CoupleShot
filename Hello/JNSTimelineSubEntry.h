@@ -27,6 +27,5 @@
 - (JNSTimelineSubEntry*)initWithJSON:(NSDictionary*)json Context:(NSManagedObjectContext*)context;
 
 - (void)downloadWithCompletion:(void(^)(NSString* error))completion;
-- (void)uploadWithCompletion:(void(^)(NSString* error))completion;
 
 @end
