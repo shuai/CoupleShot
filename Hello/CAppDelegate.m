@@ -14,6 +14,7 @@
 #import "JNSPairViewController.h"
 #import "JNSPairWaitingViewController.h"
 #import "AFNetworkActivityIndicatorManager.h"
+#import "IIViewDeckController.h"
 
 @interface CAppDelegate() {
 }
@@ -53,12 +54,22 @@
         [JNSConfig setConfig:[result firstObject]];
     }
     
-    // Init views
+    UIStoryboard* storyBoard = self.window.rootViewController.storyboard;
+    
+    // Init center/left/right views
+    UIViewController* left = [storyBoard instantiateViewControllerWithIdentifier:@"left_view"];
+    UIViewController* right = nil; //[[self.window.rootViewController storyboard] instantiateViewControllerWithIdentifier:@"right_view"];
+    
+    IIViewDeckController* deckController =  [[IIViewDeckController alloc] initWithCenterViewController:self.window.rootViewController
+                                                                                    leftViewController:left
+                                                                                   rightViewController:right];
+    self.window.rootViewController = deckController;
+    
     [self.window makeKeyAndVisible];
     
     JNSUser* user = [JNSUser activeUser];
     if (!user || !user.partner) {
-        JNSWizardViewController* wizard = [[self.window.rootViewController storyboard] instantiateViewControllerWithIdentifier:@"wizard_view"];
+        JNSWizardViewController* wizard = [storyBoard instantiateViewControllerWithIdentifier:@"wizard_view"];
         [self.window.rootViewController presentViewController:wizard animated:false completion:nil];
     }
     

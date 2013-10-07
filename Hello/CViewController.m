@@ -18,6 +18,9 @@
 @property (weak, nonatomic) IBOutlet UIButton *addButton;
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (weak, nonatomic) IBOutlet UIToolbar *toolbar;
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *menuButton;
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *tagButton;
+
 @property (weak, nonatomic) JNSTimelineEntry *activeEntry;
 
 - (IBAction)buttonTouched:(id)sender;
@@ -41,18 +44,39 @@
     self.tableView.delegate = self;
     self.tableView.dataSource = self;
     
-    // Camera Button
-    //self.addButton
-//    CALayer* layer = self.addButton.layer;
-//    layer.shadowColor = [UIColor whiteColor].CGColor;
-//    layer.shadowOpacity = 1;
-//    layer.shadowRadius = 10;
-//    layer.shadowOffset = CGSizeMake(0, 0);
+    // initialize tableview
+    [self.tableView insertRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:0 inSection:0]] withRowAnimation:UITableViewRowAnimationNone];
     
-    [[JNSConfig config] addObserver:self forKeyPath:@"cachedUser" options:0 context:nil];
+    // Camera Button
+    
+    // set up menu/tag buttons
+    self.menuButton.action = @selector(toggleLeftView);
+    self.tagButton.action = @selector(toggleRightView);
+    
+    //[[JNSConfig config] addObserver:self forKeyPath:@"cachedUser" options:NSKeyValueObservingOptionOld context:nil];
+    
+    
+    
+    NSOperationQueue *mainQueue = [NSOperationQueue mainQueue];
+
+    [[NSNotificationCenter defaultCenter] addObserverForName:@"UserSignedOut" object:nil queue:mainQueue usingBlock:^(NSNotification *note) {
+        [self presentWizardView];
+    }];
+
+//    [[NSNotificationCenter defaultCenter] addObserverForName:@"UserSessionFailed" object:nil queue:nil usingBlock:^(NSNotification *note) {
+//       
+//        UIAlertView* view = [[UIAlertView alloc] initWithTitle:@"需要重新登录"
+//                                                       message:@""
+//                                                      delegate:nil
+//                                             cancelButtonTitle:@"确定"
+//                                             otherButtonTitles:nil];
+//        [view show];
+//        [self presentWizardView];
+//    }];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
+    // TODO use observer
     JNSUser* user = [JNSUser activeUser];
     if (user) {
         user.timeline.delegate = self;
@@ -81,22 +105,11 @@
     [self presentViewController:picker animated:true completion:nil];
 }
 
-- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
-    if (object == [JNSConfig config]) {
-        if ([JNSUser activeUser] == nil) {
-            // Reset table view
-            [self.tableView reloadData];
-            UIAlertView* view = [[UIAlertView alloc] initWithTitle:@"需要重新登录"
-                                                           message:@""
-                                                          delegate:nil
-                                                 cancelButtonTitle:@"确定"
-                                                 otherButtonTitles:nil];
-            [view show];
-
-            JNSWizardViewController* vc = [[self storyboard] instantiateViewControllerWithIdentifier:@"wizard_view"];
-            [self presentViewController:vc animated:YES completion:nil];
-        }
-    }
+- (void)presentWizardView {
+    // Reset table view
+    [self.tableView reloadData];
+    JNSWizardViewController* vc = [[self storyboard] instantiateViewControllerWithIdentifier:@"wizard_view"];
+    [self presentViewController:vc animated:YES completion:nil];
 }
 
 // JNSTimelineDelegate
@@ -140,8 +153,12 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     NSAssert(section == 0, @"");
-    NSLog(@"Number of rows in section %d: %d", section, [[JNSUser activeUser].timeline.entries count]);
-    return [[JNSUser activeUser].timeline.entries count] + 1; // 1 for the top padding
+    
+    int count = 1;// 1 for the top padding
+    if ([JNSUser activeUser]) {
+        count += [[JNSUser activeUser].timeline.entries count];
+    }
+    return count;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -150,6 +167,7 @@
     }
     
     JNSTimelineEntry* entry = [JNSUser activeUser].timeline.entries[indexPath.row-1];
+    NSAssert(entry, @"");
     return [JNSEntryView heightForEntry:entry];
 }
 

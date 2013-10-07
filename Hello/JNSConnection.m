@@ -9,7 +9,7 @@
 #import "JNSConnection.h"
 #import "JNSConfig.h"
 
-NSString* kHost = @"http://192.168.1.101"; //@"http://192.168.1.102";
+NSString* kHost = @"http://localhost"; //@"http://172.13.0.159";
 //NSString* kHost = @"http://124.205.11.211";
 NSString* kSignUpURL = @"/signup";
 NSString* kSignInURL = @"/signin";
@@ -104,12 +104,7 @@ NSString* kSyncTokenURL = @"/api/synctoken";
     if ([[_response MIMEType] rangeOfString:@"json"].location != NSNotFound) {
         if (_response.statusCode == 200) {
             json = [NSJSONSerialization JSONObjectWithData:_data options:kNilOptions error:&error];
-        } else {
-            // Reset user
-            if (_response.statusCode == 401) {
-                [JNSConfig config].cachedUser = nil;
-            }
-            
+        } else {            
             NSDictionary* obj = [NSJSONSerialization JSONObjectWithData:_data options:kNilOptions error:&error];
             error = [NSError errorWithDomain:@"Network"
                                         code:_response.statusCode

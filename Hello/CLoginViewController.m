@@ -13,9 +13,11 @@
 #import "JNSPairConfirmViewController.h"
 #import "JNSConfig.h"
 #import "JNSConnection.h"
+#import "MBProgressHUD.h"
+#import "JNSAPIClient.h"
+#import "AFJSONRequestOperation.h"
 
 @interface CLoginViewController () {
-    JNSConnection* _connection;
 }
 @property (weak, nonatomic) IBOutlet UITextField *userField;
 @property (weak, nonatomic) IBOutlet UITextField *pwdField;
@@ -58,7 +60,6 @@
         return;
     }
     
-    self.view.userInteractionEnabled = false;
     [UIApplication sharedApplication].networkActivityIndicatorVisible = true;
     
     if ([self.segmentControl selectedSegmentIndex] == 0) {
@@ -69,52 +70,58 @@
 }
 
 - (void)signin {
-    NSString* url = [NSString stringWithFormat:@"%@?user=%@&pwd=%@", kSignInURL, self.userField.text, self.pwdField.text];
-    _connection = [JNSConnection connectionWithMethod:false
-                                                  URL:url
-                                               Params:nil
-                                           Completion:^(JNSConnection* connection, NSHTTPURLResponse *response, NSDictionary *json, NSError *error)
-   {
-       [UIApplication sharedApplication].networkActivityIndicatorVisible = false;
-       self.view.userInteractionEnabled = true;
-       
-       if (json) {
-           [self createUserFromJSON:json LoadTimeline:YES];
-       } else {
-           UIAlertView* view = [[UIAlertView alloc] initWithTitle:@"登录失败"
-                                                          message:[error localizedDescription]
-                                                         delegate:nil
-                                                cancelButtonTitle:@"取消"
-                                                otherButtonTitles:nil];
-           [view show];
-       }
-   }];
+    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    hud.labelText = @"正在登陆..";
     
+    NSMutableURLRequest* request = [[JNSAPIClient sharedClient] requestWithMethod:@"POST"
+                                                                      path:kSignInURL
+                                                                parameters:@{@"user": self.userField.text,
+                                                                             @"pwd": self.pwdField.text}];
+    [request setTimeoutInterval:10];
+
+    AFJSONRequestOperation* operation = [AFJSONRequestOperation JSONRequestOperationWithRequest:request success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON) {
+        
+        [hud hide:YES];
+        [self createUserFromJSON:JSON LoadTimeline:YES];
+    } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
+        
+        [hud hide:YES];
+        UIAlertView* view = [[UIAlertView alloc] initWithTitle:@"登录失败"
+                                                       message:[error localizedDescription]
+                                                      delegate:nil
+                                             cancelButtonTitle:@"取消"
+                                             otherButtonTitles:nil];
+        [view show];
+    }];
+    
+    [[JNSAPIClient sharedClient] enqueueHTTPRequestOperation:operation];
 }
 
 - (void)signup {
-    NSString* url = [NSString stringWithFormat:@"%@?user=%@&pwd=%@", kSignUpURL, self.userField.text, self.pwdField.text];
-    _connection = [JNSConnection connectionWithMethod:false
-                                                  URL:url
-                                               Params:nil
-                                           Completion:^(JNSConnection* connection, NSHTTPURLResponse *response, NSDictionary *json, NSError *error)
-   {
-       [UIApplication sharedApplication].networkActivityIndicatorVisible = false;
-       self.view.userInteractionEnabled = true;
-       
-       if (json) {
-           [self createUserFromJSON:json LoadTimeline:NO];
-       } else {
-           UIAlertView* view = [[UIAlertView alloc] initWithTitle:@"注册失败"
-                                                          message:[error localizedDescription]
-                                                         delegate:nil
-                                                cancelButtonTitle:@"取消"
-                                                otherButtonTitles:nil];
-           [view show];
-           self.view.userInteractionEnabled = true;           
-       }
-   }];
+    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    hud.labelText = @"正在注册..";
     
+    NSMutableURLRequest* request = [[JNSAPIClient sharedClient] requestWithMethod:@"POST"
+                                                                             path:kSignUpURL
+                                                                       parameters:@{@"user": self.userField.text,
+                                                                                    @"pwd": self.pwdField.text}];
+    [request setTimeoutInterval:10];
+    AFJSONRequestOperation* operation = [AFJSONRequestOperation JSONRequestOperationWithRequest:request success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON) {
+        
+        [hud hide:YES];
+        [self createUserFromJSON:JSON LoadTimeline:NO];
+    } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
+        
+        [hud hide:YES];
+        UIAlertView* view = [[UIAlertView alloc] initWithTitle:@"注册失败"
+                                                       message:[error localizedDescription]
+                                                      delegate:nil
+                                             cancelButtonTitle:@"取消"
+                                             otherButtonTitles:nil];
+        [view show];
+    }];
+    
+    [[JNSAPIClient sharedClient] enqueueHTTPRequestOperation:operation];
 }
 
 - (void)createUserFromJSON:(NSDictionary*)json LoadTimeline:(BOOL)load {

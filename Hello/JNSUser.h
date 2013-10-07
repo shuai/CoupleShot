@@ -24,6 +24,7 @@
 // to load from network
 +(JNSUser*)userWithID:(NSString*)email JSON:(NSDictionary*)json Context:(NSManagedObjectContext*)context;
 +(JNSUser*)activeUser;
++(void)signOut;
 
 -(void)pairWithUser: (NSString*) user Completion:(void (^)(NSString*))completion;
 -(void)confirmRequest:(bool)confirm Completion:(void (^)(NSString*))completion;

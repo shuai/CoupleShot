@@ -37,6 +37,12 @@ JNSUser* activeUser;
     return [JNSConfig config].cachedUser;
 }
 
++(void)signOut {
+    NSAssert([JNSUser activeUser], @"");
+    [[JNSConfig config] setCachedUser:nil];
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"UserSignedOut" object:nil];
+}
+
 -(void)pairWithUser: (NSString*) user Completion:(void (^)(NSString*))completion {
     NSAssert(!_connection, @"pairWithUser called when _connection exists");
   

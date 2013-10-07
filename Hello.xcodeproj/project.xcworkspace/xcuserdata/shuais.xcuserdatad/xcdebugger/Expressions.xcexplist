@@ -3,13 +3,37 @@
    version = "1.0">
    <ContextStates>
       <ContextState
-         contextName = "-[JNSTimelineEntry downloading]:JNSTimelineEntry.m">
+         contextName = "-[JNSEntryView constructSingleImage]:JNSEntryView.m">
          <PersistentStrings>
             <PersistentString
-               value = "self.subEntry1.downloading">
+               value = "_entry.subEntry1">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[CViewController viewWillAppear:]:CViewController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "user.timeline">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "__25-[JNSTimeline loadLatest]_block_invoke:JNSTimeline.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.delegate">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "main:main.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "array">
             </PersistentString>
             <PersistentString
-               value = "self.subEntry2.downloading">
+               value = "error">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -33,6 +57,9 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "-[CViewController didLoadLatestWithIndexes:Error:]:CViewController.m">
+      </ContextState>
+      <ContextState
          contextName = "-[CViewController createViewForEntry:]:CViewController.m">
          <PersistentStrings>
             <PersistentString
@@ -52,6 +79,17 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "-[CViewController tableView:heightForRowAtIndexPath:]:CViewController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "[[JNSUser activeUser].timeline.entries count]">
+            </PersistentString>
+            <PersistentString
+               value = "indexPath">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "-[JNSTimeline loadLatestCompletion:]:JNSTimeline.m">
          <PersistentStrings>
             <PersistentString
@@ -66,10 +104,10 @@
                value = "self.imageURL">
             </PersistentString>
             <PersistentString
-               value = "self.needUpload">
+               value = "self.uniqueID">
             </PersistentString>
             <PersistentString
-               value = "self.uniqueID">
+               value = "self.needUpload">
             </PersistentString>
             <PersistentString
                value = "self.imageCacheURL">
@@ -87,6 +125,22 @@
             </PersistentString>
             <PersistentString
                value = "self.width">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[CLoginViewController createUserFromJSON:LoadTimeline:]:CLoginViewController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "[JNSConfig config]">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "+[JNSUser signOut]:JNSUser.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "[JNSUser activeUser]">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -127,13 +181,13 @@
          contextName = "__41-[JNSTimelineEntry uploadWithCompletion:]_block_invoke141:JNSTimelineEntry.m">
          <PersistentStrings>
             <PersistentString
-               value = "[JSON description]">
-            </PersistentString>
-            <PersistentString
                value = "entry.imageCacheURL">
             </PersistentString>
             <PersistentString
                value = "JSON[@&quot;subentry2&quot;][@&quot;image&quot;][@&quot;url&quot;]">
+            </PersistentString>
+            <PersistentString
+               value = "[JSON description]">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -146,13 +200,21 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
-         contextName = "-[JNSTimelineEntry connectionDidFinishLoading:]:JNSTimelineEntry.m">
-      </ContextState>
-      <ContextState
          contextName = "-[CViewController viewDidLoad]:CViewController.m">
          <PersistentStrings>
             <PersistentString
                value = "self.toolbar.backgroundColor">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[JNSTimelineEntry downloading]:JNSTimelineEntry.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.subEntry1.downloading">
+            </PersistentString>
+            <PersistentString
+               value = "self.subEntry2.downloading">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -164,6 +226,14 @@
             </PersistentString>
             <PersistentString
                value = "user.partner">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[JNSConfig observeValueForKeyPath:ofObject:change:context:]:JNSConfig.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "[NSNull null]">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -196,20 +266,7 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
-         contextName = "-[JNSConfig observeValueForKeyPath:ofObject:change:context:]:JNSConfig.m">
-         <PersistentStrings>
-            <PersistentString
-               value = "[NSNull null]">
-            </PersistentString>
-         </PersistentStrings>
-      </ContextState>
-      <ContextState
-         contextName = "-[JNSEntryView constructSingleImage]:JNSEntryView.m">
-         <PersistentStrings>
-            <PersistentString
-               value = "_entry.subEntry1">
-            </PersistentString>
-         </PersistentStrings>
+         contextName = "-[JNSTimelineEntry connectionDidFinishLoading:]:JNSTimelineEntry.m">
       </ContextState>
    </ContextStates>
 </VariablesViewState>

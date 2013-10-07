@@ -12,22 +12,22 @@
 #import "JNSConfig.h"
 
 @interface JNSWizardViewController() {
-    JNSPairViewController* _pair_view;
-    JNSPairWaitingViewController* _waiting_view;
 }
 @end
 
 @implementation JNSWizardViewController
 
 -(void)viewDidLoad {
-    _pair_view = [[self storyboard] instantiateViewControllerWithIdentifier:@"pair_view"];
-    _waiting_view = [[self storyboard] instantiateViewControllerWithIdentifier:@"pair_waiting_view"];
     [self updateViewAnimated:NO];
     
-    
     // Observer active user
-    [[JNSConfig config] addObserver:self forKeyPath:@"cachedUser" options:0 context:nil];
+    [[JNSConfig config] addObserver:self
+                         forKeyPath:@"cachedUser" options:NSKeyValueObservingOptionNew context:nil];
     [self observeUser:[JNSUser activeUser]];   
+}
+
+-(void)dealloc {
+    [[JNSConfig config] removeObserver:self forKeyPath:@"cachedUser"];
 }
 
 -(void)viewWillDisappear:(BOOL)animated {
@@ -39,32 +39,46 @@
                      ofObject:(id)object
                        change:(NSDictionary *)change
                       context:(void *)context {
-    if (object == [JNSConfig config]) {
-        [self observeUser:[JNSUser activeUser]];
+    if (object == [JNSConfig config] && [keyPath compare:@"cachedUser"] == NSOrderedSame) {
+        JNSUser* new = [change valueForKey:NSKeyValueChangeNewKey];
+        if (new) {
+            [self observeUser:new];
+        }
     }
-    [self updateViewAnimated:YES];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self updateViewAnimated:YES];
+    });
+}
+
+-(void)pushPairViewAnimated:(BOOL)animated {
+    UIViewController* pair_view = [[self storyboard] instantiateViewControllerWithIdentifier:@"pair_view"];
+    [self pushViewController:pair_view animated:animated];
+}
+
+-(void)pushPairWaitingViewAnimated:(BOOL)animated  {
+    UIViewController* view = [[self storyboard] instantiateViewControllerWithIdentifier:@"pair_waiting_view"];
+    [self pushViewController:view animated:animated];
+
 }
 
 -(void)updateViewAnimated:(BOOL) animated {
     JNSUser* current_user = [JNSUser activeUser];
     
     if (current_user == nil) {
-        NSLog(@"1");
         [self popToRootViewControllerAnimated:YES];
     } else if (current_user.partner) {
-        NSLog(@"1");
         [self dismissViewControllerAnimated:YES completion:nil];
     } else if (current_user.request && !current_user.incoming) {
         if ([self.viewControllers count] == 1) {
-            [self pushViewController:_pair_view animated:animated];
+            [self pushPairViewAnimated:animated];
         }
         
         if ([self.viewControllers count] == 2) {
-            [self pushViewController:_waiting_view animated:animated];
+            [self pushPairWaitingViewAnimated:animated];
         }
     } else {
         if ([self.viewControllers count] == 1) {
-            [self pushViewController:_pair_view animated:animated];
+            [self pushPairViewAnimated:animated];
         } else if ([self.viewControllers count] == 3) {
             [self popViewControllerAnimated:animated];
         }
@@ -72,9 +86,12 @@
 }
 
 -(void)observeUser:(JNSUser*)user {
-    [user addObserver:self forKeyPath:@"partner" options:0 context:nil];
-    [user addObserver:self forKeyPath:@"request" options:0 context:nil];
-    [user addObserver:self forKeyPath:@"incoming" options:0 context:nil];
+    if (user) {
+        [user addObserver:self forKeyPath:@"partner" options:0 context:nil];
+        [user addObserver:self forKeyPath:@"request" options:0 context:nil];
+        [user addObserver:self forKeyPath:@"incoming" options:0 context:nil];
+        
+    }
 }
 
 @end

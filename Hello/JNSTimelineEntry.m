@@ -50,6 +50,7 @@
 
 // overrides
 -(void) awakeFromFetch {
+    [super awakeFromFetch];
 }
 
 - (bool)downloading {

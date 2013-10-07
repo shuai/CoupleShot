@@ -28,13 +28,14 @@ JNSConfig* _config;
 }
 
 - (void)awakeFromFetch {
+    [super awakeFromFetch];
     [self addObserver:self forKeyPath:@"cachedUser" options:(NSKeyValueObservingOptionNew) context:nil];
 }
 
 - (void)observeValueForKeyPath:(NSString *)keyPath
                       ofObject:(id)object
                         change:(NSDictionary *)change
-                       context:(void *)context {
+                       context:(void *)context {    
     if ([keyPath compare:@"cachedUser"] == NSOrderedSame) {
         if (self.deviceToken) {
             JNSUser* user = [change valueForKey:NSKeyValueChangeNewKey];

@@ -49,6 +49,12 @@
 		06E125B117959FD600A192EB /* tags.png in Resources */ = {isa = PBXBuildFile; fileRef = 06E125B017959C1600A192EB /* tags.png */; };
 		06E125B217959FD600A192EB /* menu2.png in Resources */ = {isa = PBXBuildFile; fileRef = 06E125AF17959BAF00A192EB /* menu2.png */; };
 		06E125B417959FFA00A192EB /* camera.png in Resources */ = {isa = PBXBuildFile; fileRef = 06E125B317959FFA00A192EB /* camera.png */; };
+		06E4E2D617F9419D005B945B /* MBProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = 06E4E2D517F9419D005B945B /* MBProgressHUD.m */; };
+		06E4E2DE17F95D91005B945B /* IISideController.m in Sources */ = {isa = PBXBuildFile; fileRef = 06E4E2D917F95D90005B945B /* IISideController.m */; };
+		06E4E2DF17F95D91005B945B /* IIViewDeckController.m in Sources */ = {isa = PBXBuildFile; fileRef = 06E4E2DB17F95D91005B945B /* IIViewDeckController.m */; };
+		06E4E2E017F95D91005B945B /* IIWrapController.m in Sources */ = {isa = PBXBuildFile; fileRef = 06E4E2DD17F95D91005B945B /* IIWrapController.m */; };
+		06E4E2E217F95DD8005B945B /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 06E4E2E117F95DD8005B945B /* QuartzCore.framework */; };
+		06E4E2E517F9A05A005B945B /* MenuViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 06E4E2E417F9A05A005B945B /* MenuViewController.m */; };
 		06ECF5BF17671E780028F7D6 /* CLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 06ECF5BE17671E780028F7D6 /* CLoginViewController.m */; };
 		06ECF5C2176838560028F7D6 /* JNSUser.m in Sources */ = {isa = PBXBuildFile; fileRef = 06ECF5C1176838550028F7D6 /* JNSUser.m */; };
 		06ECF5C5176845FC0028F7D6 /* JNSPairViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 06ECF5C4176845FC0028F7D6 /* JNSPairViewController.m */; };
@@ -127,6 +133,17 @@
 		06E125AF17959BAF00A192EB /* menu2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = menu2.png; path = assets/menu2.png; sourceTree = "<group>"; };
 		06E125B017959C1600A192EB /* tags.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = tags.png; path = assets/tags.png; sourceTree = "<group>"; };
 		06E125B317959FFA00A192EB /* camera.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = camera.png; path = assets/camera.png; sourceTree = "<group>"; };
+		06E4E2D417F9419D005B945B /* MBProgressHUD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MBProgressHUD.h; sourceTree = "<group>"; };
+		06E4E2D517F9419D005B945B /* MBProgressHUD.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MBProgressHUD.m; sourceTree = "<group>"; };
+		06E4E2D817F95D90005B945B /* IISideController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IISideController.h; sourceTree = "<group>"; };
+		06E4E2D917F95D90005B945B /* IISideController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IISideController.m; sourceTree = "<group>"; };
+		06E4E2DA17F95D91005B945B /* IIViewDeckController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IIViewDeckController.h; sourceTree = "<group>"; };
+		06E4E2DB17F95D91005B945B /* IIViewDeckController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IIViewDeckController.m; sourceTree = "<group>"; };
+		06E4E2DC17F95D91005B945B /* IIWrapController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IIWrapController.h; sourceTree = "<group>"; };
+		06E4E2DD17F95D91005B945B /* IIWrapController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IIWrapController.m; sourceTree = "<group>"; };
+		06E4E2E117F95DD8005B945B /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		06E4E2E317F9A05A005B945B /* MenuViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MenuViewController.h; sourceTree = "<group>"; };
+		06E4E2E417F9A05A005B945B /* MenuViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MenuViewController.m; sourceTree = "<group>"; };
 		06ECF5BD17671E780028F7D6 /* CLoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CLoginViewController.h; sourceTree = "<group>"; };
 		06ECF5BE17671E780028F7D6 /* CLoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CLoginViewController.m; sourceTree = "<group>"; };
 		06ECF5C0176838550028F7D6 /* JNSUser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JNSUser.h; sourceTree = "<group>"; };
@@ -149,6 +166,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				06E4E2E217F95DD8005B945B /* QuartzCore.framework in Frameworks */,
 				067BD3E11775A4ED00AECB59 /* CoreData.framework in Frameworks */,
 				0688531C175748D4009A0C46 /* MobileCoreServices.framework in Frameworks */,
 				06A521B6174A6B660077C0C8 /* UIKit.framework in Frameworks */,
@@ -163,6 +181,8 @@
 		06A521A9174A6B660077C0C8 = {
 			isa = PBXGroup;
 			children = (
+				06E4E2D717F95D90005B945B /* ViewDeck */,
+				06E4E2D317F9419D005B945B /* MBProgressHUD */,
 				06E02CDF179A96BF00121ABA /* AFNetworking */,
 				06A521BB174A6B660077C0C8 /* Hello */,
 				06A521B4174A6B660077C0C8 /* Frameworks */,
@@ -181,6 +201,7 @@
 		06A521B4174A6B660077C0C8 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				06E4E2E117F95DD8005B945B /* QuartzCore.framework */,
 				067BD3E01775A4ED00AECB59 /* CoreData.framework */,
 				0688531B175748D4009A0C46 /* MobileCoreServices.framework */,
 				06A521B5174A6B660077C0C8 /* UIKit.framework */,
@@ -268,6 +289,8 @@
 				06DAA6221768BEC7005C334A /* JNSPairConfirmViewController.m */,
 				06DAA6241768CF3E005C334A /* JNSBaseViewController.h */,
 				06DAA6251768CF3E005C334A /* JNSBaseViewController.m */,
+				06E4E2E317F9A05A005B945B /* MenuViewController.h */,
+				06E4E2E417F9A05A005B945B /* MenuViewController.m */,
 			);
 			name = Controllers;
 			sourceTree = "<group>";
@@ -311,6 +334,28 @@
 				0698DB1017A4F82D00EB0F3B /* JNSTemplateManager.m */,
 			);
 			name = Views;
+			sourceTree = "<group>";
+		};
+		06E4E2D317F9419D005B945B /* MBProgressHUD */ = {
+			isa = PBXGroup;
+			children = (
+				06E4E2D417F9419D005B945B /* MBProgressHUD.h */,
+				06E4E2D517F9419D005B945B /* MBProgressHUD.m */,
+			);
+			path = MBProgressHUD;
+			sourceTree = "<group>";
+		};
+		06E4E2D717F95D90005B945B /* ViewDeck */ = {
+			isa = PBXGroup;
+			children = (
+				06E4E2D817F95D90005B945B /* IISideController.h */,
+				06E4E2D917F95D90005B945B /* IISideController.m */,
+				06E4E2DA17F95D91005B945B /* IIViewDeckController.h */,
+				06E4E2DB17F95D91005B945B /* IIViewDeckController.m */,
+				06E4E2DC17F95D91005B945B /* IIWrapController.h */,
+				06E4E2DD17F95D91005B945B /* IIWrapController.m */,
+			);
+			path = ViewDeck;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -392,8 +437,11 @@
 				06E02CF5179A96BF00121ABA /* AFImageRequestOperation.m in Sources */,
 				06E02CF8179A96BF00121ABA /* AFPropertyListRequestOperation.m in Sources */,
 				06A521C2174A6B660077C0C8 /* main.m in Sources */,
+				06E4E2E017F95D91005B945B /* IIWrapController.m in Sources */,
 				06D4010F179BF2CD004F1DE2 /* JNSTimelineSubEntry.m in Sources */,
+				06E4E2E517F9A05A005B945B /* MenuViewController.m in Sources */,
 				06E02CF9179A96BF00121ABA /* AFURLConnectionOperation.m in Sources */,
+				06E4E2D617F9419D005B945B /* MBProgressHUD.m in Sources */,
 				06A521C6174A6B660077C0C8 /* CAppDelegate.m in Sources */,
 				06F905A51784784D006C6D50 /* JNSFormView.m in Sources */,
 				067BD3DF17759D1900AECB59 /* Model.xcdatamodeld in Sources */,
@@ -402,11 +450,13 @@
 				06ECF5BF17671E780028F7D6 /* CLoginViewController.m in Sources */,
 				06E02D02179AC8CD00121ABA /* JNSNotificationCenter.m in Sources */,
 				06F97E48176C6E3B00F58AC9 /* JNSConnection.m in Sources */,
+				06E4E2DE17F95D91005B945B /* IISideController.m in Sources */,
 				06ECF5C2176838560028F7D6 /* JNSUser.m in Sources */,
 				06ECF5C5176845FC0028F7D6 /* JNSPairViewController.m in Sources */,
 				0698DB1117A4F82D00EB0F3B /* JNSTemplateManager.m in Sources */,
 				06E02CF7179A96BF00121ABA /* AFNetworkActivityIndicatorManager.m in Sources */,
 				06E02C181799965600121ABA /* JNSLoadManager.m in Sources */,
+				06E4E2DF17F95D91005B945B /* IIViewDeckController.m in Sources */,
 				06E02CFB179A96BF00121ABA /* UIImageView+AFNetworking.m in Sources */,
 				06E02CFA179A96BF00121ABA /* AFXMLRequestOperation.m in Sources */,
 				06ECF5C817684A190028F7D6 /* JNSPairWaitingViewController.m in Sources */,

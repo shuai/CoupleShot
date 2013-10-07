@@ -164,6 +164,8 @@
 
 // overrides
 -(void) awakeFromFetch {
+    [super awakeFromFetch];
+    
     // Check entries that need to upload
     [self.entries enumerateObjectsWithOptions:NSEnumerationReverse usingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
         JNSTimelineEntry* entry = obj;
