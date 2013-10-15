@@ -63,6 +63,16 @@
     // TODO listen to entry and update position when timestamp is known
 }
 
+- (void)syncAllEntries {
+    // Check entries that need to upload
+    [self.entries enumerateObjectsWithOptions:NSEnumerationReverse usingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+        JNSTimelineEntry* entry = obj;
+        if (entry.needUpload || entry.needDownload) {
+            [[JNSLoadManager manager] queueEntry:entry];
+        }
+    }];
+}
+
 -(void)loadLatest {
     if (isLoading) {
         NSLog(@"[JNSTimeline loadLatest] already loading");
@@ -120,6 +130,7 @@
                 self.latestTimestamp = entry.timestamp;
             }
         }
+        [self syncAllEntries];
         [self.delegate didLoadLatestWithIndexes:indexies Error:nil];
     } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
         isLoading = NO;
@@ -165,14 +176,7 @@
 // overrides
 -(void) awakeFromFetch {
     [super awakeFromFetch];
-    
-    // Check entries that need to upload
-    [self.entries enumerateObjectsWithOptions:NSEnumerationReverse usingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-        JNSTimelineEntry* entry = obj;
-        if (entry.needUpload) {
-            [[JNSLoadManager manager] queueEntry:entry];
-        }
-    }];
+    [self syncAllEntries];
 }
 
 // http://stackoverflow.com/questions/7385439/exception-thrown-in-nsorderedset-generated-accessors

@@ -45,7 +45,15 @@
     self.tableView.dataSource = self;
     
     // initialize tableview
-    [self.tableView insertRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:0 inSection:0]] withRowAnimation:UITableViewRowAnimationNone];
+    //[self.tableView setSectionHeaderHeight:20+44];
+    UIView* header = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 20+44)];
+    [self.tableView setTableHeaderView:header];
+    
+    UIView* footer = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 5)];
+    [self.tableView setTableFooterView:footer];
+    
+    // toolbar
+    self.toolbar.delegate = self;
     
     // Camera Button
     
@@ -154,7 +162,7 @@
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     NSAssert(section == 0, @"");
     
-    int count = 1;// 1 for the top padding
+    int count = 0;// 1 for the top padding
     if ([JNSUser activeUser]) {
         count += [[JNSUser activeUser].timeline.entries count];
     }
@@ -162,11 +170,7 @@
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    if (indexPath.row == 0) {
-        return 44+20;
-    }
-    
-    JNSTimelineEntry* entry = [JNSUser activeUser].timeline.entries[indexPath.row-1];
+    JNSTimelineEntry* entry = [JNSUser activeUser].timeline.entries[indexPath.row];
     NSAssert(entry, @"");
     return [JNSEntryView heightForEntry:entry];
 }
@@ -176,11 +180,7 @@
 
     UITableViewCell *cell = [UITableViewCell new];
     
-    if (indexPath.row == 0) {
-        return cell;
-    }
-    
-    JNSTimelineEntry* entry = [JNSUser activeUser].timeline.entries[indexPath.row-1];
+    JNSTimelineEntry* entry = [JNSUser activeUser].timeline.entries[indexPath.row];
     
     cell.frame = CGRectMake(0, 0, 320, [JNSEntryView heightForEntry:entry] + 5);
 
@@ -212,6 +212,11 @@
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 
+// UIToolbarDelegate
+- (UIBarPosition)positionForBar:(id <UIBarPositioning>)bar {
+    return UIBarPositionTopAttached;
+}
+
 // For responding to the user accepting a newly-captured picture or movie
 - (void) imagePickerController: (UIImagePickerController *) picker
  didFinishPickingMediaWithInfo: (NSDictionary *) info {
@@ -234,7 +239,7 @@
             
             [self.tableView insertRowsAtIndexPaths:
              [NSArray arrayWithObject:
-              [NSIndexPath indexPathForRow: [[JNSUser activeUser].timeline.entries count]
+              [NSIndexPath indexPathForRow: [[JNSUser activeUser].timeline.entries count] - 1
                                  inSection:0]]
                                   withRowAnimation:UITableViewRowAnimationFade];
         }
@@ -243,10 +248,12 @@
     [self dismissViewControllerAnimated:YES completion:nil];
     
     // scroll to bottom
-    [_tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:[[JNSUser activeUser].timeline.entries count]
+
+    [_tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:[[JNSUser activeUser].timeline.entries count] - 1
                                                           inSection:0]
                       atScrollPosition:UITableViewScrollPositionNone
                               animated:true];
+    
 }
 
 + (UIImage*)scaledImageWithImage:(UIImage*)image;

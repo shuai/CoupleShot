@@ -10,7 +10,7 @@
 #import "JNSUser.h"
 #import "JNSWizardViewController.h"
 
-@interface CViewController : UIViewController <UITableViewDelegate, UITableViewDataSource,  UINavigationControllerDelegate, UIImagePickerControllerDelegate,
+@interface CViewController : UIViewController <UITableViewDelegate, UITableViewDataSource,  UINavigationControllerDelegate, UIImagePickerControllerDelegate, UIToolbarDelegate,
     JNSTimelineDelegate>
 
 @end
