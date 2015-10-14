@@ -21,12 +21,16 @@ struct JNSTemplateInfo
 
 @required
 - (struct JNSTemplateInfo)infoWithEntry:(JNSTimelineEntry*)entry Width:(int)width;
+@property (readonly) UIImage* image;
 
 @end
 
 @interface JNSTemplateManager : NSObject
 
+@property (readonly) NSArray* templates;
+
 + (JNSTemplateManager*)manager;
 
 - (id<JNSTemplate>)templateForEntry:(JNSTimelineEntry*)entry;
+
 @end

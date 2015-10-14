@@ -32,6 +32,8 @@ const int kActivePhotoBottomPadding = 60;
     id<JNSTemplate> _singleActiveTemplate;
     id<JNSTemplate> _hSplitTemplate;
     id<JNSTemplate> _vSplitTemplate;
+    
+    NSMutableArray* _array;
 //    id<JNSTemplate> singleTemplate;
 //    id<JNSTemplate> singleTemplate;
 }
@@ -41,6 +43,10 @@ const int kActivePhotoBottomPadding = 60;
 
 
 @implementation JNSSingleTemplate
+
+- (UIImage*)image {
+    return nil;
+}
 
 - (struct JNSTemplateInfo)infoWithEntry:(JNSTimelineEntry*)entry Width:(int)width
 {
@@ -64,6 +70,10 @@ const int kActivePhotoBottomPadding = 60;
 
 @implementation JNSSingleActiveTemplate
 
+- (UIImage*)image {
+    return nil;
+}
+
 - (struct JNSTemplateInfo)infoWithEntry:(JNSTimelineEntry*)entry Width:(int)width
 {
     struct JNSTemplateInfo info = [super infoWithEntry:entry Width:width];
@@ -74,6 +84,10 @@ const int kActivePhotoBottomPadding = 60;
 @end
 
 @implementation JNSHSplitTemplate
+
+- (UIImage*)image {
+    return nil;
+}
 
 - (struct JNSTemplateInfo)infoWithEntry:(JNSTimelineEntry*)entry Width:(int)width
 {
@@ -95,10 +109,16 @@ const int kActivePhotoBottomPadding = 60;
 
 @implementation JNSVSplitTemplate
 
+- (UIImage*)image {
+    return nil;
+}
+
 @end
 
 
 @implementation JNSTemplateManager
+
+//@property (readonly) NSArray* templates;
 
 + (JNSTemplateManager*)manager
 {
@@ -117,6 +137,12 @@ const int kActivePhotoBottomPadding = 60;
         _singleActiveTemplate = [JNSSingleActiveTemplate new];
         _hSplitTemplate = [JNSHSplitTemplate new];
         _vSplitTemplate = [JNSVSplitTemplate new];
+        
+        _array = [NSMutableArray new];
+        
+        [_array addObject:_singleActiveTemplate];
+        [_array addObject:_hSplitTemplate];
+        [_array addObject:_vSplitTemplate];
     }
     return self;
 }
@@ -136,5 +162,8 @@ const int kActivePhotoBottomPadding = 60;
     }
 }
 
+- (NSArray*)templates {
+    return _array;
+}
 
 @end

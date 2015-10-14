@@ -29,6 +29,14 @@
 		06A521CF174A6B660077C0C8 /* MainStoryboard_iPhone.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 06A521CD174A6B660077C0C8 /* MainStoryboard_iPhone.storyboard */; };
 		06A521D2174A6B660077C0C8 /* MainStoryboard_iPad.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 06A521D0174A6B660077C0C8 /* MainStoryboard_iPad.storyboard */; };
 		06A521D5174A6B660077C0C8 /* CViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 06A521D4174A6B660077C0C8 /* CViewController.m */; };
+		06C42970180D937300FEBEC3 /* cancel-circle.png in Resources */ = {isa = PBXBuildFile; fileRef = 06C4296E180D937300FEBEC3 /* cancel-circle.png */; };
+		06C42971180D937300FEBEC3 /* food.png in Resources */ = {isa = PBXBuildFile; fileRef = 06C4296F180D937300FEBEC3 /* food.png */; };
+		06C42978180D975E00FEBEC3 /* tempalte2-2.png in Resources */ = {isa = PBXBuildFile; fileRef = 06C42973180D975E00FEBEC3 /* tempalte2-2.png */; };
+		06C42979180D975E00FEBEC3 /* template1.png in Resources */ = {isa = PBXBuildFile; fileRef = 06C42974180D975E00FEBEC3 /* template1.png */; };
+		06C4297A180D975E00FEBEC3 /* template2-1.png in Resources */ = {isa = PBXBuildFile; fileRef = 06C42975180D975E00FEBEC3 /* template2-1.png */; };
+		06C4297B180D975E00FEBEC3 /* template2-3.png in Resources */ = {isa = PBXBuildFile; fileRef = 06C42976180D975E00FEBEC3 /* template2-3.png */; };
+		06C4297C180D975E00FEBEC3 /* template2-4.png in Resources */ = {isa = PBXBuildFile; fileRef = 06C42977180D975E00FEBEC3 /* template2-4.png */; };
+		06C4297F180D9FD200FEBEC3 /* JNSShotViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 06C4297E180D9FD200FEBEC3 /* JNSShotViewController.m */; };
 		06D4010F179BF2CD004F1DE2 /* JNSTimelineSubEntry.m in Sources */ = {isa = PBXBuildFile; fileRef = 06D4010E179BF2CD004F1DE2 /* JNSTimelineSubEntry.m */; };
 		06DAA6231768BEC7005C334A /* JNSPairConfirmViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 06DAA6221768BEC7005C334A /* JNSPairConfirmViewController.m */; };
 		06DAA6261768CF3E005C334A /* JNSBaseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 06DAA6251768CF3E005C334A /* JNSBaseViewController.m */; };
@@ -49,6 +57,21 @@
 		06E125B117959FD600A192EB /* tags.png in Resources */ = {isa = PBXBuildFile; fileRef = 06E125B017959C1600A192EB /* tags.png */; };
 		06E125B217959FD600A192EB /* menu2.png in Resources */ = {isa = PBXBuildFile; fileRef = 06E125AF17959BAF00A192EB /* menu2.png */; };
 		06E125B417959FFA00A192EB /* camera.png in Resources */ = {isa = PBXBuildFile; fileRef = 06E125B317959FFA00A192EB /* camera.png */; };
+		06E44029180D8C44001D75DD /* confused.png in Resources */ = {isa = PBXBuildFile; fileRef = 06E4401A180D8C43001D75DD /* confused.png */; };
+		06E4402A180D8C44001D75DD /* cool.png in Resources */ = {isa = PBXBuildFile; fileRef = 06E4401B180D8C43001D75DD /* cool.png */; };
+		06E4402B180D8C44001D75DD /* evil.png in Resources */ = {isa = PBXBuildFile; fileRef = 06E4401C180D8C43001D75DD /* evil.png */; };
+		06E4402C180D8C44001D75DD /* grin.png in Resources */ = {isa = PBXBuildFile; fileRef = 06E4401D180D8C43001D75DD /* grin.png */; };
+		06E4402D180D8C44001D75DD /* happy.png in Resources */ = {isa = PBXBuildFile; fileRef = 06E4401E180D8C43001D75DD /* happy.png */; };
+		06E4402E180D8C44001D75DD /* neutral.png in Resources */ = {isa = PBXBuildFile; fileRef = 06E4401F180D8C43001D75DD /* neutral.png */; };
+		06E4402F180D8C44001D75DD /* sad.png in Resources */ = {isa = PBXBuildFile; fileRef = 06E44020180D8C43001D75DD /* sad.png */; };
+		06E44030180D8C44001D75DD /* shocked.png in Resources */ = {isa = PBXBuildFile; fileRef = 06E44021180D8C43001D75DD /* shocked.png */; };
+		06E44031180D8C44001D75DD /* smiley.png in Resources */ = {isa = PBXBuildFile; fileRef = 06E44022180D8C44001D75DD /* smiley.png */; };
+		06E44032180D8C44001D75DD /* wink.png in Resources */ = {isa = PBXBuildFile; fileRef = 06E44023180D8C44001D75DD /* wink.png */; };
+		06E44033180D8C44001D75DD /* wondering.png in Resources */ = {isa = PBXBuildFile; fileRef = 06E44024180D8C44001D75DD /* wondering.png */; };
+		06E44034180D8C44001D75DD /* bubble2.png in Resources */ = {isa = PBXBuildFile; fileRef = 06E44025180D8C44001D75DD /* bubble2.png */; };
+		06E44035180D8C44001D75DD /* heart2.png in Resources */ = {isa = PBXBuildFile; fileRef = 06E44026180D8C44001D75DD /* heart2.png */; };
+		06E44036180D8C44001D75DD /* thumbs-up.png in Resources */ = {isa = PBXBuildFile; fileRef = 06E44027180D8C44001D75DD /* thumbs-up.png */; };
+		06E44037180D8C44001D75DD /* users2.png in Resources */ = {isa = PBXBuildFile; fileRef = 06E44028180D8C44001D75DD /* users2.png */; };
 		06E4E2D617F9419D005B945B /* MBProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = 06E4E2D517F9419D005B945B /* MBProgressHUD.m */; };
 		06E4E2DE17F95D91005B945B /* IISideController.m in Sources */ = {isa = PBXBuildFile; fileRef = 06E4E2D917F95D90005B945B /* IISideController.m */; };
 		06E4E2DF17F95D91005B945B /* IIViewDeckController.m in Sources */ = {isa = PBXBuildFile; fileRef = 06E4E2DB17F95D91005B945B /* IIViewDeckController.m */; };
@@ -96,6 +119,15 @@
 		06A521D1174A6B660077C0C8 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = en; path = en.lproj/MainStoryboard_iPad.storyboard; sourceTree = "<group>"; };
 		06A521D3174A6B660077C0C8 /* CViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CViewController.h; sourceTree = "<group>"; };
 		06A521D4174A6B660077C0C8 /* CViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CViewController.m; sourceTree = "<group>"; };
+		06C4296E180D937300FEBEC3 /* cancel-circle.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "cancel-circle.png"; path = "assets/cancel-circle.png"; sourceTree = "<group>"; };
+		06C4296F180D937300FEBEC3 /* food.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = food.png; path = assets/food.png; sourceTree = "<group>"; };
+		06C42973180D975E00FEBEC3 /* tempalte2-2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "tempalte2-2.png"; sourceTree = "<group>"; };
+		06C42974180D975E00FEBEC3 /* template1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = template1.png; sourceTree = "<group>"; };
+		06C42975180D975E00FEBEC3 /* template2-1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "template2-1.png"; sourceTree = "<group>"; };
+		06C42976180D975E00FEBEC3 /* template2-3.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "template2-3.png"; sourceTree = "<group>"; };
+		06C42977180D975E00FEBEC3 /* template2-4.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "template2-4.png"; sourceTree = "<group>"; };
+		06C4297D180D9FD200FEBEC3 /* JNSShotViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JNSShotViewController.h; sourceTree = "<group>"; };
+		06C4297E180D9FD200FEBEC3 /* JNSShotViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JNSShotViewController.m; sourceTree = "<group>"; };
 		06D4010D179BF2CD004F1DE2 /* JNSTimelineSubEntry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JNSTimelineSubEntry.h; sourceTree = "<group>"; };
 		06D4010E179BF2CD004F1DE2 /* JNSTimelineSubEntry.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JNSTimelineSubEntry.m; sourceTree = "<group>"; };
 		06DAA6211768BEC7005C334A /* JNSPairConfirmViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JNSPairConfirmViewController.h; sourceTree = "<group>"; };
@@ -133,6 +165,21 @@
 		06E125AF17959BAF00A192EB /* menu2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = menu2.png; path = assets/menu2.png; sourceTree = "<group>"; };
 		06E125B017959C1600A192EB /* tags.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = tags.png; path = assets/tags.png; sourceTree = "<group>"; };
 		06E125B317959FFA00A192EB /* camera.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = camera.png; path = assets/camera.png; sourceTree = "<group>"; };
+		06E4401A180D8C43001D75DD /* confused.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = confused.png; sourceTree = "<group>"; };
+		06E4401B180D8C43001D75DD /* cool.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = cool.png; sourceTree = "<group>"; };
+		06E4401C180D8C43001D75DD /* evil.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = evil.png; sourceTree = "<group>"; };
+		06E4401D180D8C43001D75DD /* grin.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = grin.png; sourceTree = "<group>"; };
+		06E4401E180D8C43001D75DD /* happy.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = happy.png; sourceTree = "<group>"; };
+		06E4401F180D8C43001D75DD /* neutral.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = neutral.png; sourceTree = "<group>"; };
+		06E44020180D8C43001D75DD /* sad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = sad.png; sourceTree = "<group>"; };
+		06E44021180D8C43001D75DD /* shocked.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = shocked.png; sourceTree = "<group>"; };
+		06E44022180D8C44001D75DD /* smiley.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = smiley.png; sourceTree = "<group>"; };
+		06E44023180D8C44001D75DD /* wink.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = wink.png; sourceTree = "<group>"; };
+		06E44024180D8C44001D75DD /* wondering.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = wondering.png; sourceTree = "<group>"; };
+		06E44025180D8C44001D75DD /* bubble2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = bubble2.png; path = assets/bubble2.png; sourceTree = "<group>"; };
+		06E44026180D8C44001D75DD /* heart2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = heart2.png; path = assets/heart2.png; sourceTree = "<group>"; };
+		06E44027180D8C44001D75DD /* thumbs-up.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "thumbs-up.png"; path = "assets/thumbs-up.png"; sourceTree = "<group>"; };
+		06E44028180D8C44001D75DD /* users2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = users2.png; path = assets/users2.png; sourceTree = "<group>"; };
 		06E4E2D417F9419D005B945B /* MBProgressHUD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MBProgressHUD.h; sourceTree = "<group>"; };
 		06E4E2D517F9419D005B945B /* MBProgressHUD.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MBProgressHUD.m; sourceTree = "<group>"; };
 		06E4E2D817F95D90005B945B /* IISideController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IISideController.h; sourceTree = "<group>"; };
@@ -238,6 +285,14 @@
 		06A521BC174A6B660077C0C8 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				06C42972180D975E00FEBEC3 /* template */,
+				06C4296E180D937300FEBEC3 /* cancel-circle.png */,
+				06C4296F180D937300FEBEC3 /* food.png */,
+				06E44019180D8C43001D75DD /* smiley */,
+				06E44025180D8C44001D75DD /* bubble2.png */,
+				06E44026180D8C44001D75DD /* heart2.png */,
+				06E44027180D8C44001D75DD /* thumbs-up.png */,
+				06E44028180D8C44001D75DD /* users2.png */,
 				06E02D03179ACE2600121ABA /* camera4.png */,
 				06E125B317959FFA00A192EB /* camera.png */,
 				06E125B017959C1600A192EB /* tags.png */,
@@ -253,6 +308,19 @@
 				06A521CB174A6B660077C0C8 /* Default-568h@2x.png */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		06C42972180D975E00FEBEC3 /* template */ = {
+			isa = PBXGroup;
+			children = (
+				06C42973180D975E00FEBEC3 /* tempalte2-2.png */,
+				06C42974180D975E00FEBEC3 /* template1.png */,
+				06C42975180D975E00FEBEC3 /* template2-1.png */,
+				06C42976180D975E00FEBEC3 /* template2-3.png */,
+				06C42977180D975E00FEBEC3 /* template2-4.png */,
+			);
+			name = template;
+			path = assets/template;
 			sourceTree = "<group>";
 		};
 		06E02CDD179A7A7C00121ABA /* Models */ = {
@@ -275,6 +343,8 @@
 		06E02CDE179A7ACE00121ABA /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				06C4297D180D9FD200FEBEC3 /* JNSShotViewController.h */,
+				06C4297E180D9FD200FEBEC3 /* JNSShotViewController.m */,
 				06A521D3174A6B660077C0C8 /* CViewController.h */,
 				06A521D4174A6B660077C0C8 /* CViewController.m */,
 				06F97E49176C8BC700F58AC9 /* JNSWizardViewController.h */,
@@ -334,6 +404,25 @@
 				0698DB1017A4F82D00EB0F3B /* JNSTemplateManager.m */,
 			);
 			name = Views;
+			sourceTree = "<group>";
+		};
+		06E44019180D8C43001D75DD /* smiley */ = {
+			isa = PBXGroup;
+			children = (
+				06E4401A180D8C43001D75DD /* confused.png */,
+				06E4401B180D8C43001D75DD /* cool.png */,
+				06E4401C180D8C43001D75DD /* evil.png */,
+				06E4401D180D8C43001D75DD /* grin.png */,
+				06E4401E180D8C43001D75DD /* happy.png */,
+				06E4401F180D8C43001D75DD /* neutral.png */,
+				06E44020180D8C43001D75DD /* sad.png */,
+				06E44021180D8C43001D75DD /* shocked.png */,
+				06E44022180D8C44001D75DD /* smiley.png */,
+				06E44023180D8C44001D75DD /* wink.png */,
+				06E44024180D8C44001D75DD /* wondering.png */,
+			);
+			name = smiley;
+			path = assets/smiley;
 			sourceTree = "<group>";
 		};
 		06E4E2D317F9419D005B945B /* MBProgressHUD */ = {
@@ -411,14 +500,36 @@
 			buildActionMask = 2147483647;
 			files = (
 				06E125B417959FFA00A192EB /* camera.png in Resources */,
+				06C42970180D937300FEBEC3 /* cancel-circle.png in Resources */,
 				06A521C0174A6B660077C0C8 /* InfoPlist.strings in Resources */,
 				06A521C8174A6B660077C0C8 /* Default.png in Resources */,
 				06E125B117959FD600A192EB /* tags.png in Resources */,
+				06E44032180D8C44001D75DD /* wink.png in Resources */,
+				06E44031180D8C44001D75DD /* smiley.png in Resources */,
 				06A521CA174A6B660077C0C8 /* Default@2x.png in Resources */,
+				06C42971180D937300FEBEC3 /* food.png in Resources */,
+				06E44033180D8C44001D75DD /* wondering.png in Resources */,
+				06C42979180D975E00FEBEC3 /* template1.png in Resources */,
+				06E44035180D8C44001D75DD /* heart2.png in Resources */,
+				06E44036180D8C44001D75DD /* thumbs-up.png in Resources */,
 				06A521CC174A6B660077C0C8 /* Default-568h@2x.png in Resources */,
+				06C4297A180D975E00FEBEC3 /* template2-1.png in Resources */,
+				06C4297C180D975E00FEBEC3 /* template2-4.png in Resources */,
+				06C42978180D975E00FEBEC3 /* tempalte2-2.png in Resources */,
+				06E4402A180D8C44001D75DD /* cool.png in Resources */,
+				06E44030180D8C44001D75DD /* shocked.png in Resources */,
 				06A521CF174A6B660077C0C8 /* MainStoryboard_iPhone.storyboard in Resources */,
+				06E44037180D8C44001D75DD /* users2.png in Resources */,
+				06E44029180D8C44001D75DD /* confused.png in Resources */,
+				06C4297B180D975E00FEBEC3 /* template2-3.png in Resources */,
+				06E4402D180D8C44001D75DD /* happy.png in Resources */,
 				06E02D04179ACE2600121ABA /* camera4.png in Resources */,
+				06E4402E180D8C44001D75DD /* neutral.png in Resources */,
 				06252706178C748900579F1C /* user2.png in Resources */,
+				06E4402C180D8C44001D75DD /* grin.png in Resources */,
+				06E4402F180D8C44001D75DD /* sad.png in Resources */,
+				06E4402B180D8C44001D75DD /* evil.png in Resources */,
+				06E44034180D8C44001D75DD /* bubble2.png in Resources */,
 				06A521D2174A6B660077C0C8 /* MainStoryboard_iPad.storyboard in Resources */,
 				06252705178C748900579F1C /* lock.png in Resources */,
 				06E125B217959FD600A192EB /* menu2.png in Resources */,
@@ -444,6 +555,7 @@
 				06E4E2D617F9419D005B945B /* MBProgressHUD.m in Sources */,
 				06A521C6174A6B660077C0C8 /* CAppDelegate.m in Sources */,
 				06F905A51784784D006C6D50 /* JNSFormView.m in Sources */,
+				06C4297F180D9FD200FEBEC3 /* JNSShotViewController.m in Sources */,
 				067BD3DF17759D1900AECB59 /* Model.xcdatamodeld in Sources */,
 				06A521D5174A6B660077C0C8 /* CViewController.m in Sources */,
 				06522D2F176DAF8400D097E4 /* JNSTimelineEntry.m in Sources */,

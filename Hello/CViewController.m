@@ -13,6 +13,7 @@
 #import "JNSConfig.h"
 #import "JNSLoadManager.h"
 #import "JNSEntryView.h"
+#import "JNSShotViewController.h"
 
 @interface CViewController ()
 @property (weak, nonatomic) IBOutlet UIButton *addButton;
@@ -103,14 +104,18 @@
 
 - (IBAction)buttonTouched:(id)sender {
     
-    UIImagePickerController* picker = [[UIImagePickerController alloc] init];
-    picker.delegate = self;
-    picker.allowsEditing = true;
-    if ([UIImagePickerController isSourceTypeAvailable: UIImagePickerControllerSourceTypeCamera]) {
-        picker.sourceType = UIImagePickerControllerSourceTypeCamera;
-    }
+    UIViewController* vc = [self.storyboard instantiateViewControllerWithIdentifier:@"shot_view"];
+    [self presentViewController:vc animated:YES completion:nil];
     
-    [self presentViewController:picker animated:true completion:nil];
+    
+//    UIImagePickerController* picker = [[UIImagePickerController alloc] init];
+//    picker.delegate = self;
+//    picker.allowsEditing = true;
+//    if ([UIImagePickerController isSourceTypeAvailable: UIImagePickerControllerSourceTypeCamera]) {
+//        picker.sourceType = UIImagePickerControllerSourceTypeCamera;
+//    }
+//    
+//    [self presentViewController:picker animated:true completion:nil];
 }
 
 - (void)presentWizardView {
